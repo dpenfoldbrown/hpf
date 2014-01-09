@@ -63,9 +63,9 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
         # NOTE: Must loop here because struct_set can have nested lists
         for sv in struct_set:
             if is_known(sv): 
-                global_org_structs.add(sv)
+                global_org_structs.add(str(sv))
             else:
-                global_org_structs.update(sv)
+                global_org_structs.update(map(str, sv))
     
     keyhandle.close()
     print "{0} structures in Organism Structure set".format(len(global_org_structs))
@@ -131,19 +131,19 @@ def parse_structure_mammoth_db():
     mfile00 = "/data/cafa/structMammothDB/mammoth.txt"
 
     struct_dict = {}
-    # with open(smfile00) as handle:
-    #    for line in handle:
-    #       fields = line.split(",")
-    #       if fields[1] in global_org_structs and fields[2] in global_org_structs:
-    #            print "Adding Structure Mammoth to global dict"
-    #            global_struct_mammoth_db[StructPair(source=int(fields[1]), target=int(fields[2]))] = float(fields[10])
-    # print "Completed parsing {0}".format(smfile00)
+    with open(smfile00) as handle:
+        for line in handle:
+            fields = line.split(",")
+            if fields[1] in global_org_structs and fields[2] in global_org_structs:
+                #print "Adding Structure Mammoth to global dict"
+                global_struct_mammoth_db[StructPair(source=int(fields[1]), target=int(fields[2]))] = float(fields[10])
+    print "Completed parsing {0}".format(smfile00)
     
     with open(smfile01) as handle:
         for line in handle:
             fields = line.split(",")
             if fields[1] in global_org_structs and fields[2] in global_org_structs:
-                print "Adding Structure Mammoth to global dict"
+                #print "Adding Structure Mammoth to global dict"
                 global_struct_mammoth_db[StructPair(source=int(fields[1]), target=int(fields[2]))] = float(fields[10])
     print "Completed parsing {0}".format(smfile01)
 
@@ -151,7 +151,7 @@ def parse_structure_mammoth_db():
         for line in handle:
             fields = line.split(",")
             if fields[0] in global_org_structs and fields[1] in global_org_structs:
-                print "Adding Structure Mammoth to global dict"
+                #print "Adding Structure Mammoth to global dict"
                 global_struct_mammoth_db[StructPair(source=int(fields[0]), target=int(fields[1]))] = float(fields[2])
     print "Completed parsing {0}".format(mfile00)
 
