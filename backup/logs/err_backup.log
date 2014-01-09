@@ -1,0 +1,61 @@
+Mon Feb 14 13:37:18 EST 2011
+
+
+					Notice to Users
+
+		This is a Private computer system and is the property of New York University
+		It is for authorized use only. Users (authorized or unauthorized)
+		have no explicit or implicit expectation of privacy.
+
+		Any or all uses of this system and all files on this system may be intercepted,
+		monitored, recorded, copied, audited, inspected, and disclosed to authorized
+		site, New York University and law enforcement personnel, as well as
+		authorized officials of other agencies, both domestic and foreign. By using
+		this system, the user consents to such interception, monitoring, recording,
+		copying, auditing, inspection, and disclosure at the discretion of authorized
+		site or New York University personnel.
+
+		Unauthorized or improper use of this system may result in administrative
+		disciplinary action and civil and criminal penalties. By continuing to use
+		this system you indicate your awareness of and consent to these terms and
+		conditions of use. LOG OFF IMMEDIATELY if you do not agree to the conditions
+		stated in this warning.
+
+
+receiving file list ... done
+rsync: failed to set times on "/archive/rb133/backup/err/.": Operation not permitted (1)
+./
+err-all-mysql-databases.20110214.sql
+err-var-lib-svn-DREAM.20110214.svn.gz
+err-var-lib-svn-akp258.20110214.svn.gz
+err-var-lib-svn-alexg.20110214.svn.gz
+err-var-lib-svn-aviv.20110214.svn.gz
+err-var-lib-svn-bionetbuilder.20110214.svn.gz
+err-var-lib-svn-bonneaulab.20110214.svn.gz
+err-var-lib-svn-cmonkey.20110214.svn.gz
+err-var-lib-svn-cmonkey_data.20110214.svn.gz
+err-var-lib-svn-crispy.20110214.svn.gz
+err-var-lib-svn-devo.20110214.svn.gz
+err-var-lib-svn-gaggle.20110214.svn.gz
+err-var-lib-svn-hpf.20110214.svn.gz
+err-var-lib-svn-hz417.20110214.svn.gz
+err-var-lib-svn-inferelator.20110214.svn.gz
+err-var-lib-svn-kahn.20110214.svn.gz
+err-var-lib-svn-kbelasco.20110214.svn.gz
+err-var-lib-svn-kdrew.20110214.svn.gz
+err-var-lib-svn-kieran.20110214.svn.gz
+err-var-lib-svn-mitalia.20110214.svn.gz
+err-var-lib-svn-mz.20110214.svn.gz
+err-var-lib-svn-nyoungs.20110214.svn.gz
+err-var-lib-svn-patrick.20110214.svn.gz
+err-var-lib-svn-predictelator.20110214.svn.gz
+err-var-lib-svn-renfrew.20110214.svn.gz
+err-var-lib-svn-sandbox.20110214.svn.gz
+err-var-lib-svn-shaila.20110214.svn.gz
+err-var-lib-svn-tjk229.20110214.svn.gz
+err-var-lib-svn-waltman.20110214.svn.gz
+rsync: failed to set times on "/archive/rb133/backup/err/.": Operation not permitted (1)
+
+sent 675 bytes  received 25615871522 bytes  29292020.81 bytes/sec
+total size is 182082868831  speedup is 7.11
+rsync error: some files could not be transferred (code 23) at main.c(1298) [generator=2.6.8]

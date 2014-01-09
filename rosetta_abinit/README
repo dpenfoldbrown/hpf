@@ -1,0 +1,82 @@
+# dpb, 1/31/2012
+
+The contents of this directory are for manually (as opposed to via the World Community
+Grid) running the whole Rosetta ab initio structure prediction process.
+
+This way, we can generate a few predicted structures locally as opposed to having to
+wait for the WCG to finish a certain sequence (that may be way back in its queue).
+
+The tools are simple. Notably, this corresponds to Rosetta 3.3.
+
+Steps are outlined in order below.
+
+1) denovo_setup (.py)
+
+This will create the initial setup for your ab init (aka denovo) struct pred run.
+On the cmd line, pass it the prediction code of the domain sequence you want to predict
+structure for.
+
+Internally, set the BASE_DIR, WORK_DIR, and NR_DB variable to reflect your system's locations.
+
+This setup will generate a foldable fasta file and run PSIPRED to generate a psipred ss2 file
+(both used in frag picking and structure prediction)
+
+
+2) frag_driver (.sh)
+
+This is a simple driver to run fragment picker, which creates fragment libraries for your 
+foldable sequence. Frag libraries are required to run abinit structure prediction.
+
+This script solely runs the fragment picking script provided by rosetta. Note that I am
+using Rosetta 3.3's shortcut fragment picking script. I have provided this script here, in the
+rosetta_fragments_3.3 directory. You will have to configure this script to reflect system
+locations of BLAST, NR database, VALL database, the Rosetta Picker actually being used,
+PSIPRED, etc. See the top of the 'make_fragments.pl' script, and the fragments.README.
+
+Set the OUT_DIR, PSIPRED_IN, and FASTA_IN vars in the frag_driver script to reflect the files
+and dirs created with step (1): denovo_setup
+
+Running this script will create a bunch of files, including the 3' and 9' frag libraries required
+for rosetta ab init (denovo) structure prediction
+
+
+3) abinit_singlerun.sh
+
+Take a look at this script. It is for running a small ab init run, usually local or on a 
+single machine. 
+
+Set all script vars to relfect system locations and the locations of files created previously
+in steps (1) and (2), denovo setup and fragment picking.
+
+This script will create a standard flags file for an ab init run. This simply specifies all the
+cmdline flags to pass to rosetta when running ab init. See rosetta ab init docs for all options
+(http://www.rosettacommons.org/manuals/archive/rosetta3.3_user_guide/d0/dd9/abinitio.html).
+
+This script will then run rosetta ab init. Set the MODELS var to the number of structures you
+would like to create. Start small to get a sense of how long it takes.
+
+Output is now specified in Silent format, where all predicted structs are written to the same
+Silent-formatted outfile. You can change this to output a single PDB file for each struct. See
+Rosetta abinit docs.
+
+
+4) abinit_cluster (.sh, .pbs)
+
+This script does much the same thing as abinit_singlerun, except it takes a pre-existing flags
+file THAT MUST NOT HAVE AN OUTPUT FIELD. This is because the script is intended to be run
+many times on many different machines simultaneously, and each run will write to its own output
+file (uniquely IDentified by PBS_JOBID). 
+
+Simple set all vars to reflect local system locations and the code you are predicting, make sure
+you have an existing flags file without the '-out:file...' property defined, and then you can
+submit this job via qsub and abinit_cluster.pbs.
+
+Before submitting, change the fields in abinit_cluster.pbs to reflect code and job name.
+
+Note that you can run many of these jobs (I generally go for 100 - 500 jobs, where each job is set
+to produce 100 models), and at the end simply concatenate all the output files together to get
+the full set of results.
+
+
+Voila.
+

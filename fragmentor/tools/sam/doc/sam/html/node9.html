@@ -1,0 +1,422 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>7 Sequence formats</TITLE>
+<META NAME="description" CONTENT="7 Sequence formats">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html391"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html387"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html381"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html389"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html392"
+  HREF="node10.html">8 Regularizers and models</A>
+<B> Up:</B> <A NAME="tex2html388"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html382"
+  HREF="node8.html">6 Parameter specification</A>
+ &nbsp <B>  <A NAME="tex2html390"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html393"
+  HREF="#SECTION00091000000000000000">7.1 Alphabets</A>
+<UL>
+<LI><A NAME="tex2html394"
+  HREF="#SECTION00091100000000000000">7.1.1 User-defined alphabets</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html395"
+  HREF="#SECTION00092000000000000000">7.2 Sequences</A>
+<LI><A NAME="tex2html396"
+  HREF="#SECTION00093000000000000000">7.3 Training sets, test sets, and databases</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00090000000000000000">
+7 Sequence formats</A>
+</H1>
+
+<P>
+The SAM system understands several alphabets and many sequence
+formats.  
+
+<P>
+
+<H2><A NAME="SECTION00091000000000000000"></A><A NAME="sec:alph"></A>
+<BR>
+7.1 Alphabets
+</H2>
+
+<P>
+The SAM system currently supports two nucleotide alphabets (`DNA' and
+`RNA'), one amino acid alphabet (`protein'), and four secondary
+structure alphabets (`DSSP', `EHL', `EHL2', and `EHTL'), as well as
+user-defined alphabets of up to 25 letters.  The predefined alphabets
+can be specified by setting the <TT>alphabet</TT> variable.  If no
+alphabet is chosen, the first sequence in a specified file will be
+examined using <TT>readseq</TT> (discussed below) to determine if a
+nucleotide or protein alphabet should be used.  If this method does
+not work, the protein alphabet is the default.  The SAM software
+includes several warning messages if it appears that an incorrect
+alphabet has been chosen.
+
+<P>
+The alphabets use standard characters.  DNA sequences are composed of
+the characters ``AGCTRYN'' and RNA of ``AGCURYN,'' where `R' is a
+purine (`G' or `A'), `Y' is a pyrimidine (`C,' or `T' or `U,' as
+appropriate), and `N' is a wildcard character that could be any of the
+four normal characters.  SAM's sequence I/O routines can convert
+between DNA and RNA alphabets if the alphabet is specified
+incorrectly.
+
+<P>
+The protein alphabet is ``ACDEFGHIKLMNPQRSTVWYBZX.''  In addition to
+the twenty amino acids, `X' is the general wildcard character, `B'
+matches `N' or `D', and `Z' matches `Q' or `E.'  Protein alignments
+(specified with <TT>alignfile</TT> to <TT>buildmodel</TT> or <TT>modelfromalign</TT>) converted to models can additionally use the letter
+`O' to indicate insertion of a free-insertion module.  Except for
+these two instances, the `O' character is converted to the
+all-matching `X' wildcard.
+
+<P>
+The DSSP alphabet is ``EHTSGBICX'', including `E' (beta strand), `H'
+(alpha helix), `T' (turn), `S' (bend), `G' (3-10 helix), `B' (short
+beta bridge), `I' (pi helix), and `C' (random coil).  The character
+`L' (loop) is an alias for `C'.  The character `C' is used
+to indicate coils rather than the space character used by DSSP.
+The remaining secondary structure alphabets are subsets of the DSSP
+alphabets with various groups merged.
+
+<UL>
+<LI>The 3-character EHL alphabet (with characters ``EHCX'')
+aliases `G' to `H'; and `L', `T', `S', `B', and `I' to 'C'.
+</LI>
+<LI>The
+3-character EHL2 alphabet (with characters ``EHCX'') aliases `G' and
+`I' to `H'; `B' to `E'; and `L', `T', and `S' to `C'.
+</LI>
+<LI>The 4-character EHTL alphabet (with characters ``EHTCX'')
+aliases `G' to `H'; and `L', `S', `B', and `I' to 'C'.  
+
+<P>
+</LI>
+<LI>The 4-character EHTL2  alphabet (with characters ``EHTCX'')
+aliases `G' and `I' to `H'; and `L', `S', and `B' to 'C'.  
+
+<P>
+</LI>
+<LI>The 5-character EBHTL  alphabet (with characters ``EBHTCX'')
+aliases `G' and `I' to `H'; and `L' and `S' to 'C'.  
+
+<P>
+</LI>
+<LI>The 6-character EBGHTL  alphabet (with characters ``EBGHTCX'')
+aliases `I' to `H'; and `L' and `S' to 'C'.  
+
+<P>
+</LI>
+<LI>The 7-character STRIDE alphabet (with characters ``EBGHITCX'')
+aliases `L' and `S' to 'C'.  
+</LI>
+</UL>
+
+<P>
+The secondary strucutre alphabets are not automatically detected; they
+must be specified with a <TT>alphabet</TT> command line option.
+
+<P>
+In all alphabets, unknown characters are converted to wildcards and a
+warning message is printed.
+
+<P>
+When a model is created, a wildcard character's probability is the sum
+of the probabilities of the component letters. Thus, the `X' character
+will have unity probability, giving it no preference to one state over
+another. During the training process, wildcard character frequency
+counts are proportioned among the appropriate true characters
+according to the relative probabilities of those
+characters.
+
+<P>
+
+<H3><A NAME="SECTION00091100000000000000"></A><A NAME="sec:alphdef"></A>
+<BR>
+7.1.1 User-defined alphabets
+</H3>
+
+<P>
+SAM also supports user-defined alphabets of 2 to 25 user-selected
+letters (`A'-`Z') and one (required) wildcard letter.  The restriction
+to alphabetic characters is a result of the need for both uppercase
+and lowercase letters in the sequence alignment format.  As the system
+always requires an all-matching wildcard, only 25 letters are allowed.
+
+<P>
+User-defined alphabets are specified with the <TT>alphabet_def</TT>
+variable.  As with the standard alphabets, the definition will be
+included in all resulting models, so future specification of the
+alphabet on the command line is not required.
+
+<P>
+For example, performing the commands
+<PRE>
+
+buildmodel text -train text.seq -alphabetdef "text QWERTYUIOPASDFGHJKLZCVBNMX"
+align2model text -i text.mod -db text.seq
+</PRE>
+results in the alignment file:
+<PRE>
+
+&gt;sentence1
+THEQUICK--BROWNFOXJUMPEDOVERTHESLOW-LAZYDOG
+&gt;sentence1
+THEQUICK--BROWNFOXJUMPEDOVERTHESLOW-LAZYDOG
+&gt;sentence2
+THEQUICKERG-REENFOXHOPPEDOVERTHESLOWLUCKYPIG
+&gt;sentence3
+THESLOWLAZYPIGW-ADDLEDINTOTHEQUICKPURPLEFOX
+&gt;sentence4
+THEF--ASTBROWNFOXHOPPEDINTOTHEQUICKLAZYDOG
+</PRE>
+
+<P>
+Note that the above example does not model the letter `X' because it
+is a wildcard:  the `X' character was not trained and does not have a
+preference for any state over any other state.
+
+<P>
+A minimum of three characters, 2 normal and one wildcard, is required
+to define an alphabet.  Default flat regularizers are created
+automatically, but users may wish to create their own
+alphabet-specific regularizers with <TT>regularizer_file</TT>.
+
+<P>
+As with alphabets, models are tagged with the <TT>alphabet_def</TT>
+line, for example
+<PRE>
+
+MODEL -  Final model for run text
+alphabet_def text QWERTYUIOPASDFGHJKLZCVBNMx
+GENERIC
+1.886984 0.254944 0.376488
+.....
+</PRE>
+See Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>.
+
+<P>
+
+<H2><A NAME="SECTION00092000000000000000">
+7.2 Sequences</A>
+</H2>
+
+<P>
+SAM has three ways of reading sequences.  SAM's FASTA (and a2m-format
+alignment) format reader is by far the quickest.  SAM also includes an
+HSSP alignment file reader and, for many other formats,
+D. G. Gilbert's <TT>readseq</TT> package.  Because SAM's FASTA reader is
+tuned both to SAM and to a single format, it can be up to 10 times
+faster than <TT>readseq</TT>.  Users are advised to convert large
+databases into FASTA format using the readseq <TT>program.</TT>
+
+<P>
+SAM's modified version of the <TT>readseq</TT> package by D. G. Gilbert
+of the Indiana University.  The code is based on the February 1, 1993
+release, and is included as a subdirectory of the SAM source
+directory.  We are grateful that Gilbert has provided this useful
+package that may be used by anyone.
+
+<P>
+The <TT>readseq</TT> package can read most common formats:  examples of
+all these formats are included in the <TT>readseq</TT> directory.  The
+formats include
+
+<UL>
+<LI>IG/Stanford, used by Intelligenetics and others
+</LI>
+<LI>GenBank/GB, genbank flatfile format
+</LI>
+<LI>NBRF format (SAM modifications cause this to break when
+    sequences do not have a terminating asterix)
+</LI>
+<LI>EMBL, EMBL flatfile format
+</LI>
+<LI>GCG, single sequence format of GCG software
+</LI>
+<LI>DNAStrider, for common Mac program
+</LI>
+<LI>Fitch format, limited use
+</LI>
+<LI>Pearson/Fasta, a common format used by Fasta programs and others
+</LI>
+<LI>Zuker format, limited use. Input only.
+</LI>
+<LI>Olsen, format printed by Olsen VMS sequence editor. Input only.
+</LI>
+<LI>Phylip3.2, sequential format for Phylip programs
+</LI>
+<LI>Plain/Raw, sequence data only (no name, document, numbering)
+</LI>
+<LI>MSF multi sequence format used by GCG software
+</LI>
+<LI>PAUP's multiple sequence (NEXUS) format
+</LI>
+<LI>PIR/CODATA format used by PIR
+</LI>
+</UL>
+
+<P>
+We usually use FASTA format, which looks like this:
+<PRE>
+
+; Comments are ignored.
+&gt;IDENTIFIER
+LMLDQQTINI IKATVPVLKE HGVTITTTFY KNLFAKHPEV
+RPLFDMGRQE SLEQPKALAM T
+&gt;SEQ2       Annotations after identifier are preserved
+AKHPEVRPLFDMGRQESLEQPKALAMT
+</PRE>
+
+<P>
+For information on other formats, please look through the test files
+and the <TT>Formats</TT> file in the <TT>readseq</TT> directory.
+
+<P>
+Sequence output will be in FASTA format regardless of the input file format.
+
+<P>
+Alignment output by <TT>align2model</TT> and <TT>hmmscore</TT> is in a
+FASTA-compatible format in which uppercase letters indicate match
+states and lowercase letters indicate insertion states
+and hyphens indicate deletion states (model positions for which the
+given sequence has no corresponding character).  The <TT>prettyalign</TT>
+program can be used to line up the match columns of an a2m-format
+alignment file.
+
+<P>
+Additionally, <TT>align2model</TT> can include periods so that its
+sequence outputs can be visually aligned without the use of <TT>prettyalign</TT>.  If, for example, the longest sequence in a collection
+is 2000 characters long, all sequences will be filled (using periods)
+to that longest sequence's alignment length, which will be more than
+2000 if any deletion states are used.  Thus, allowing the periods to
+be printed can greatly expand the size of the alignment file.  If
+periods are not desired, the paramater <TT>a2mdots</TT> can be set to 0.
+The <TT>prettyalign</TT> program will work whether or not the <TT>a2m</TT>
+format alignment has periods.
+
+<P>
+SAM can also read HSSP files.
+
+<P>
+
+<H2><A NAME="SECTION00093000000000000000"></A><A NAME="traintest"></A>
+<BR>
+7.3 Training sets, test sets, and databases
+</H2>
+
+<P>
+The <code>buildmodel</code> program uses two sets of sequences: the training
+and the test set.  Training is performed exclusively on the training
+set, and at the end of the model creation, all sequences in the test
+set are checked against the model, and the average NLL distance is
+reported for both the training and the test set.  
+
+<P>
+Training and test sets can be specified in up to two files each: <TT>train, train2, test,</TT> and <TT>test2</TT>.  At most <TT>Nseq</TT> sequences
+will be read from any one file, so that at most <TT>4Nseq</TT> sequences
+will be read in if four files are specified.  The <TT>buildmodel</TT>
+program ignores zero-length sequences in the training set file(s)
+after printing a warning.
+
+<P>
+The system can also randomly partition sequences into the training and
+the test set.  If <TT>Ntrain</TT> is set, the system will randomly pick
+<TT>Ntrain</TT> sequences from all files specified (training and
+testing) using the random seed <TT>trainseed</TT>, and reserve the rest
+for the test set.  By default, the seed is set to the process ID
+number, which is printed on the output file so that the partition can
+be reproduced.  Sequence partitioning and model training use different
+random seeds, though both default to the process  ID.
+
+<P>
+Several other programs, such as <TT>hmmscore</TT> and <TT>align2model</TT>,
+take an arbitrary number of sequence database files specified as <TT>db</TT>. Unlike most variables, repeating the <TT>db</TT> declaration adds a
+new file to the list, rather than replacing the previous database
+file.  Zero-length sequences are processed the same way as all other
+sequences. 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html391"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html387"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html381"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html389"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html392"
+  HREF="node10.html">8 Regularizers and models</A>
+<B> Up:</B> <A NAME="tex2html388"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html382"
+  HREF="node8.html">6 Parameter specification</A>
+ &nbsp <B>  <A NAME="tex2html390"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

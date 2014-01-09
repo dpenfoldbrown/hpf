@@ -1,0 +1,24 @@
+dpb, 05/30/2012:
+Completely new, fully functional MCM process (whole thing, from clustering to mammoth
+to MCM) is being written in 'new_mcm.py'.
+Code has been moved out of task chain structure, and instead made more modular (with
+components going into appropriate modules) and procedural.
+
+dpb, 12/16/2010:
+IMPORTANT NOTE: mcm.py is the old wrapper for the perl script with MCM functionality.
+The most current MCM functionality (re-written by PW) is in process.py, which is driven by
+scripts/remcm.py:
+
+https://err.bio.nyu.edu/svn/hpf/hpf/trunk/src/hpf/hddb/mcm/process.py
+https://err.bio.nyu.edu/svn/hpf/hpf/trunk/src/hpf/hddb/mcm/scripts/remcm.py
+
+This code uses task chaining for organization of functionality (different from task pool
+structure).
+
+
+PW, ??:
+You can probably disregard most of the things here.  A lot of these scripts were 
+inherited, one way or another, and should probably be cleaned up.
+
+However, the robetta clustering mod and the mammoth mod are both important.  
+The mammoth mod contains a patch that computes contact order.

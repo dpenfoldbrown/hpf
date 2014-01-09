@@ -1,0 +1,12 @@
+# Example qsub executions to run ginzu functionality on cluster.
+
+# Note that the job's working directory must contain the tasks.pickle and must have access to
+# ddb.pl (so, ddb.pl must either be in the working directory or in the PATH).
+
+# Note that the -d tag and value (working directory path for the job) is very important, as it
+# specifies where the job will look for the tasks.pickle (defaults to the user's home dir).
+
+qsub -t 1-100 -j oe -N NAME -q long -V -S /bin/bash -d /home/dpb3/ginzu -o /home/dpb3/ginzu/logs /home/dpb3/ginzu/hddb/scripts/ginzu.sh
+
+
+

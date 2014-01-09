@@ -1,0 +1,1395 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>8 Regularizers and models</TITLE>
+<META NAME="description" CONTENT="8 Regularizers and models">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html407"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html403"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html397"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html405"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html408"
+  HREF="node11.html">9 The buildmodel estimation</A>
+<B> Up:</B> <A NAME="tex2html404"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html398"
+  HREF="node9.html">7 Sequence formats</A>
+ &nbsp <B>  <A NAME="tex2html406"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html409"
+  HREF="#SECTION000101000000000000000">8.1 Regularizers</A>
+<UL>
+<LI><A NAME="tex2html410"
+  HREF="#SECTION000101100000000000000">8.1.1 Regularizer alternatives</A>
+<LI><A NAME="tex2html411"
+  HREF="#SECTION000101200000000000000">8.1.2 Transition regularizers with
+structural information</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html412"
+  HREF="#SECTION000102000000000000000">8.2 Initial model</A>
+<LI><A NAME="tex2html413"
+  HREF="#SECTION000103000000000000000">8.3 Initial alignment</A>
+<LI><A NAME="tex2html414"
+  HREF="#SECTION000104000000000000000">8.4 Model format</A>
+<UL>
+<LI><A NAME="tex2html415"
+  HREF="#SECTION000104100000000000000">8.4.1 Model length</A>
+<LI><A NAME="tex2html416"
+  HREF="#SECTION000104200000000000000">8.4.2 Special nodes</A>
+<LI><A NAME="tex2html417"
+  HREF="#SECTION000104300000000000000">8.4.3 Node labels</A>
+<LI><A NAME="tex2html418"
+  HREF="#SECTION000104400000000000000">8.4.4 Binary models</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html419"
+  HREF="#SECTION000105000000000000000">8.5 Free-insertion modules</A>
+<LI><A NAME="tex2html420"
+  HREF="#SECTION000106000000000000000">8.6 FIM, insert and match tables</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION000100000000000000000">
+8 Regularizers and models</A>
+</H1>
+
+<P>
+The SAM system handles a type of hidden Markov model that was
+developed specifically for biological sequences.  It consists of a
+chain of `nodes', each of which consists of a `match' state, an
+`insert' state, and a `delete' state (Figure <A HREF="node4.html#fig:model-struct">1</A> on
+page&nbsp;<A HREF="node4.html#fig:model-struct"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/crossref.png"></A>).  The only way the structure can be
+varied is in the length, <EM>i.e.</EM>, how many nodes the model has.  There are
+three transitions out of each state, which can be taken with some
+probability.  One of these transitions leads to the insert state in
+the same node, whereas the others lead to the match and delete states in
+the next node.  Two states are special: the begin state (numbered 0)
+and the end state (numbered <IMG
+ WIDTH="44" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img34.png"
+ ALT="$L+1$"> for a model of length <IMG
+ WIDTH="17" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img35.png"
+ ALT="$L$">).  The
+model is completely specified when all the probabilities are given for
+all transitions and all the letters in the match and insert states.
+
+<P>
+
+<H2><A NAME="SECTION000101000000000000000"></A><A NAME="sec:regularizer"></A>
+<BR>
+8.1 Regularizers
+</H2>
+
+<P>
+The word <EM>regularizer</EM> is often used in (Bayesian) estimation
+for a method to keep estimates from over-fitting the data, and in
+Bayesian statistics it is tightly connected with the so-called <EM>prior</EM> distribution.  We use a Bayesian method of model estimation,
+and we have chosen to let the regularizer play several important roles
+in the program.  The regularizer should reflect your prior
+expectations about how a model will look like for the family you are
+about to model.  For instance, one may not think a model that only
+uses inserts and deletes is a good one, and that expectation can be
+built into the regularizer.
+
+<P>
+The regularizer has three functions:
+<DL>
+<DT><STRONG>Regularizer:</STRONG></DT>
+<DD>During model estimation the regularizer should make sure that the model 
+does not diverge too much from your expectations.  It is done by adding 
+`fake' observations to the real ones.  The model is re-estimated by 
+`counting' how many times each probability parameter is used by the data, 
+and then normalizing these counts.  Before the normalization the `fake' 
+counts in the regularizer are added.
+
+<P>
+</DD>
+<DT><STRONG>Initial model:</STRONG></DT>
+<DD>By normalizing the regularizer, a valid model is obtained.  If no initial 
+model is specified to the program it will use this normalized regularizer 
+as a starting point, but usually some noise is added first (see below).
+
+<P>
+</DD>
+<DT><STRONG>Noise:</STRONG></DT>
+<DD>The normalized regularizer also determines the noise added both initially 
+and during learning (if annealing is used).   See below.
+</DD>
+</DL>
+
+<P>
+Therefore, to run the program, you always have to specify a
+regularizer.  Some good default ones are shipped with the program, so
+you need not worry about it in the beginning.  With some experience
+however, it can be used as a powerfull tool for guiding the learning
+process.
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="2774"></A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+Default amino acid match-state frequencies for protein regularizer.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="CENTER">A</TD>
+<TD ALIGN="LEFT">0.08713</TD>
+<TD ALIGN="CENTER">C</TD>
+<TD ALIGN="LEFT">0.03347</TD>
+<TD ALIGN="CENTER">D</TD>
+<TD ALIGN="LEFT">0.04687</TD>
+<TD ALIGN="CENTER">E</TD>
+<TD ALIGN="LEFT">0.04953</TD>
+<TD ALIGN="CENTER">F</TD>
+<TD ALIGN="LEFT">0.03977</TD>
+</TR>
+<TR><TD ALIGN="CENTER">G</TD>
+<TD ALIGN="LEFT">0.08861</TD>
+<TD ALIGN="CENTER">H</TD>
+<TD ALIGN="LEFT">0.03362</TD>
+<TD ALIGN="CENTER">I</TD>
+<TD ALIGN="LEFT">0.03689</TD>
+<TD ALIGN="CENTER">K</TD>
+<TD ALIGN="LEFT">0.08048</TD>
+<TD ALIGN="CENTER">L</TD>
+<TD ALIGN="LEFT">0.08536</TD>
+</TR>
+<TR><TD ALIGN="CENTER">M</TD>
+<TD ALIGN="LEFT">0.01475</TD>
+<TD ALIGN="CENTER">N</TD>
+<TD ALIGN="LEFT">0.04043</TD>
+<TD ALIGN="CENTER">P</TD>
+<TD ALIGN="LEFT">0.05068</TD>
+<TD ALIGN="CENTER">Q</TD>
+<TD ALIGN="LEFT">0.03826</TD>
+<TD ALIGN="CENTER">R</TD>
+<TD ALIGN="LEFT">0.04090</TD>
+</TR>
+<TR><TD ALIGN="CENTER">S</TD>
+<TD ALIGN="LEFT">0.06958</TD>
+<TD ALIGN="CENTER">T</TD>
+<TD ALIGN="LEFT">0.05854</TD>
+<TD ALIGN="CENTER">V</TD>
+<TD ALIGN="LEFT">0.06472</TD>
+<TD ALIGN="CENTER">W</TD>
+<TD ALIGN="LEFT">0.01049</TD>
+<TD ALIGN="CENTER">Y</TD>
+<TD ALIGN="LEFT">0.02992</TD>
+</TR>
+</TABLE>
+</DIV>
+<A NAME="fig:reg"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="2795"></A>
+<TABLE>
+<CAPTION><STRONG>Table 2:</STRONG>
+Default frequencies for secondary structure regularizers.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER" COLSPAN=1>DSSP</TD>
+<TD ALIGN="CENTER" COLSPAN=1>EHL</TD>
+<TD ALIGN="CENTER" COLSPAN=1>EHL2</TD>
+<TD ALIGN="CENTER" COLSPAN=1>EHTL</TD>
+</TR>
+<TR><TD ALIGN="CENTER">E</TD>
+<TD ALIGN="LEFT">0.104</TD>
+<TD ALIGN="LEFT">0.104</TD>
+<TD ALIGN="LEFT">0.110</TD>
+<TD ALIGN="LEFT">0.104</TD>
+</TR>
+<TR><TD ALIGN="CENTER">H</TD>
+<TD ALIGN="LEFT">0.159</TD>
+<TD ALIGN="LEFT">0.178</TD>
+<TD ALIGN="LEFT">0.1781</TD>
+<TD ALIGN="LEFT">0.178</TD>
+</TR>
+<TR><TD ALIGN="CENTER">T</TD>
+<TD ALIGN="LEFT">0.058</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">0.058</TD>
+</TR>
+<TR><TD ALIGN="CENTER">S</TD>
+<TD ALIGN="LEFT">0.047</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">G</TD>
+<TD ALIGN="LEFT">0.019</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">B</TD>
+<TD ALIGN="LEFT">0.006</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">I</TD>
+<TD ALIGN="LEFT">0.0001</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="CENTER">C</TD>
+<TD ALIGN="LEFT">0.103</TD>
+<TD ALIGN="LEFT">0.2141</TD>
+<TD ALIGN="LEFT">0.208</TD>
+<TD ALIGN="LEFT">0.1561</TD>
+</TR>
+</TABLE>
+</DIV>
+<A NAME="fig:regss"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+The default RNA and DNA regularizer assumes a uniform distribution
+over the four letters, while the default protein and secondary
+structure regularizers use the frequencies specified in
+Tables&nbsp;<A HREF="node10.html#fig:reg">1</A> and&nbsp;<A HREF="node10.html#fig:regss">2</A> (the other reduced-character
+secondary structure alphabets similarly sum the aliased characters).
+Often it is a good idea to 
+use the actual letter frequencies in the training data instead of the
+default distribution.  This can be achived by setting <TT>Insert_method_train</TT> to 1.
+
+<P>
+Without editing all the numbers in the regularizer, one can change the
+strength of it by changing some parameters called `confidences'.  All
+regularizer numbers corresponding to transitions leaving the delete
+states are multiplied by the parameter <TT>del_jump_conf</TT> before
+being used.  Similarly for the parameters <TT>ins_jump_conf</TT> and
+<TT>match_jump_conf</TT>.  The numbers corresponding to the letter
+probabilities in match states and delete states are multiplied by
+<TT>matchconf</TT> and <TT>insconf</TT> respectively.
+
+<P>
+
+<H3><A NAME="SECTION000101100000000000000"></A><A NAME="sec:reg-alternatives"></A><A NAME="sec:priors"></A>
+<BR>
+8.1.1 Regularizer alternatives
+</H3>
+
+<P>
+For training protein sequences, we always recommend the use of a
+Dirichlet mixture prior, which is enabled by setting <TT>prior_library</TT> to the name of a prior library.
+The prior library (discussed in the Sj&#246;lander et.&nbsp;al.&nbsp;paper
+mentioned in Section&nbsp;<A HREF="node2.html#sec:intro">1</A>) encapsulates information about
+what distributions are expected to be found in match states.
+That is, columns in a multiple alignment are not all drawn from the
+same background distribution: some columns are highly conserved,
+others are primarily hydrophobic, and so on.
+The SAM distribution includes both the mixture from the CABIOS paper
+as well as several other prior libraries created by Kevin Karplus
+(karplus@cse.ucsc.edu), and others can be downloaded from the web site
+<DIV ALIGN="CENTER">
+<A NAME="tex2html49"
+  HREF="http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html"><TT>http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html</TT></A>.
+</DIV>
+<P>
+<DIV ALIGN="CENTER">
+</DIV>
+
+<P>
+Here are some of the included Dirichlet mixtures:
+<DL>
+<DT><STRONG>recode4.20comp</STRONG></DT>
+<DD><P>
+This is currently Karplus's favorite mixture for HMMs intended for
+finding distantly related proteins, superseding recode1.20comp,
+recode2.20comp, and recode3.20comp.  
+
+<P>
+The recode4.20comp mixture was re-optimized from
+     fournier-fssp.20comp on the fssp-3-5-98-select-0.8-3.cols data
+     set, to minimize the errors in estimating distributions from
+     samples of 1, 2, or 3 amino acids. It differs from earlier
+     mixtures in the <I>recode</I> series in predicting a broader
+     distribution for any given set of counts. It does a better job of
+     matching distributions structural alignments than earlier
+     alignments in the series.
+
+<P>
+The recode3.20comp mixture may still be more appropriate for
+     modeling close homologs, as it does slightly better on the
+     SAM-T98 alignments. (Note: this may be an artifact, as the
+     SAM-T98 alignments were built using either the recode3.20comp
+     mixture or the similar recode2.20comp mixture.)
+
+<P>
+</DD>
+<DT><STRONG>recode3.20comp</STRONG></DT>
+<DD><P>
+Optimized for the SAM-T98 alignments built for all the leaves of
+     the FSSP tree (version from 3-5-98). The sequences were weighted
+     to obtain an average information content of 1.0 bits/column
+     (relative to using background frequencies).  The optimization was
+     to minimize the encoding cost of the observed distributions given
+     small samples from them.
+
+<P>
+This regularizer was trained on a dataset that included columns
+     with few counts, so it probably overestimates the probability of
+     residues being conserved.
+
+<P>
+</DD>
+<DT><STRONG>uprior9.plib</STRONG></DT>
+<DD>The 9-component library discussed in the
+aforementioned paper.  Optimized for unweighted blocks data.
+
+<P>
+</DD>
+<DT><STRONG>mall-opt.9comp</STRONG></DT>
+<DD>Library re-optimized for unweighted data from
+                        an HSSP subset.
+
+<P>
+</DD>
+<DT><STRONG>opt-weight1.9comp</STRONG></DT>
+<DD>Library reoptimized for weighted version of same
+                        HSSP subset.
+
+<P>
+</DD>
+<DT><STRONG>recode1.20comp</STRONG></DT>
+<DD>A 20-component Dirichlet mixture trained on
+        (realigned) HSSP alignments that have a diverse set of sequences.
+        Intended for use in recoding inputs to neural net, but also
+        useful as a standard regularizer.
+
+<P>
+</DD>
+<DT><STRONG>null.1comp</STRONG></DT>
+<DD>A one-component regularizer with tiny alpha,
+                        to get effectively no regularization.
+
+<P>
+</DD>
+</DL>
+
+<P>
+The <TT>protein_prior</TT> command, in conjunction with another file
+that specifies the prior library, can be used to ensure that a prior
+library is used whenever protein analysis is performed.
+
+<P>
+The distributions of nucleic acids do not lend themselves to effective
+use of Dirichlet mixture priors.  We have not yet created Dirichlet
+mixtures for the secondary structure alphabets.
+
+<P>
+When a prior library is used, it overrides the match-state character
+emission values of the regularizer.  Similarly, the insert-state
+character emission values of the regularizer are by default overridden
+to be the geometric average of the match state probabilities.
+Thus, as a result of the historical development of this code, for
+protein sequence analysis, only the transistion probabilities of the
+regularizer are actually used in training.  Again, the distribution
+contains several different transistion regularizers optimized for
+different purposes, all created by Kevin Karplus.  With Version 2.0,
+the default protein transition 
+regularizer has been changed to trained.regularizer, good general
+regularizer.  The 
+old values are in the <TT>sam1.3.regularizer</TT> file of the <TT>lib</TT>
+directory.
+<DL>
+<DT><STRONG>trained.regularizer</STRONG></DT>
+<DD>Regularizer optimized for unweighted
+                transition counts on some set of re-estimated HSSP alignments
+</DD>
+<DT><STRONG>cheap_gap.regularizer</STRONG></DT>
+<DD>Makes gap opening and closing very cheap
+                allowing exploration of many different alignments, but
+                giving too high a cost to long matches
+
+<P>
+</DD>
+<DT><STRONG>long_match.regularizer</STRONG></DT>
+<DD>Assigns somewhat reasonable gap costs
+                for unweighted data, useful for sweeping away "chatter"
+                into big matches and big gaps, by making gap opening
+                expensive but gap extension fairly cheap.
+</DD>
+</DL>
+
+<P>
+We intend to futher evaluate nucleotide regularizers in
+the future.
+
+<P>
+Prior libraries and regularizers can be specified by their path name.
+If the <code>$PRIOR_LIBRARY</code> environment variable is set to a path  
+name including a trailing `/' (or if it was not set but the proper
+directory was specified at compile time), SAM will check that
+directory for prior libraries and regularizers.
+
+<P>
+Mixtures and regularizers make the biggest difference for small training
+sets.  The file <TT>globins50.seq</TT> contains  50 globins.  To test
+this, generate and score two models from four sequences:
+<PRE>
+
+buildmodel train4 -train globins50.seq -randseed 0 -trainseed 0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-ntrain 4 -priorlibrary 0
+buildmodel train4reg -train globins50.seq -priorlibrary recode1.20comp 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-regularizerfile weak-gap.regularizer -randseed 0 -trainseed 0 -ntrain 4      
+hmmscore train4  -i train4.mod  -db globins50.seq -sw 2
+hmmscore train4reg -i train4reg.mod -db globins50.seq -sw 2
+</PRE>
+
+<P>
+Note here that the four training sequences are also in the test set.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="regfig"></A><A NAME="3098"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure:</STRONG>
+Regularizer performance (also see
+Figure&nbsp;<A HREF="node5.html#t99plot">7</A> on page&nbsp;<A HREF="node5.html#t99plot"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/crossref.png"></A>).</CAPTION>
+<TR><TD><IMG
+ WIDTH="599" HEIGHT="214" BORDER="0"
+ SRC="img36.png"
+ ALT="\begin{figure}\begin{tabular}{cc}
+\psfig{figure=train4.ps,width=0.45\textwidth}&amp;...
+...re&amp;
+Ntrain = 10, Dirichlet and weak-gap regularizer\\
+\end{tabular}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+The results of these two runs, as well as two similar ones with 10
+training sequences, are shown in in Figure&nbsp;<A HREF="node10.html#regfig">14</A>, in the form
+of score histograms. See Section&nbsp;<A HREF="node12.html#sec:makehist">10.10.1</A>. Note how in both cases, the
+use of the optimized regularizer improves scores of the globin
+sequences, and also that in both cases, the jump from 4 sequences to
+10 sequences greatly improves model scores.
+
+<P>
+
+<H3><A NAME="SECTION000101200000000000000"></A><A NAME="sec:structreg"></A>
+<BR>
+8.1.2 Transition regularizers with
+structural information
+</H3>
+
+<P>
+Just as the Dirichlet mixtures were used to incorporate prior
+information about amino acid distributions in the match states of an
+HMM, one can now use analogous information concerning the transition
+probabilities in various structural environments.  To derive this
+information, we built HMMs from about 1050 HSSP database files and
+aligned the sequences that made up the file back to the HMM.  Using
+sequence weighting and noting the structural environment, we generated
+weighted counts for transitions in every structural environment.
+Structural environment was defined in terms of secondary structure and
+accessibility.  From these weighted counts we derive pseudocounts and
+incorporate them when building an HMM.  The net effect of this is to
+impose general structural information, such as the low probability of
+an insert into the middle of a helix, into the HMM estimation process.
+
+<P>
+There are three relevant parameters.  The first is the specification
+of the structural transition prior library, which one specifies with
+<TT>trans_priors</TT>.  The library incorporated into the current SAM
+suite is TransFromRev15.plib.  In order to use this library, one must
+specify a template file with <TT>template</TT>.  This is a three-column
+file: animo acid sequence, secondary structure, and accessibility (as
+defined by HSSP).  During model estimation, the sequence in the
+template file is aligned to the HMM.  The alignment of the template
+sequence to the HMM dictates the assignment of the values in the
+second and third columns of the template file to each model node.
+These values in the last two columns specify a structural environment,
+whose pseudocounts are used to re-estimate the node's transition
+parameters.  One may change the influence of pseudocounts with a
+real-valued multiplier using the parameter <TT>transweight</TT>.
+
+<P>
+The program <TT>make_template</TT> is included with the SAM distribution
+for generating template files from HSSP files.
+
+<P>
+The following is a command line example involving the use of the transition
+prior library TransFromRev15.plib, the template file for the PDB structure
+2prd, and the weight multiplier.
+
+<P>
+<PRE>
+
+buildmodel 2prd -train 2prd.training.seqs -priorlibary recode1.20comp          -transpriors TransFromRev15.plib -template 2prd.tplate          -transweight 2.5
+</PRE>
+
+<P>
+The 2prd template file 2prd.tplate was generated with the command line
+
+<P>
+<PRE>
+
+make_template 2prd -alignfile 2prd.hssp
+</PRE>
+
+<P>
+and the first few lines are
+
+<P>
+<PRE>
+
+TEMPLATE
+%
+%
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;sequence&nbsp;from&nbsp;2prd
+%
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;generated&nbsp;Mon&nbsp;Aug&nbsp;11&nbsp;19:20:51&nbsp;1997
+%
+%
+SEQLENGTH&nbsp;&nbsp;&nbsp;174
+ID&nbsp;&nbsp;2prd
+%
+%
+%AA&nbsp;&nbsp;&nbsp;&nbsp;STRUCTURE&nbsp;&nbsp;&nbsp;&nbsp;ACCESSIBILITY
+%-&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;-------
+
+<P>
+&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;128
+&nbsp;N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60
+&nbsp;L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30
+&nbsp;K&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60
+&nbsp;S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;61
+&nbsp;L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;44
+&nbsp;P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88
+&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;23
+&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;19
+&nbsp;D&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;172
+&nbsp;K&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;115
+&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27
+&nbsp;P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11
+&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;94
+&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27
+&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+&nbsp;H&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;53
+&nbsp;M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12
+&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+&nbsp;P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18
+</PRE>
+
+<P>
+This method of incorporating structural information into the transition
+probabilities of an HMM leaves open the option of experimentation with protein
+HMMs for which structure may only be predicted or assumed.
+
+<P>
+
+<H2><A NAME="SECTION000102000000000000000">
+8.2 Initial model</A>
+</H2>
+
+<P>
+Sometimes one would like to change a model that was already found
+earlier, and then restart buildmodel from that model.  Thus, the
+initial model should not be made from the regularizer as described
+above.  That is done by specifying the model explicitly in the initialization
+file, by using the heading `MODEL' instead of `REGULARIZER' that
+starts the regularizer specifications.  See section
+<A HREF="node10.html#sec:model-format">8.4</A>, below.  Most other programs in the SAM
+package also take already-formed models as input.
+
+<P>
+If desired, the first model in some other file (which might have a
+keyword other than `MODEL') can be read using the <TT>model_file</TT>
+directive. See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+
+<H2><A NAME="SECTION000103000000000000000"></A><A NAME="sec:alignfile"></A>
+<BR>
+8.3 Initial alignment
+</H2>
+
+<P>
+One of the best ways to train a hidden Markov model is to use an
+existing rough alignment to get the process started.  There are two
+equivalent ways to do this.  First, a model could be generated using
+the <TT>modelfromalign</TT> program (Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>).
+Second, an alignment file can be specified on the <TT>buildmodel</TT> command line using the <TT>alignfile</TT> directive.  In
+this case, any initial models are ignored in favor of this starting
+alignment.
+
+<P>
+The format of the alignment file is determined automatically as follows.
+First, if the key letters `HSSP' begin the files first line, it is
+read in as an HSSP file.  Second, the <TT>align2model</TT>  (a2m) format is checked.
+In this case, lowercase letters are treated as insertions, periods are
+ignored, and uppercase letters and hyphens refer to match columns.  If
+all sequences do not have the same number of match columns under these
+assumptions, the sequences are checked for a general alignment format,
+in which all upper and lower case letters count as match columns, and
+all periods and hyphens count as deletions.  If this fails as well,
+SAM will continue on using this last format, but will print error
+messages about the sequences with non-matching lengths.
+
+<P>
+The <TT>alignment_weights</TT> parameter can be used to specify a file
+of weights, or <TT>aweight_method</TT> can be used to internally
+calculate sequence weights based on the initial alignment.  If both
+are set, the external file is used. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+
+<P>
+As a subcase of an initial alignment, <TT>buildmodel</TT> can be
+instructed to create models from randomly chosen single sequences in
+the training set.  This is done by setting the <TT>sequence_models</TT>
+to a value greater than 0.  For each of the initial models required by
+<TT>buildmodel</TT>, a random sequence will be chosen and a model created
+based on that sequence regularized with a weight equal to the value of
+<TT>sequence_models</TT>.  As long as fewer models are created than
+sequences in the training set, a different sequence will be chosen for
+each model.  Noise will be reduced according to <TT>retrain_noise_scale</TT>. 
+
+<P>
+
+<H2><A NAME="SECTION000104000000000000000"></A><A NAME="sec:model-format"></A>
+<BR>
+8.4 Model format
+</H2>
+
+<P>
+Regularizers and models are specified by one set of numbers for each
+node in 
+the structure. One can also specify a generic node for nodes not
+specified 
+explicitly (internal nodes or the special Start and End states).
+The simplest model (for DNA) looks like this: 
+<PRE>
+
+MODEL
+alphabet DNA
+Generic
+dd md id
+dm mm im
+di mi ii
+mA mG mC mT
+iA iG iC iT
+ENDMODEL
+</PRE>
+where <TT>dd</TT>, <TT>md</TT>, and <TT>id</TT> are numbers specifying
+probabilities of transitions 
+INTO the delete state from delete, match and insert respectively.
+Similarly, <TT>dm</TT>, <TT>mm</TT>, and <TT>im</TT> are probabilities for the transitions INTO
+a match state and <TT>di</TT>, <TT>mi</TT>, and <TT>ii</TT> into insert.
+(The states come in the order: delete (<TT>d</TT>), match (<TT>m</TT>), and 
+insert (<TT>i</TT>)).  In Figure&nbsp;<A HREF="node4.html#fig:model-struct">1</A> on
+page&nbsp;<A HREF="node4.html#fig:model-struct"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/crossref.png"></A>, <IMG
+ WIDTH="71" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img37.png"
+ ALT="$T(m_3\vert d_2)$">, for
+example, corresponds to the <TT>dm</TT> entry of node 3.
+The next four numbers (<TT>mA</TT>, <TT>mG</TT>, <TT>mC</TT>, <TT>mT</TT>) are the
+letter probabilities in the 
+match state, <EM>i.e.</EM>, probabilities for producing the letters A, G, C, and
+T. 
+Similarly the last four are the letter probabilities for the insert state.
+Here DNA was assumed; there would be
+20 probabilities for proteins in each of the last two groups, in the
+alphabetical order of the single-letter amino acid abbreviations given
+in Section&nbsp;<A HREF="node9.html#sec:alph">7.1</A>.  Wildcards do not have corresponding
+entries in either the match or insert tables: their probabilities are
+calculated by SAM.
+
+<P>
+A model of length 4, in which all nodes are different,
+looks like this:
+<PRE>
+
+MODEL
+alphabet DNA
+0 0  0  0   0  0  0   0  mi ii    0  0  0  0     iA iG iC iT
+1 0  md id  0  mm im  di mi ii    mA mG mC mT    iA iG iC iT
+2 dd md id  dm mm im  di mi ii    mA mG mC mT    iA iG iC iT
+3 dd md id  dm mm im  di mi ii    mA mG mC mT    iA iG iC iT
+4 dd md id  dm mm im  di mi ii    mA mG mC mT    iA iG iC iT
+5 0  0  0   dm mm im  0  0  0     mA mG mC mT    0  0  0  0
+ENDMODEL
+</PRE>
+ The first number in each line is the model position (the node number).
+Position 0 is the begin state, and position length+1 (5 in the example) is
+the end state.
+
+<P>
+In the two first positions (0 and 1) and the last (5) some probabilities
+are zero.  These will always be set to zero by the program, whether or
+not a number different from zero is specified.  Referring to
+Figure&nbsp;<A HREF="node4.html#fig:model-struct">1</A>, the begin and end states look like
+match states, but really only match beginning-of-sequence and
+end-of-sequence, rather than real characters.  In the case of
+position 0, initial insertions are allowed (the <TT>mi</TT> and <TT>ii</TT>
+transitions), as are transitions to the next position's match or delete
+states.  Since position 0 has no delete state, the <TT>dd</TT>, <TT>dm</TT>
+transitions for position 1 are zero (the <TT>di</TT> transition is
+between <IMG
+ WIDTH="22" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img38.png"
+ ALT="$d_1$"> and <IMG
+ WIDTH="19" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img39.png"
+ ALT="$i_1$"> in the figure).
+
+<P>
+At position 5, all sequences are required to match the implicit
+end-of-sequence.  Because the end position has no insert or delete
+states, all transitions into node 5's insert or delete state are zero.
+
+<P>
+The use of regularizers is discussed in
+section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.  A regularizer specification looks
+exactly the same as a model specification, except that it starts with
+`REGULARIZER' instead of `MODEL'.  Frequency count output (<TT>print_frequencies</TT>) is similarly formatted, but with the starting word
+`FREQUENCIES'.  A trained model can be turned into a user-specified
+NULL model (See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.) by replacing `MODEL' with
+`NULLMODEL'.  Any text on the same line as the initial word is ignored
+-- <TT>buildmodel</TT> places a brief comment after the word `MODEL'.
+
+<P>
+When specifying regularizers and models, it is sometimes 
+convenient to specify the first and last node differently than the
+remainder. Since the length of the model can vary, the final node
+cannot be specified as being, for example, node 100.  Instead,
+one can use <EM>negative</EM> numbers to specify nodes
+relative to the end, rather than the beginning.  For example,
+<PRE>
+
+REGULARIZER
+Generic .........
+Begin   ......
+ 1      ......
+ 3      .......
+-2      ......
+-1      ......
+End     .....
+ENDMODEL
+</PRE>
+`Begin' (or anything beginning with `B') is synonymous with node
+number 0,  
+and `End' with the end node.  If this regularizer is used with a model of
+length 100, node number 0, 1, 3, 99(-2), 100(-1), and 101 (End) will be 
+specified individually, and for all the rest of the nodes the Generic
+specification would be used.
+
+<P>
+The <TT>buildmodel</TT> program adds two informational nodes to models it
+produces.  The first, called `LETTCOUNT', has the distribution of
+characters in the set of training sequences.  The letter counting
+procedure adds a small offset to avoid zero counts.  Wildcard counts
+are proportioned among the appropriate letters according to the
+distribution of non-wildcard letters.  The second, 'FREQAVE', has the
+average frequency of each letter in the match states.  If the match
+states are only modeling a portion of the training sequences, these
+averages may be different from the `LETTCOUNT' values.  These nodes can
+be used as null models during the scoring procedure, and during future
+buildmodel runs. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+It is often easiest to specify regularizers by changing an existing
+regularizer.  For example, the default protein regularizer can be
+printed out to the model file by setting <TT>dump_parameters</TT> to 1.
+<PRE>
+
+buildmodel params -a protein -train trna10.seq -dump_parameters 1 -reestimates 0
+</PRE>
+This command writes all parameter values to the file <TT>params.mod</TT>
+using the protein alphabet (several alphabet warning messages will be
+printed because the sequences are not protein sequences).  The last
+argument is required to ensure that <TT>buildmodel</TT> constructs a
+regularizer. 
+
+<P>
+The <TT>params.mod</TT> file contains among other lines, the following
+regularizer specification (several digits have been truncated):
+<PRE>
+
+REGULARIZER:   Initial setting
+alphabet protein
+GENERIC 1.89 0.25 0.38 1.82 15.52 3.76 0.23 0.27 4.01
+ 0.16 0.04 0.11 0.12 0.07 0.12 0.07 0.11 0.13 0.14
+ 0.06 0.11 0.07 0.10 0.11 0.17 0.15 0.14 0.03 0.07
+ 0.16 0.04 0.11 0.12 0.07 0.12 0.07 0.11 0.13 0.14
+ 0.06 0.11 0.07 0.10 0.11 0.17 0.15 0.14 0.03 0.07
+ENDMODEL
+</PRE>
+The numbers are in order, the transition probabilities, the 20 match
+state values, and the 20 insert state probabilities.  The match an
+insert state values correspond to those in Table&nbsp;<A HREF="node10.html#fig:reg">1</A>.
+Versions of SAM before Version 1.1 had a uniform distribution in the
+insert states, rather than a background distribution.
+To change to a uniform 
+distribution for insert states, but maintaining the
+default transition regularization, the following could be
+placed in a parameter file (or the <TT>insert_method_train</TT>
+variable could be used, as discussed in Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>):
+<PRE>
+
+REGULARIZER:  Background in match, 1/20 in insert 
+alphabet protein
+GENERIC
+ 1.886984 0.254944 0.376488
+ 1.819972 15.521340 3.764209
+ 0.225758 0.265967 4.006562
+ 0.162339 0.037220 0.107508 0.123557 0.074544 
+ 0.122092 0.072662 0.112151 0.128548 0.138534 
+ 0.063912 0.113368 0.074824 0.103722 0.110612 
+ 0.170739 0.154307 0.143584 0.028017 0.069302 
+ 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05
+ 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05
+ENDMODEL
+</PRE>
+Alphabet (or <TT>alphabet_def</TT>) specification within a model or
+regularizer is optional, though whenever <TT>buildmodel</TT> prints one
+of these structures, the name of the alphabet will be included.
+
+<P>
+
+<H3><A NAME="SECTION000104100000000000000"></A><A NAME="sec:mod_length"></A>
+<BR>
+8.4.1 Model length
+</H3>
+
+<P>
+The length of the model(s) can be determined by the program in several
+ways (listed in order of importance):
+
+<P>
+
+<UL>
+<LI>If there is an initial alignment (<TT>alignfile</TT>), the length 
+of the alignment will be used.
+</LI>
+<LI>If there is an initial model of fixed length (no GENERIC) or <TT>modellength</TT> is 0, the initial 
+model's length will be used.
+</LI>
+<LI>If there is an initial regularizer  of fixed length (no
+GENERIC), the regularizer's length will be used.
+</LI>
+<LI>If the value of <TT>modellength</TT> is greater
+than 0, all models will be of that length.
+</LI>
+<LI>If instead <TT>maxmodlen</TT> is set to greater than 0, model
+lengths will be chosen randomly between <TT>maxmodlen</TT> and <TT>minmodlen</TT>.
+</LI>
+<LI>If <TT>maxmodlength</TT> is left at its default 0 and <TT>modellength</TT> is set to 0, and no initial model is specified, all model
+lengths will be set to the average length of the training sequences.
+</LI>
+<LI>If <TT>maxmodlength</TT> is left at its default 0 and <TT>modellength</TT> is left at its default value of <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img40.png"
+ ALT="$-1$">, then model
+lengths will be randomly chosen between 90% and 110% of either the
+initial model length (if present) or the average training sequence
+length (if no initial model is present).
+</LI>
+</UL>
+
+<P>
+When model lengths are randomly selected, it is done with the same
+random number generator that creates model noise (distinct from the
+random number generator used to divide sequences into the training and
+the test set).
+
+<P>
+The surgery heuristic may lengthen or
+shorten a model.  See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+
+<H3><A NAME="SECTION000104200000000000000"></A><A NAME="sec:spec-nodes"></A>
+<BR>
+8.4.2 Special nodes
+</H3>
+
+<P>
+There are several special node types that can be used to hand-tune a
+model.  These are indicated with type declarations within the model
+description, such as
+<PRE>
+
+TYPE 29 NO_SURGERY
+TYPE 12 KEEP
+TYPE 1  FIM
+TYPE -1 F
+</PRE>
+Here, the two parameters are the node number (a negative node number
+indexes from the end of the model, as above) and a type.  Type
+declarations may appear anywhere within the model specification, and
+in any order.  If more than one specification for a node appears, 
+the last one is used.  Only the first character of the type matters,
+and it must be one of `N', `K', `T', `A', or `F'.
+
+<P>
+To tie a type declaration to a specific node (rather than a generic
+node), its number must match that of the node declaration.  That is,
+if a model consists of node declarations for nodes <IMG
+ WIDTH="46" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img41.png"
+ ALT="$1\ldots5$">, a `<TT>TYPE 6 F</TT>' statement will either generate an error if there is no
+generic node declaration, or create a FIM node number 6 using the
+generic node specification.
+
+<P>
+Model output from <TT>buildmodel</TT> is fully specified: the model will
+include begin and end nodes and a sequence of positively-numbered
+nodes.  If you wish to change change node types of a node, you must
+specify the exact same positive node number as that node.  Specifying,
+for example <TT>TYPE -1 FIM</TT>, will result in an error because there
+is no generic node, and node -1 has not been specified. To achieve
+this effect, you will need to add either a generic or a new node
+description (for node -1) in addition to the type statement.
+Alternatively (and preferably), you can use the <TT>addfims</TT> program
+or in some cases the <TT>auto_fim</TT> variable 
+to add a FIM at the start and end of the model.
+
+<P>
+Type `N' nodes are no-surgery nodes.  During the surgery heuristic,
+these nodes will neither be deleted (if they are used by too few
+sequences) nor expanded (if their insert states are used by too many
+sequences).  The parameters of the node will be trained as normal.
+No-surgery nodes are usually not used explicitly: they are a building
+block upon which keep and FIM nodes are based.
+
+<P>
+Type `K' nodes are keep nodes.  The match and insert probabilities of
+these states will not be trained, however their transition
+probabilities will.  Keep nodes are also immune to surgery.
+
+<P>
+Type `T' nodes are transition keep notes.  The <EM>outgoing</EM>
+transitions associated with that node are not trained but the match
+and insert tables are.  Note that the outgoing transitions for a node
+include the incoming transitions to that node's insert state as well
+as the incoming transitions to the next node's delete and match
+states.  Transition keep nodes are immune to surgery.
+
+<P>
+Type 'A' nodes are all keep nodes.  This has the attributes of both
+`K' and `T', though of course one could not specify both `K' and `T'
+because nodes can only have one type.  The outgoing transitions and
+the character distributions are not trained.  All keep nodes are
+immune to surgery.  In general, if you do not wish to train a node
+(for example, it is a conserved region from an existing alignment that
+is known to be correct), the nodes of that region should be of type
+`A'.  The `K' and `T' nodes are for more specialized use, such as
+learning transition probabilities for an existing profile.
+
+<P>
+Keep nodes can be particularly useful when training from an existing
+model or alignment (using the <TT>modelfromalign</TT> program,
+Section&nbsp;<A HREF="node12.html#sec:modfa">10.6</A>). If a region is identified as being
+particularly important to preserve during training, its nodes can be
+identified as keep nodes (determining which node numbers correspond
+to the region can be done using <TT>drawmodel</TT> or <TT>align2model</TT>).
+For example, if node numbers 10-12 are identified as being `correct'
+(and thus should not be trained), the lines
+<PRE>
+
+TYPE 10 K
+TYPE 11 K
+TYPE 12 K
+</PRE>
+should be added between the MODEL and matching ENDMODEL statements.
+After training, the kept nodes may no longer be numbered 10-12
+because of model surgery, however the nodes will still be part of the
+model, and will be identified as kept nodes in the model output.
+The program <TT>modifymodel</TT> can be used to change node types.
+
+<P>
+Type `F' nodes are free-insertion modules (FIMs).  See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+
+<P>
+If the program is being run without an initial model, node
+types are taken from the regularizer.  If there is an initial model,
+types in the regularizer are ignored preference to any types present
+in the model.
+
+<P>
+
+<H3><A NAME="SECTION000104300000000000000"></A><A NAME="sec:node_labels"></A>
+<BR>
+8.4.3 Node labels
+</H3>
+
+<P>
+Node labels used by constraints are specified using <TT>NODELABELS</TT>
+directives.  The form of this directive is
+
+<P>
+<PRE>
+
+NODELABELS <EM>firstnode</EM>-<EM>lastnode</EM>: <EM>firstlabel</EM>
+</PRE>
+
+<P>
+Where <TT><EM>firstnode</EM></TT> and <TT><EM>lastnode</EM></TT> specify a 
+contiguous range of nodes to label and <TT><EM>firstlabel</EM></TT>
+is the first label to use.  For example,
+<PRE>
+
+NODELABELS 10-22: 79
+</PRE>
+See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>.
+
+<P>
+
+<H3><A NAME="SECTION000104400000000000000"></A><A NAME="sec:binmods"></A>
+<BR>
+8.4.4 Binary models
+</H3>
+
+<P>
+Files containing models can be written in either text (human readable)
+or binary format.  You can recognize a binary model by the keyword
+BINARY which appears on the line directly after the model declaration.
+The advantages of using binary formatted models are decreased file
+size/disk space usage and faster model reading and writing.  The
+disadvantage is that you can't read or modify your model files.
+
+<P>
+By selecting binary format, you can reduce the size of an 81-node
+model file from 16,240 bytes to 8726 bytes.  A file containing 249
+nodes shrinks from 116,218 bytes in text format to 51,647 bytes.
+We achieve this striking savings by taking advantage of the fact
+that nodes of a given type frequently have the same letter
+probabilities for the insert state.
+
+<P>
+Before a binary model is written to file, the program scans all the
+nodes of each type.  If it finds the nodes all have the same letter
+probabilities for insert state, the data is stored in a table.
+The probabilities are considered `identical' if their difference 
+is less than .000002, therefore they are rounded to this magnitude
+in the binary model.
+
+<P>
+If you run buildmodel and use binary output you are likely to shave
+a few seconds from the program's run time.
+
+<P>
+When generating model files, use the command-line option <TT>-binary_output 1</TT> for binary format.
+The default for this option is currently set to 0 or off.
+
+<P>
+The program <TT>hmmconvert</TT> is available 
+to switch models from one format to another.  It will read your model, 
+determine its format and then write the model to a new file in the opposite
+format. See Section&nbsp;<A HREF="node12.html#sec:hmmcon">10.9.2</A>.
+
+<P>
+
+<H2><A NAME="SECTION000105000000000000000"></A><A NAME="sec:fims"></A>
+<BR>
+8.5 Free-insertion modules
+</H2>
+
+<P>
+It is often desirable to be able to model motifs that occur in long
+sequences.  This can be done with a free-insertion module.  The idea
+is to have a model of the motif flanked by insert states with
+particular character distributions.  The cost of aligning a sequence
+to such a model does not strongly depend on the position of the motif
+in the sequence, and thus it will pick up the piece of the sequence
+that fits the motif model the best.
+
+<P>
+These insert states are added to the model by the so-called
+free-insertion modules (FIMs), in which only the delete state and the
+insert states are used.  All the transitions from the previous node go
+into the delete state, which is ensured by setting the other
+probabilities to zero.  From the delete state there is a transition to
+the insert state with the probability set to one.  In the insert
+state, character probabilities are set according to <TT>FIM_method_train</TT> (for <TT>buildmodel</TT>) or <TT>FIM_method_score</TT> (for <TT>hmmscore</TT>).  Use of these parameters
+allows you to embody information particular to the problem domain and
+can significantly affect performance. Discussion on the their use
+appears in Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.  From the delete and insert
+states there are transitions to the next node which also have unity
+probability (delete to match, insert to match, delete to delete, and
+insert to delete).  Note that the probabilities do not sum up to one
+properly in such a module.  Since all sequences must pass through a
+FIM's delete node (excepting the case of when the Begin node is a
+FIM), a delete (or dash) will be present in any alignment to the
+model.  (This delete is automatically removed whenever
+<TT>auto_fim</TT> is set, whether or not the FIMs were already there.)
+
+<P>
+The FIM is also used as the null model during
+scoring. (See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.) 
+
+<P>
+These special nodes can be used to learn, align, or discriminate
+motifs that occur once per sequence.  Typically, FIMs are used at the
+beginning and the end of a model to allow an arbitrary number of
+insertions at either end.  For example, if a model for a motif has
+been learned from truncated sequences, adding FIMs to the resulting
+model will enable detection of that motif within longer sequences.
+Before trimming sequences by hand, one should try learning with FIMs,
+as in
+
+<P>
+<PRE>
+
+REGULARIZER
+GENERIC .....
+TYPE 0 FIM
+TYPE -1 FIM
+ENDMODEL
+</PRE>
+The begin node (number 0) can be used as a FIM as shown above.  However,
+the end node has no insert state, so the FIM is put just before
+the end, which is specified as node <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img40.png"
+ ALT="$-1$">. (See
+Section&nbsp;<A HREF="node12.html#sec:fimtrain">10.3.1</A> for some important comments on adding FIMs
+to models without the <TT>addfims</TT> program, as in the regularizer
+example above.)
+
+<P>
+Given a sequence, an HMM will only identify one occurrence of the
+domain or motif on which it was trained even if there are multiple
+copies.  Multiple occurrences can be found with <TT>multdomain</TT>.
+
+<P>
+To train a model to find several (different) motifs, one can add
+FIMs at different positions in the model.  For instance to model
+sequences with two motifs of lengths 5 and 10 one should
+specify the model as
+<PRE>
+
+REGULARIZER
+GENERIC .....
+TYPE 0 FIM
+TYPE 6 FIM
+TYPE -1 FIM
+ENDMODEL
+</PRE>
+and set the model length equal to 17 (5+10+2FIMs).
+
+<P>
+If domains are clipped from an alignment, converted to a
+model using <TT>modelfromalign</TT>, and then to a FIM model using <TT>addfims</TT>, it is best to model several positions on either side of the
+domain  to prevent the FIMs from eating up the ends of the domain.
+
+<P>
+The FIM state's insert table (or the generic node's, if the FIM is not
+fully specified) has the distribution over characters to be used.
+
+<P>
+The program <TT>addfims</TT> will add free insertion models to both ends
+of a model.  See Section&nbsp;<A HREF="node12.html#sec:addfims">10.3</A>.
+Because the correct addition of a FIM requires changes in the
+transition probabilities to and from the FIM, it is recommended that
+users only add FIMs by hand for unspecified regularizers and models:
+those that only have a generic node and one or more type declarations.
+To add free insertion modules to the ends of an existing model, for
+training or for motif searching, be sure to use the <TT>addfims</TT> or
+<TT>modifymodel</TT> program, or that <TT>auto_fim</TT> is set to its
+default value of 1.
+
+<P>
+Sometimes, in alignment or training the model may not be using FIMs as
+much as desired when, for example, there is a reasonably strong
+probability of using a specific internal insert state.  The
+probability of a FIM modeling <IMG
+ WIDTH="16" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.png"
+ ALT="$n$"> characters is by default the product
+of the insert table probabilities for those characters.  If this
+probability is too low, meaning that sequences are not using the FIM
+enough, it can be adjusted with the <TT>fimstrength</TT> parameter.
+Changing this parameter from its default 1.0 to 2.0, for example, make
+use of the FIM twice as likely as before.  The value of <TT>fimstrength</TT> is also applied to simple null models, and if less than
+zero, the absolute value of fimstrength is applied to both FIMs and
+normal insertion states.
+
+<P>
+Similar to <TT>fimstrength</TT>, <TT>fimtrans</TT> can be used to adjust
+the cost of the insert to insert loop within the FIM, and possibly
+within insert states in the model.  If set to a non-zero value, <TT>fimtrans</TT> becomes a multiplier of the geometric average of the match
+to match transitions in the model.  Thus, if set to 1.0 (the default),
+the FIM insert-to-insert transition will cost the same as the average
+match to match transition.  When set to a negative number, non-FIM
+insert-to-insert transitions are set to <IMG
+ WIDTH="98" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$p-(1-f)p^2$">, where <IMG
+ WIDTH="14" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.png"
+ ALT="$p$"> is the
+regularized and normalized frequency counts for the transition and <IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img28.png"
+ ALT="$f$">
+is the FIM insert-to-insert transition. The effect of this formula is
+to ensure that the FIMs remain cheap in comparison to any
+insert-to-insert transitions, something that can be critical in
+using buildmodel to train HMMs.
+
+<P>
+
+<H2><A NAME="SECTION000106000000000000000"></A><A NAME="sec:insert_fim"></A>
+<BR>
+8.6 FIM, insert and match tables
+</H2>
+
+<P>
+To aid in the manipulation of insert tables, SAM provides several options
+to globally change the regularizer's match and insert states, and
+the initial model if it is generated from the regularizer.
+These options are controlled by <TT>FIM_method_train</TT> and <TT>insert_method_train</TT>.  The default is to use the residue counts
+of the training sequences in both the insert and FIM states, as
+well as the match states of the GENERIC node.
+<DL COMPACT>
+<DT>0</DT>
+<DD>Use the tables present in the model.
+</DD>
+<DT>1</DT>
+<DD>The relative frequencies of residues in the training
+sequences (from the LETTCOUNT node or the training sequences).
+</DD>
+<DT>2</DT>
+<DD>The relative frequencies of residues in model match
+states (from the FREQAVE node).
+</DD>
+<DT>3</DT>
+<DD>Uniform (flat) probability over all residues.
+</DD>
+<DT>5</DT>
+<DD>Amino acid background frequencies over all proteins
+(from the GENERIC node).
+</DD>
+<DT>6</DT>
+<DD>Geometric average of the match state probabilities.
+</DD>
+</DL>
+The match state frequency average is only available when an
+existing model (with a FREQAVE node) is being trained.
+
+<P>
+If the FIM method number is negative, the change is used when FIMs are
+being added by the program, as when <TT>SW</TT> is 2 (local) or 3
+(domain), or <TT>auto_fim</TT> is 2 (always add).  When the FIM method
+number is 0, added FIMs use the geometric average as if it were <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img43.png"
+ ALT="$-6$">.
+
+<P>
+If <TT>insert_method_train</TT> is set, and a generic node exists in
+the regularizer or model, then both the match and the insert states of
+that generic node are changed.  This is important because it means
+that match states in the initial model (before training commences)
+will be based on, for example if <TT>insert_method_train</TT> is 1,
+the letter counts of the current training set, assuming that that
+there is no initial model or alignment.
+
+<P>
+If the <TT>train_reset_inserts</TT> variable is set, then after each
+re-estimation cycle in the training process, the insertion and FIM
+tables will be set according its value: 0, 1, 2, 3, 5 as above, or
+6 (the default) to set to the geometric average of the match table
+probabilities in the newly trained model. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html407"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html403"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html397"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html405"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html408"
+  HREF="node11.html">9 The buildmodel estimation</A>
+<B> Up:</B> <A NAME="tex2html404"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html398"
+  HREF="node9.html">7 Sequence formats</A>
+ &nbsp <B>  <A NAME="tex2html406"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,464 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>2 New to this version</TITLE>
+<META NAME="description" CONTENT="2 New to this version">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node4.html">
+<LINK REL="previous" HREF="node2.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node4.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html298"
+  HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html294"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html288"
+  HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html296"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html299"
+  HREF="node4.html">3 Quick overview</A>
+<B> Up:</B> <A NAME="tex2html295"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html289"
+  HREF="node2.html">1 Introduction</A>
+ &nbsp <B>  <A NAME="tex2html297"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html300"
+  HREF="#SECTION00031000000000000000">2.1 Version 3.3.1</A>
+<LI><A NAME="tex2html301"
+  HREF="#SECTION00032000000000000000">2.2 Version 3.2.1</A>
+<LI><A NAME="tex2html302"
+  HREF="#SECTION00033000000000000000">2.3 Version 3.2</A>
+<LI><A NAME="tex2html303"
+  HREF="#SECTION00034000000000000000">2.4 Version 3.1</A>
+<LI><A NAME="tex2html304"
+  HREF="#SECTION00035000000000000000">2.5 Version 3.0</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00030000000000000000">
+2 New to this version</A>
+</H1>
+
+<P>
+Information on previous versions follows the program descriptions.
+See Section&nbsp;<A HREF="node13.html#sec:previous">11.5</A>.
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+2.1 Version 3.3.1</A>
+</H2>
+
+<P>
+December 2001.
+
+<P>
+
+<UL>
+<LI>Model libraries.  Model libraries may now be specified and
+scored with <TT>hmmscore</TT>.  Each member of a model library is a set of
+SAM settings, a model, and a model name.  RDB files now always provide
+model names.  Model libraries can be calibrated (highly recommended)
+as an option to <TT>hmmscore</TT>.  See Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</LI>
+<LI>The <TT>genseq</TT> program will generate random sequences based on
+a regularizer or Dirichlet mixture regularizer.  See Section&nbsp;<A HREF="node12.html#sec:genseq">10.11.2</A>.
+
+<P>
+</LI>
+<LI>The <TT>makelogo</TT> program is a new viewing tool for SAM
+models. See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</LI>
+<LI>The new <TT>get_fisher_scores</TT> outputs Fisher score  vectors for
+input to an external distriminitive learning program.
+See Section&nbsp;<A HREF="node12.html#sec:get_fisher_scores">10.5</A>. 
+
+<P>
+</LI>
+<LI>Posterior decoded alignment has been found to have a slight edge
+over Viterbi alignment.  However, the current implementation of this
+algorithm requires a very large dynamic programming matrix that may
+be beyond the memory limits of the platform.  New to this version,
+sequences that are too long for the posterior decoded alignment
+calculation will be aligned to the model using the Viterbi algorithm.
+See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+
+<P>
+</LI>
+<LI>Complex null models are no longer supported.  An error in <TT>hmmscore</TT> that ignored user's null models has been fixed. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</LI>
+<LI>The ability of <TT>hmmscore</TT> to read and sort score files,
+undocumented for the last several versions, has been removed.
+
+<P>
+</LI>
+<LI>The postscript header file used by <TT>drawmodel</TT> is now
+produced directly by the program.  The SAM_PS environment variable,
+which previously indicated the location of the postscript header, has
+been eliminated.  See Section&nbsp;<A HREF="node12.html#sec:drawmodel">10.9.1</A>.
+
+<P>
+</LI>
+<LI>For proteins, the <TT>recode4.20comp</TT> prior has been made an
+internal default so that buildmodel will use it even without proper
+setting of the PRIOR_PATH environment variable.  See Section&nbsp;<A HREF="node10.html#sec:priors">8.1.1</A>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+2.2 Version 3.2.1</A>
+</H2>
+
+<P>
+October 2000
+
+<P>
+
+<UL>
+<LI>Null sequences are now properly scored and aligned by <TT>hmmscore</TT> and other programs.  The <TT>buildmodel</TT> program
+automatically removes null sequences from the training set.
+See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+</LI>
+<LI>In the <TT>hmmscore</TT> program, setting <TT>many_files</TT> to <IMG
+ WIDTH="14" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$2$">
+causes the score file to be printed to standard output rather than
+to the normal .dist file, setting to <IMG
+ WIDTH="14" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$4$"> causes .mstat files to be
+printed to standard out, and to 6, both are sent to standard out with
+undefined interleaving.  This variable is treated as a binary
+bit-vector, so setting to, for example, 3, will result in <TT>buildmodel</TT> generating many files and <TT>hmmscore</TT> sending .dist
+output to standard output. See Section&nbsp;<A HREF="node12.html#sec:select">10.2.2</A>.
+</LI>
+<LI>Martin Madera and Julian Gough have written a perl converter between
+SAM and HMMer 2.0 formats that can be downloaded from the SAM WWW page
+or, for the most up-to-date copy, from
+<A NAME="tex2html26"
+  HREF="http://www.mrc-lmb.cam.ac.uk/genomes/julian/convert/convert.html">http://www.mrc-lmb.cam.ac.uk/genomes/julian/convert/convert.html</A>.
+
+<P>
+</LI>
+<LI>Problems with Irix 64 distribution corrected.
+
+<P>
+</LI>
+</UL>
+<H2><A NAME="SECTION00033000000000000000">
+2.3 Version 3.2</A>
+</H2>
+
+<P>
+July 2000
+
+<P>
+
+<UL>
+<LI>Secondary structure alphabets based on DSSP labels.  See Section&nbsp;<A HREF="node9.html#sec:alph">7.1</A>.
+
+<P>
+</LI>
+<LI>Multi-track HMMs.  The <TT>hmmscore</TT> and <TT>align2model</TT>
+programs can now make use of multi-track HMMs and sequences.  For
+example, a set of protein sequences with associated secondary
+structure sequences can be scored or aligned to a  protein
+model with character emission probabilities calculated according to
+the protein model and a second secondary structure model
+(track). See Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A>.
+
+<P>
+</LI>
+<LI>The <TT>predict_track</TT> program can be used to
+make consensus predictions from a primary sequence alignment about a
+secondary structure track. The program is experimental and not yet
+fully optimized.  See Section&nbsp;<A HREF="node12.html#sec:predicttrack">10.8</A>.
+
+<P>
+</LI>
+<LI>The <TT>pathprobs</TT> program can be used to generate the
+posterior probabilities of each character in an alignment given an
+alignment and a model, in RDB format and (with reduced information)
+a2m format.  Changes to accommodate this format in <TT>prettyalign</TT>
+mean that <TT>a2m</TT> files with compressed insertions (as generated by
+<TT>prettyalign</TT>) will not be read as alignments.  In general, <TT>prettyalign</TT> output should not be used as an input format.
+See Section&nbsp;<A HREF="node12.html#sec:pathprobs">10.7</A>.
+
+<P>
+</LI>
+<LI>The SAM-T99 <TT>target99</TT> script now supports NCBI Blast 2 as
+well as WU-Blast.  SAM-T99 has been developed using WU-Blast; results
+with Blast2 will differ slightly. See Section&nbsp;<A HREF="node5.html#sec:samt99">4</A>.
+
+<P>
+</LI>
+<LI>An error that caused the <TT>regularizer_file</TT> to be read for
+a user's null model rather than the <TT>nullmodel_file</TT> has been
+fixed.  
+
+<P>
+</LI>
+<LI>Previous to this release, <TT>buildmodel</TT> local training
+incorrectly always performed global alignment to a model with FIMs on
+both ends.  This has been corrected.  To approximately duplicate
+previous work with local training settings, use <TT>sw 3</TT>.  See Section&nbsp;<A HREF="node12.html#sec:fimtrain">10.3.1</A>.
+
+<P>
+</LI>
+<LI>Simple null model selection has been improved.  If FIM tables
+are automatically set (i.e., <TT>FIM_method_score</TT> is positive),
+the null model emission probabilities correspond to that table,
+whether or not any FIMs are present in the model.  If it is negative,
+the null model is taken from the specified source, and any
+automatically-added FIMs are taken from that source as well.  If it is
+zero, the null model corresponds to the first FIM present in the
+model, or to geometric average of the match states. The null model transition
+probability is set according to the value of <TT>fimtrans</TT>.  The
+null model probabilities are affected by <TT>fimstrength</TT> whether or
+not there are FIMs in the model.  This eliminates the previous
+inconsistencies that arose from using the first insert node as a null
+model whether or not it was a FIM.  SAM is now quite explicit when
+insert/FIM tables are changed and when FIMs are added.
+
+<P>
+</LI>
+<LI>The <TT>viterbi_threshold</TT> can be used with <TT>hmmscore</TT> to
+prefilter sequences with a Viterbi NLL-NULL calculation before
+performing the more expensive (and more sensitive) all-paths (EM
+style) calculation. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+</LI>
+<LI>Previously, when E-values were calculated but a sequence did not
+have a reverse-null-model score due to <TT>simple_theshold</TT>, the
+E-value was calculated from the simple null model, leading to
+incomparible E-values.  Now, when the reverse score is not calculated,
+the E-value is reported as the maximum possible E-value (database
+size). See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+2.4 Version 3.1</A>
+</H2>
+
+<P>
+
+<UL>
+<LI>SAM now includes a dedicated FASTA reader that is far quicker
+than the more flexible <TT>readseq</TT> package.  Sequence I/O, measured
+by running <TT>checkseq</TT>, has been sped by a factor of 10.  Sequence
+memory use can be reduced by unsetting the <TT>keepannotations</TT>
+parameter.
+
+<P>
+</LI>
+<LI>Models can be created to enable <TT>hmmscore</TT> to perform Smith
+&amp; Waterman alignment and scoring.   SAM will calculate E-values using
+the reverse-sequence null model.  See Section&nbsp;<A HREF="node12.html#sec:smithwaterman">10.2.7</A>.
+
+<P>
+</LI>
+<LI>Default value of <TT>segment_size</TT> has been increased from
+100 to 1000 sequences so that <IMG
+ WIDTH="18" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.png"
+ ALT="$\sim$"> 0.5-1MB of protein sequence data
+is in memory at any one time.  For particularly long sequences, you
+may wish to reduce.
+
+<P>
+</LI>
+<LI>Addition of <TT>adpstyle</TT>, the dynamic programming style used
+for alignments and multiple domain alignments.  Posterior-decoded
+alignment based solely on character emission posteriors is now
+available.  Scoring according to either posterior alignment option can
+also be performed. See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+
+<P>
+</LI>
+<LI>Reoptimization of inner loop checkpoint placement.  The default
+setting of <TT>maxmem</TT> has been increased to use up to 20MB of memory
+for dynamic programming.  <IMG
+ WIDTH="92" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img4.png"
+ ALT="$\sim 5--20\%$"> speedup for <TT>buildmodel</TT>
+and sequence alignment.  Posterior-decoded alignment does not yet use
+reduced space.
+
+<P>
+</LI>
+<LI>Addition of the <TT>randseq</TT> program, which can be used to
+randomly select sequences from a database, and <TT>splitseq</TT> which
+can split a database according to sequence length (particularly useful
+to filter sequences that can cause posterior-decoded alignment to run
+out of memory). 
+See Section&nbsp;<A HREF="node12.html#sec:randseq">10.11.4</A> 
+and Section&nbsp;<A HREF="node12.html#sec:splitseq">10.11.5</A>.
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
+2.5 Version 3.0</A>
+</H2>
+October 1999
+
+<UL>
+<LI>The SAM-T99 iterative method for remote homology detection.
+This is the vastly preferred method for building an HMM from a single
+protein sequence and for weighting sequences when an alignment is
+available. See Section&nbsp;<A HREF="node5.html#sec:samt99">4</A> 
+and Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A>. 
+
+<P>
+</LI>
+<LI>Inclusion of the <TT>view_pdoc</TT> program for  viewing the
+posterior decoded alignment.  This may assist in checking alternate
+paths in an alignment. See Section&nbsp;<A HREF="node12.html#sec:grabdp">10.4</A>.
+
+<P>
+</LI>
+<LI>The <TT>uniqueseq</TT> program can now be used on alignments to
+eliminate sequences that match other sequences in the alignment.
+See Section&nbsp;<A HREF="node12.html#sec:uniqueseq">10.11.8</A>.
+
+<P>
+</LI>
+<LI>The <TT>hmmscore</TT> program will calculate E-values for
+reverse-sequence null model scoring (scores better than <TT>1e-300</TT>
+are reported as <TT>1e-300</TT>). Internal Z-scoring has been eliminated.
+Score data can be output in the RDB format. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</LI>
+<LI>Also in <TT>hmmscore</TT>, the reverse null model is now the
+default null model calculation.  This doubles runtime over the simple
+null model, but is more accurate.  To reduce this cost, set
+<TT>simple_threshold</TT> to <IMG
+ WIDTH="34" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.png"
+ ALT="$-10$">, which means that only sequences
+that score better than this threshold will have the reverse null model
+score calculated. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</LI>
+<LI>The default null model (as well as all FIMs) now includes by
+default a self-loop transition probability equal to the geometric
+average of the match to match transitions in the HMM (<TT>fimtrans</TT> is 1.0).  The way in which insert to insert arcs are set for
+negative values of <TT>fimtrans</TT> has changed. See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+
+<P>
+</LI>
+<LI>Regardless of input format, selected sequence output is always
+in FASTA format.  Sequence annotation lines are now preserved in
+sequence output files (sel, a2m, and mult files), and are truncated to
+the first 50 characters in dist and mstat files.
+
+<P>
+</LI>
+<LI>In <TT>buildmodel</TT>, constrained trainining is now supported.
+Specific residues can be constrained to specific model nodes during
+training.  This serves as a method of incorporation prior knowledge
+about the training sequence, such as structurally similar
+regions. See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>.
+
+<P>
+</LI>
+<LI>The <TT>buildmodel</TT> <TT>seed</TT> parameter has been renamed
+<TT>randseed</TT> to avoid confusion with the SAM-T99 seed alignment
+parameter.
+
+<P>
+</LI>
+</UL>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html298"
+  HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html294"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html288"
+  HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html296"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html299"
+  HREF="node4.html">3 Quick overview</A>
+<B> Up:</B> <A NAME="tex2html295"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html289"
+  HREF="node2.html">1 Introduction</A>
+ &nbsp <B>  <A NAME="tex2html297"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

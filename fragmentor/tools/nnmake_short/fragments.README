@@ -1,0 +1,80 @@
+c  CVS information:
+c  $Revision: 1.4 $
+c  $Date: 2002/03/27 18:42:10 $
+c  $Author: rohl $
+
+
+COMPILING/INSTALLING:
+
+1. FORTRAN code in the nnmake_source and chemshift_source directory
+   should be compiled according to the instructions in the makefiles
+   in the respective directories.
+
+2. PSIBLAST must be installed locally.
+
+3. PSIPRED can be installed locally and used.  Alternately, predictions
+   can be obtained from the web server. IF PSIPRED IS NOT LOCALLY 
+   INSTALLED, make sure you use the '-nopsipred' option with 
+   make_fragments.pl
+
+4. For prediction of backbone angles from chemical shift assignments,
+   the CHEMSHIFT algorithm requires several databases that are
+   used by the TALOS algorithm. The TALOS program and the accompanying
+   databases can be obtained from the Ad Bax group at NIH.  See
+   http://spin.niddk.nih.gov/bax/software/ for information about the
+   TALOS algorithm. 
+
+5. All appropriate paths must be set at the top of the make_fragments.pl
+   script.
+
+
+TO MAKE FRAGMENTS:
+
+1. Obtain a fasta file for the desired sequence. This file
+   must have 60 characters/line with no white space.  First
+   line can be a comment starting with the '>' character.
+
+2. Obtain secondary structure predictions. At least one secondary 
+   structure prediction is required. Up to three predictions can 
+   be used including:
+       psipred,    1 state            (.jones or .psipred extension) 
+                or 3 state            (.psipred_ss2)
+       phd         3 state            (.phd)
+       SAM-T99     3 state rdb format (.rdb).
+
+   The getSSpred.pl script can be used to obtain predictions off 
+   the web.  Edit the config portion of this script to include your 
+   email address. To use this script, provide the fasta filename and 
+   the desired method.  Invoke the command without arguments to see the
+   usage explanation.  Retrieve the secondary structure predictions
+   from you email mail box.  If fetchmail is set up, you can use
+   the -parsembox option to automatically retrieve predictions from
+   your mailbox.
+
+3. Prepare files with NMR data.  These include .cst and .dpl files
+   that are the same files that rosetta uses, and the .chsft_in file
+   that contains chemical shift information.  See the file
+   'data_formats.README' for the formating information.
+
+4. Run make_fragments.pl.  Invoke without arguments for usage options.
+   Likely the only argument you need to provide is the fasta file.
+   If you want to exclude homologous seqeunces from the fragment search, 
+   add the -nohoms argument.  Note that if you want to exclude homologs 
+   from the chemical shift/TALOS search, you need to edit the talos 
+   database.  See the README in the chemshift_source directory for 
+   instructions.
+
+NOTES:  
+
+1.  Name all your files with a five character base name followed
+    by the appropriate extension.  The base-name should be the four-letter
+    pdb code and 1 letter chain id.
+
+2   See also the nnmake.README a listing of the files involved in the 
+    fragment process
+
+3.  If a pdb file is in the directory you're making fragments in, nnmake
+    will evaluate the fragment match to the pdb.  Note that if the pdbfile
+    disagrees with the fasta file, the program will detect an error and 
+    stop
+

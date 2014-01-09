@@ -1,0 +1,1608 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>12 Parameter descriptions</TITLE>
+<META NAME="description" CONTENT="12 Parameter descriptions">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node15.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html541"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html537"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html531"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html539"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html542"
+  HREF="node15.html">About this document ...</A>
+<B> Up:</B> <A NAME="tex2html538"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html532"
+  HREF="node13.html">11 System installation</A>
+ &nbsp <B>  <A NAME="tex2html540"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION000140000000000000000"></A>
+<A NAME="sec:parameters"></A>
+<BR>
+12 Parameter descriptions
+</H1>
+
+<P>
+
+<P>
+
+<P>
+This section alphabetically explains all the parameters that can be
+specified in an init file.  Where appropriate, the type of the
+parameter and any default value is listed.  The default values are
+automatically used by the program if the user does not specify any
+alternative setting.  The <TT>dump_parameters</TT> option can be used
+to verify the default values.
+See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+The <TT>drawmodel</TT> and <TT>prettyalign</TT> programs do not use
+parameter files.
+
+<P>
+The SAM-T99 paramaters are discussed elsewhere.  See Section&nbsp;<A HREF="node5.html#sec:samt99">4</A>.
+
+<P>
+The parameter reading routines will accept variations in
+capitalization and the presence or absence of underscores.
+
+<P>
+SAM supports reading compressed input files.
+If any of the file name arguments to the options end in a <TT>.gz</TT> or <TT>.Z</TT>
+extension. SAM will read the files using the appropriate decompression program.
+If an input file does not exist and does not have a <TT>.gz</TT> or <TT>.Z</TT>
+extension is not found, SAM will try to read from a compressed file with one
+of these extensions.
+
+<P>
+<DL>
+<DT><STRONG>a2mdots (0 or 1) (1):</STRONG></DT>
+<DD>By default (1), <TT>align2model</TT> will place dots in the sequence
+alignment to fill space need for other sequences' insertions.  If set
+to 0, these dots are not printed.  See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>adjust_score (0, 1 or 2) (2):</STRONG></DT>
+<DD>If set, and local or semi-local scoring is performed,
+simple null model scores are adjusted according
+to the log of the model and sequence length (1) or log of the sequence
+length (2), so that final scores are somewhat independent of sequence
+length and/or model length.  This parameter is used by <TT>hmmscore</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>adpstyle (1,  4, or 5) (1):</STRONG></DT>
+<DD>The dynamic programming style for alignment and multiple domain
+alignment used by <TT>hmmscore</TT> and <TT>align2model</TT>.  Setting to 1
+indicates Viterbi alignment,  4 indicates posterior-decoded
+alignment on transitions and character emissions,  5 indicates
+posterior-decoded alignment on only character emissions . If <TT>adpstyle</TT> is set for other than 1, 4, or 5, it is changed to 1
+(Viterbi).   See also the description of <TT>dpstyle</TT>.
+See Section&nbsp;<A HREF="node11.html#sec:vtrain">9.5</A>,
+Section&nbsp;<A HREF="node12.html#sec:fragalign">10.1.2</A>, and Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>alignfile (string) ():</STRONG></DT>
+<DD>A file containing an alignment of sequences for use with <TT>modelfromalign</TT>, <TT>uniqueseq</TT>, and <TT>sortseq</TT>, or as an initial
+model for <TT>buildmodel</TT>. See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>. 
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>align_fim (0 or 1) (0):</STRONG></DT>
+<DD>Add FIMs to the ends of a model generated by <TT>modelfromalign</TT>
+or an alignfile in <TT>buildmodel</TT>.  See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>. 
+
+<P>
+</DD>
+<DT><STRONG>alignment_weights (string) ():</STRONG></DT>
+<DD>A file containing sequence weights for alignments used to form initial
+models with <TT>buildmodel</TT> or models with <TT>modelfromalign</TT>. The external weights have precedence over the
+internal ones, but a warning message will be generated unless <TT>aweight_method</TT> is set to zero. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>alignshort (integer) (-1):</STRONG></DT>
+<DD>When less than  0 (default), multiple domain search produces an alignment file
+that copies the entire sequence for each copy of the domain occurring
+within the sequence.  When 0, only the region matching the model is
+printed.  When greater than zero, that many characters to the left and
+the right of the domain are also printed to the file.
+In both cases, sequence IDs in the new file can be used to locate where
+the <TT>hmmscore</TT> found copies of the model.  See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>alphabet (string) (protein):</STRONG></DT>
+<DD>This system supports 3 alphabets: DNA, RNA or protein.  The protein
+alphabet is the default, and does not need to be specified.  The
+abbreviation <TT>a</TT> 
+may be used in place of <TT>alphabet</TT>.
+ If unset, the first <TT>train</TT>, <TT>test</TT>, or <TT>db</TT> file is checked to see if the <TT>alphabet</TT> can be
+determined from the data.  A comma-separated list of alphabets is
+required for using multi-track HMMs.
+See Section&nbsp;<A HREF="node9.html#sec:alph">7.1</A> 
+and Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>alphabet_def (string) ():</STRONG></DT>
+<DD>The <TT>alphabet_def</TT> variable can be used to define an alphabet of
+2 to 25 letters plus a (require) all-matching wildcard character.  In
+the quoted string argument, both an alphabet name and the list of
+characters, with the wildcard last, must be specified.  See Section&nbsp;<A HREF="node9.html#sec:alphdef">7.1.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>anneal_length (float) (0.8):</STRONG></DT>
+<DD>Indicates the speed with which noise should be decreased to zero.  If
+greater than 1, decrease linearly over <TT>anneal_length</TT> re-estimates.  If
+less than one, decrease exponentially.  See Section&nbsp;<A HREF="node11.html#noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>anneal_noise (float) (5):</STRONG></DT>
+<DD>Amount of noise to add to the model (decreased linearly or
+exponentially according to <TT>anneal_length</TT>.  See Section&nbsp;<A HREF="node11.html#noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>auto_fim (0 or 1) (1):</STRONG></DT>
+<DD>Cause <TT>hmmscore</TT> and <TT>align2model</TT> to automatically add FIMs to
+the model (and to the user's null model, if used) before scoring when
+null model subtraction 
+is used or fully local scoring (<TT>SW</TT> is 2) is used. Also, in
+alignments, the FIM-induced delete state is automatically removed
+whenever <TT>auto_fim</TT> is set, regardless of whether or not FIMs
+were originally present in the model.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>aweight_bits (float) (0.5):</STRONG></DT>
+<DD>Target bits per column to save in determining alignment sequence
+weighting.
+See Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>aweight_exponent (float) (0.5):</STRONG></DT>
+<DD>Exponent in determining alignment sequence weighting.
+See Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>aweight_method (0, 1, 2, or 3) (1):</STRONG></DT>
+<DD>Internal weighting method for initial alignment provided to <TT>buildmodel</TT> or <TT>modelfromalign</TT>. 0 (none), 1 (karplus), 2 (henikoff), or 3 (flat).
+If non-zero and an <TT>alignment_weights</TT> file is specified, the
+external weights are used and a warning message is printed to standard error.
+See Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>binary_output (0 or 1) (0):</STRONG></DT>
+<DD>Tells model-generating programs to write models in  text format 
+if set to 0 or a binary format if set to 1.  Default is text or 0.
+See Section&nbsp;<A HREF="node10.html#sec:binmods">8.4.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>constraints (string) ():</STRONG></DT>
+<DD>Specify a constraints definition file to be read.  This option maybe 
+specified multiple times.
+See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>constraints_out (string) ():</STRONG></DT>
+<DD>Specify the name for a constraints definition file to create.
+See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>constraints_from_align (0 or 1) (0):</STRONG></DT>
+<DD>If a true value is specified, constraints will be be created for all
+aligned positions when a model is created from an alignment.
+See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>cutinsert (float) (0.5):</STRONG></DT>
+<DD>If this fraction of sequences use an insert
+state, surgery will replaced with one or more match states.
+See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>cutmatch (float) (0.5):</STRONG></DT>
+<DD>When fewer than this fraction of sequences use a match state, surgery
+will delete the state.  See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>db (string) ():</STRONG></DT>
+<DD>A file containing sequences that are to be scored against a model in
+<TT>hmmscore</TT> or aligned to a model in <TT>align2model</TT>.  Multiple
+instances of the 
+<TT>db</TT> variable add to the list of database files, rather than
+replacing the previous <TT>db</TT> file name.
+A comma-separated list of parallel databases, one per track, is
+required for multi-track HMMs.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>dbsize (integer) (0):</STRONG></DT>
+<DD>When greater than 0, this value is used in the calculation of E-values rather
+than the number of sequences that are read in to <TT>hmmscore</TT>.  This
+is useful for correctly calculating E-values when multiple scoring
+runs are performed, and to avoid having to perform a complete reading
+of the database twice, once to calculate the number of sequences, and
+second time to score the sequences.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>del_jump_conf (float) (1.0):</STRONG></DT>
+<DD>Confidence in the regularizer for transitions leaving a delete state.
+The regularizer's transition values are multiplied by this number.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>distfile (string) ():</STRONG></DT>
+<DD>File with already-calculated sequence distances for use with the <TT>makehist</TT>, <TT>makeroc</TT>, <TT>makeroc2</TT>, and <TT>sortesq</TT> programs.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>,
+Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>, and Section&nbsp;<A HREF="node12.html#sec:sortseq">10.11.7</A>..
+
+<P>
+</DD>
+<DT><STRONG>distfile2 (string) ():</STRONG></DT>
+<DD>A second file with already-calculated sequence distances for use with
+the <TT>makehist</TT>, <TT>makeroc</TT> or <TT>makeroc2</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>dpstyle (0, 1, 2, 3,  4, or 5) (0):</STRONG></DT>
+<DD>Flavor of internal dynamic programming for scoring and training.  0
+indicates forward-backward (see <TT>adpstyle</TT> for alignment).
+(EM) sum-of-all-paths, 1 indicates Viterbi single best path, 2
+indicates EM with the posteriors saved in a <TT>.pdoc</TT>  file, 3 (for
+use with <TT>grabdp</TT>, but presently identical to 0) indicates EM
+outputting the frequency counts of each sequence in its 
+own <TT>.freq</TT> file,  4 indicates most probable alignment
+(posterior-decoded alignment on transitions and emissions), and 5
+indicates most probable alignment (posterior-decoded alignment on
+emissions only).
+See Section&nbsp;<A HREF="node11.html#sec:vtrain">9.5</A>,
+Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>, and Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>dump_match_probs (0 or 1) (0):</STRONG></DT>
+<DD>When the <TT>grabdp</TT> program is run with this flag set, it generates
+an RDB file listing the amino acid posterior probabilities for each node,
+and the amino acid priors.  Priors are listed with the node label ``FREQAVE''.
+
+<P>
+</DD>
+<DT><STRONG>dump_parameters (0, 1, or 2) (0):</STRONG></DT>
+<DD>Normally, only modified parameters are printed to the output file.  If
+this is set to 1, all parameters are printed. If 2, and specified
+alone on the command line, <TT>buildmodel</TT> and <TT>align2model</TT> will
+dump parameters and exit.  Because in this case 
+an alphabet is not specified and a regularizer not created, a setting
+of 2 will <EM>not</EM> reveal the default
+regularizer. See Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>Emax (float) (0.001):</STRONG></DT>
+<DD>When a selection
+variable includes 4 in its binary representation, <TT>Emax</TT> is used
+to determine what sequences are selected.  Also, when <TT>select_score/seq</TT><IMG
+ WIDTH="31" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.png"
+ ALT="$=4$">, sequences with an E-value better than <TT>Emax</TT>
+are selected. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>family_base_file (string) ():</STRONG></DT>
+<DD>If non-null, and <TT>sequence_weights</TT> and <TT>family_specific</TT> are specified, initial
+models are read in from the files whose names are created by appending
+<code>.i.mod</code>, where <code>i</code> is an integer corresponding to the
+family number.  For example, if there are three families and the base
+name is <TT>test</TT>, the family models will be read in from <TT>test.0.mod</TT>, <TT>test.1.mod</TT>, and <TT>test.2.mod</TT>.  
+The first model in the file (of any type, including MODEL,
+REGULARIZER, NULLMODEL, and FREQUENCIES) is used.  An error will
+result if the models are of different lengths.
+See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>FIM_method_train (0, 1, 2, 3, 5, 6) (-1):</STRONG></DT>
+<DD>During the model building process, one may employ an initial model
+that contains FIMs.  The  table probabilities can readily be
+changed to reflect different distributions.
+Negative values only cause changes to the tables when models are
+created by the program, rather than being read in. The default setting of -1
+uses the letter frequencies in the training set when generating new
+models. See Section&nbsp;<A HREF="node10.html#sec:insert_fim">8.6</A>. 
+
+<P>
+</DD>
+<DT><STRONG>FIM_method_score (0, 1, 2, 3, 5, 6) (-6):</STRONG></DT>
+<DD>Similar to <TT>FIM_method_train</TT>, except that the insert probabilities
+in the FIMs are changed before sequences are scored against the model.
+Negative values only cause changes when FIMs are added to the model.
+When set to 0, it is treated as <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img43.png"
+ ALT="$-6$"> for adding FIMs.  
+The default method of -6 uses the geometric  average of match state
+probabilities.  
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>fimstrength (float) (1.0):</STRONG></DT>
+<DD>A factor by which to multiply the FIM letter emission probabilities.
+If set to 2.0, for example, each letter will have twice the
+probability of being generated as in the normalized insert state. This
+can be used to encourage the use of FIMs.  The value is also
+applied to simple null models.  When set to a value less
+than 0, the absolute value of <TT>fimstrength</TT> is applied to all
+insert states, FIM or otherwise. See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>fimtrans (float) (0.0):</STRONG></DT>
+<DD>When 0.0, the FIM's insert to insert probability is 1.0.
+When greater than 0.0, a factor by which to multiply the model's
+geometric average match to match probability to produce the FIM's
+insert-to-insert probability.  When
+less than 0.0, the FIM is adjusted as according to the absolute value
+of <TT>fimtrans</TT>, and the non-FIM insert-to-insert probability is
+set to  <IMG
+ WIDTH="98" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$p-(1-f)p^2$">, where <IMG
+ WIDTH="14" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.png"
+ ALT="$p$"> is the regularized and
+       normalized frequency counts for the transition and <IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img28.png"
+ ALT="$f$"> is the
+        FIM insert-to-insert transition.
+See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>fisher_feature (string) (match_prior simple):</STRONG></DT>
+<DD>Specifies the type of <EM>Fisher score vector</EM> features 
+the <TT>get_fisher_scores</TT> will be generated.
+The following value are valid.  This parameter maybe specified multiple
+times.
+  
+<UL>
+<LI><TT>trans</TT> - Compute gradients from the model transition parameters.
+</LI>
+<LI><TT>insert</TT> - Compute gradients from the model insert parameters.
+</LI>
+<LI><TT>match</TT> - Compute gradients from the model match parameters
+</LI>
+<LI><TT>match_prior</TT> - Compute gradients from a mixture decomposition
+          of the model match parameters with the prior library use to train
+          the model.
+</LI>
+<LI><TT>simple</TT> - Include the simple NLL-NULL score as a feature.
+  
+</LI>
+</UL>
+If this parameter is not explictly specified,  <TT>match_prior</TT> and
+<TT>simple</TT> are used. See Section&nbsp;<A HREF="node12.html#sec:get_fisher_scores">10.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>fracinsert (float) (1.0):</STRONG></DT>
+<DD>When an insert state is being replaced, surgery will replace it with
+the average number or characters generated by the insert state
+multiplied by this number.  See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>FREQUENCIES () ():</STRONG></DT>
+<DD>A model structure that has frequency counts rather than probabilities.
+Output by <TT>buildmodel</TT> if the <TT>print_frequencies</TT> parameter
+is set to 1.  The <TT>drawmodel</TT> program is the only program that
+can use frequencies as input. See Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>..
+
+<P>
+</DD>
+<DT><STRONG>histbins (integer) (10):</STRONG></DT>
+<DD>Number of bins used by the <TT>makehist</TT> program. See Section&nbsp;<A HREF="node12.html#sec:makehist">10.10.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>genprot_prior (string) (rsdb-comp2.32comp):</STRONG></DT>
+<DD>Dirichlet mixture for randomly generated protein sequences output by
+<TT>genseq</TT> and used in HMM model calibration.
+See Section&nbsp;<A HREF="node12.html#sec:genseq">10.11.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>genehl2_prior (string) (t99-2d-comp.9comp):</STRONG></DT>
+<DD>Dirichlet mixture for randomly generated secondary structure alphabet
+EHL2 sequences output by <TT>genseq</TT> and used in HMM model
+calibration. 
+See Section&nbsp;<A HREF="node12.html#sec:genseq">10.11.2</A>,
+Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>, and Section&nbsp;<A HREF="node9.html#sec:alph">7.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>gs_mean_log_len (float) (5.4151):</STRONG></DT>
+<DD>Logarithm of mean sequence length used for randomly generated protein
+sequences output by <TT>genseq</TT> and used in HMM model calibration.
+See Section&nbsp;<A HREF="node12.html#sec:genseq">10.11.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>gs_sd_log_len (float) (1.03632564):</STRONG></DT>
+<DD>Logarithm of standard deviation of sequence length used for randomly
+generated protein sequences output by <TT>genseq</TT> and used in HMM
+model calibration.  
+See Section&nbsp;<A HREF="node12.html#sec:genseq">10.11.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>id (string) ():</STRONG></DT>
+<DD>A sequence identifier, used to restrict <TT>align2model</TT> or <TT>hmmscore</TT> to only considering specific 
+sequences.   Multiple occurrences of the <TT>id</TT> parameter are added
+to the list of sequence identifiers, rather than replacing the value
+of <TT>id</TT>.
+
+<P>
+</DD>
+<DT><STRONG>initial_noise (float) (-1.0):</STRONG></DT>
+<DD>When greater than zero, amount of
+noise to add for the first iteration. See Section&nbsp;<A HREF="node11.html#noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>ins_jump_conf (float) (1.0):</STRONG></DT>
+<DD>Confidence in the regularizer for transitions leaving an insert state.
+The regularizer's transition values are multiplied by this number.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>insconf (float) (10000):</STRONG></DT>
+<DD>Confidence in the regularizer for character probabilities in an insert
+state.  The high default means that the regularizer will overpower the
+actual counts determined by aligning sequences to the model.  The
+regularizer's character insert values are multiplied by this number. 
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>insert (string) ():</STRONG></DT>
+<DD>Insert another parameter file.  The single character <TT>i</TT> may
+be used in place of <TT>insert</TT>. See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+</DD>
+<DT><STRONG>insert_file_dna (string) ():</STRONG></DT>
+<DD>Insert another parameter file if the current alphabet has been set to
+DNA.  This is particularly useful for alphabet-specific regularizers.
+ See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+</DD>
+<DT><STRONG>insert_file_protein (string) ():</STRONG></DT>
+<DD>Insert another parameter file if the current alphabet has been set to protein.
+This is particularly useful for alphabet-specific regularizers.
+ See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+</DD>
+<DT><STRONG>insert_file_rna (string) ():</STRONG></DT>
+<DD>Insert another parameter file if the current alphabet has been set to RNA.
+This is particularly useful for alphabet-specific regularizers.  See Section&nbsp;<A HREF="node8.html#params">6</A>.
+
+<P>
+</DD>
+<DT><STRONG>Insert_method_train (0, 1, 2, 3, 5) (-1):</STRONG></DT>
+<DD>Similar to <TT>FIM_method_train</TT> except that the insert probabilities
+are changed in the nodes that are not FIMs.
+Negative values only cause changes to the tables when models are
+created by the program, rather than being read in. 
+The default method -1 uses the letter frequencies in the training set
+when generating models.  If the model or regularizer
+includes a GENERIC node, then its match and insert tables are also
+filled in with these values. 
+See Section&nbsp;<A HREF="node10.html#sec:insert_fim">8.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>Insert_method_score (0, 1, 2, 3, 5, 6) (0):</STRONG></DT>
+<DD>Similar to <TT>FIM_method_score</TT> except that the insert probabilities
+are changed in the nodes that are not FIMs.
+Negative values only cause changes to the tables when models are
+created by the program, rather than being read in. 
+The default method 0 is
+to not change the insert tables during scoring.
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>internal_weight (0, 1, 2) (1):</STRONG></DT>
+<DD>Use  internal maximum discrimination sequence weighting.
+Automatically turned off if not explicitly set and external weights
+are used.  See Section&nbsp;<A HREF="node11.html#sec:internalweight">9.4.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>jump_in_prob (float) (1.0):</STRONG></DT>
+<DD>The probability cost of jumping into the center of the model
+when the <TT>SW</TT> option is set.
+See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>. 
+
+<P>
+</DD>
+<DT><STRONG>jump_out_prob (float) (1.0):</STRONG></DT>
+<DD>The probability cost of jumping out of the center of the model when
+the <TT>SW</TT> option is set. 
+See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>. 
+
+<P>
+</DD>
+<DT><STRONG>keepannotations (0, 1) (1):</STRONG></DT>
+<DD>Keep sequence annotations for sequence output.  Short versions of the
+annotations are included in distance files as well.  Annotations
+are frequently longer than the sequences themselves, so
+setting this to 0 can save considerable amounts of memory.
+
+<P>
+</DD>
+<DT><STRONG>kestrel_fallback (0 or 1) (1):</STRONG></DT>
+<DD>Enables or disables fallback into sequential mode if a Kestrel is board is
+not available after the specified number of retries or if features
+not implemented on Kestrel are requested.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_min_model_len (integer) (0):</STRONG></DT>
+<DD>Specifies the minimum model length to use with Kestrel implementation of 
+<TT>hmmscore</TT> EM scoring.
+Models smaller than this value will be be scored using the sequential
+algorithm.  This is useful as small models may be slower on Kestrel.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_remote_db_dir (integer) ():</STRONG></DT>
+<DD>Specifies the remote directory containing the sequence databases in Kestrel
+format.  This should be in Windows-NT syntax, for example
+<TT>&#92;&#92;merlin&#92;data</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_retry_cnt (integer) (0):</STRONG></DT>
+<DD>Specifies the number of times to retries if a Kestrel board is not available.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_retry_time (integer) (0):</STRONG></DT>
+<DD>Specifies the number of seconds to wait between retries when Kestrel board is
+not available.
+
+<P>
+</DD>
+<DT><STRONG>kestrel_use_simulator (integer) (0):</STRONG></DT>
+<DD>Use the Kestrel simulator.  This is useful when debugging the SAM Kestrel code.
+The number of simulated PEs will be set to the minimum required to hold the
+model.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_num_extra_pe (integer) (0):</STRONG></DT>
+<DD>When using the Kestrel simulator for debugging SAM, increase the number of
+simulated PEs by the specified number.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>. 
+
+<P>
+</DD>
+<DT><STRONG>kestrel_dual_mapping (integer) (-1):</STRONG></DT>
+<DD>Used for debugging Kestrel dual mapping code.  When set to -1, dual
+mapping is selected if the model will fit in Kestrel PE array.  If
+0, then the dual mapping algorithm is never used.  If 1, then the
+dual mapping is always used with an error generated if the model
+will not fit.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>lambda (float) (1.0):</STRONG></DT>
+<DD>Scaling factor for HMM
+e-value calculations.  Best set using  the <TT>calibrate</TT> option of
+<TT>hmmscore</TT>. For <TT>pathprob</TT> output scaling use <TT>pplambda</TT>,
+and for Smith &amp; Waterman E-value scoring, use <TT>swlambda</TT>. See Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_auto_size (0/1) (0):</STRONG></DT>
+<DD>Set to 1 to resize the logo to a single 8.5 by 11 page.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_bars_per_line (integer) (0):</STRONG></DT>
+<DD>Number of bars per line.  Default setting of 0 allows 
+variance for cosmetic reasons.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_bw (0/1) (0):</STRONG></DT>
+<DD>If set to 1, make a black and white logo, ignoring color information.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_captions (filename) ():</STRONG></DT>
+<DD>A file of captions.  Each caption has two integers
+(start and end bars) on one line, and the caption on
+the following line. Captions can overlap. 
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_captionf (filename) ():</STRONG></DT>
+<DD>Captions as above, but taken from a FASTA sequence.
+Each run of identical characters will be collapsed into
+a single caption.  Intended for secondary structure.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_captionf_color (filename) ():</STRONG></DT>
+<DD>Colors for the  caption FASTA format file <TT>logo_captionf</TT>.
+Normally installed files include protein.colors,
+nucleotide.colors, and stride.colors.  If not specified,
+black will be used.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_color_file (filename) ():</STRONG></DT>
+<DD>Color file for the characters.  Internal defaults exist
+for protein, nucleotide, and secondary structure.  Each line has a
+character and 3 RGB numbers between 0.0 and 1.0, inclusive, but, not
+more than 9 characters.   The pound sign (#) is a comment indicator. 
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_font (fontname) (Courier):</STRONG></DT>
+<DD>Postscript font for logo letters.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_savings (filename) ():</STRONG></DT>
+<DD>Use a bit savings file for logo creation rather than a
+SAM modelfile.  Savings files have one line per bar of:
+(bits label percentage label percentage ... newline)
+where `bits' is the total bar heigth, labels are single
+characters, and percentages are of the bar height.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_scale (float) (20.0):</STRONG></DT>
+<DD>Vertical scale in points per bit of the logo.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_sections (string) ():</STRONG></DT>
+<DD>A string (e.g. <code>"3-8,12,15"</code>) indicating which bars to display.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_sig_height (float) (1.0):</STRONG></DT>
+<DD>Height in points of smallest charector other than X to display.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_start_num (integer) (1):</STRONG></DT>
+<DD>The sequence index of the first bar in the logo.  
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_title (string) (runname):</STRONG></DT>
+<DD>Title of the logo.  Default is the current runname.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_title_font (fontname) (Times-Roman):</STRONG></DT>
+<DD>Postscript font for the logo title.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_under_file (filename) ():</STRONG></DT>
+<DD>A file with one FASTA-format sequence, to provide lablels, such as
+amino acid names in a sequence, one character per logo bar.
+Useful for visually comparing a sequence and a model.
+See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>logo_under_color (filename) ():</STRONG></DT>
+<DD>A color file for use with the underfile sequence.
+Normally installed files include <TT>protein.colors</TT>, 
+<TT>nucleotide.colors</TT>, and <TT>stride.colors</TT>.  If not specified,
+black will be used.  PRIOR_PATH is searched for the file if not in
+the current directory.  See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>max_seq_length (integer) (2500):</STRONG></DT>
+<DD>Used to specify maximum sequence length for Kestrel database
+processing and the maximum sequence length for <TT>splitseq</TT> database
+splitting.  See Section&nbsp;<A HREF="node12.html#sec:splitseq">10.11.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>mainline_cutoff (float) (0.5):</STRONG></DT>
+<DD>Changing this value will set both <TT>cutmatch</TT> and <TT>cutinsert</TT>
+to the new value.   See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>many_files (0-7) (0):</STRONG></DT>
+<DD>When zero, all the output of <TT>buildmodel</TT> is sent to the <code>.mod</code> file.
+If the binary expansion of <TT>many_files</TT>  includes a
+'1' (e.g., 1, 3, 5, 7), <TT>buildmodel</TT> will create multiple files
+for the probability model, frequency model, and the run statistics.
+If the binary expansion of <TT>many_files</TT>  includes a
+ '2' (e.g., 2, 3, 6, 7), the <TT>hmmscore</TT> score information (.dist)
+ is sent  to standard output.
+If the binary expansion of <TT>many_files</TT>  includes a
+'4' (e.g., 4, 5, 6, 7), the <TT>hmmscore</TT> multiple domain score
+information (.mstat) is sent to standard output. 
+See Section&nbsp;<A HREF="node7.html#sec:files">5</A>,
+Section&nbsp;<A HREF="node12.html#sec:select">10.2.2</A>, and Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>match_jump_conf (float) (1.0):</STRONG></DT>
+<DD>Confidence in the regularizer for transitions leaving a match state.
+The regularizer's transition values are multiplied by this number.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>matchconf (float) (1.0):</STRONG></DT>
+<DD>Confidence in the regularizer for character probabilities in a match
+state.  The regularizer's character match values are multiplied by
+this number.  This variable is ignored if a prior library is used.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>maxinserts (integer) (100):</STRONG></DT>
+<DD>In buildmodel, the maximum number of states inserted after
+any node by the surgery. See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>maxmem (integer) (0):</STRONG></DT>
+<DD>Maximum size of dynamic programming array to use for training and
+alignment.   See  Grice, Hughey, and Speck, and Tarnas and Hughey
+CABIOS papers for more 
+information on the algorithm used.  Depending on system configuration,
+performance may increase with higher values.  If set to zero (the
+default), SAM will always use the smallest possible amount of space.
+
+<P>
+</DD>
+<DT><STRONG>maxmodlen (integer) (0):</STRONG></DT>
+<DD>When starting with multiple, randomly generated models, the longest
+model to use.  If set to 0 (the default), the value is calculated as
+10% above the average sequence length when needed.  See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>mdNLLnull (float) (-10.0):</STRONG></DT>
+<DD>Criterion by which subsequences are judged to be matches to a single
+motif (model) during a multiple domain alignment if there is a 1 in
+the bit pattern of <TT>select_md</TT>.  All occurrences for which NLL-NULL 
+is better than the specified value are considered matches.  
+See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>mdNLLcomplex (float) (-10.0):</STRONG></DT>
+<DD>Criterion by which subsequences are judged to be matches to a single
+motif (model) during a multiple domain alignment if there is a 2 in
+the bit pattern of <TT>select_md</TT>.  All occurrences for which
+NLL-NULL user's null or reverse null model score is better than the
+specified value are considered matches.   
+See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>mdEmax (float) (0.01):</STRONG></DT>
+<DD>Criterion by which subsequences are judged to be matches to a single
+motif (model) during a multiple domain alignment if there is a 4 in
+the bit pattern of <TT>select_md</TT>.  All occurrences for which
+reverse sequence null model e-value is better than the
+specified value are considered matches.   
+See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>minmodlen (integer) (0):</STRONG></DT>
+<DD>When starting with multiple, randomly generated models, the shortest
+model to use.  If set to 0 (the default), the value is calculated as
+10% below the average sequence length when needed.  See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>.
+See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>MODEL () ():</STRONG></DT>
+<DD>Specify an initial model. See Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>..
+
+<P>
+</DD>
+<DT><STRONG>model_abort_length (integer) (10000):</STRONG></DT>
+<DD>In <TT>buildmodel</TT>, if the initial model length is greater than this
+number, an error message is printed and the program is aborted.  This
+is 
+to avoid giant models that will never complete training because of
+their memory or  execution time requirements.
+
+<P>
+</DD>
+<DT><STRONG>model_file (string) ():</STRONG></DT>
+<DD>If non-null, this file
+is read for an initial model.  The first model in the
+file (of any type, including MODEL, REGULARIZER, NULLMODEL, and
+FREQUENCIES) is used.  This will override any models present in
+inserted files. See Section&nbsp;<A HREF="node7.html#sec:files">5</A>.
+
+<P>
+</DD>
+<DT><STRONG>modellength (integer) (-1):</STRONG></DT>
+<DD>When greater than 0, sets the model length to a specific value in <TT>buildmodel</TT>. 
+(overridden if a model or regularizer without a GENERIC node is
+present). If equal to 0 and <TT>maxmodlen</TT> is less than 1, all
+model lengths  are set to the average length of the training
+sequences.  If less than 0, model
+length(s) are set to a random value between <TT>minmodlen</TT> 
+and <TT>maxmodlen</TT> according to <TT>randseed</TT>.  These two bounds will
+default to 90% and 110% of average sequence length if <TT>maxmodlen</TT> is less than 1.  See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>model_library (string) ():</STRONG></DT>
+<DD>Specify a library of models for scoring or calibration.  See Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>modlib_absolute (0/1) (1):</STRONG></DT>
+<DD>Use absolute path names when creating a model library file.  See Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>Motifcutoff (float) (0.5):</STRONG></DT>
+<DD>In multiple motif search, fragments which are smaller than this fraction of the
+model length are not considered for further processing.  Further,
+processing stops if a fragment of length less than the square of <TT>Motifcutoff</TT> is the best match (this is needed when using SW scoring
+with weak thresholds).
+See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>NLLnull (float) (-10.0):</STRONG></DT>
+<DD>If a selection variable is odd, this value is checked against a
+sequence's simple null model score.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.   
+
+<P>
+</DD>
+<DT><STRONG>NLLcomplex (float) (-10.0):</STRONG></DT>
+<DD>If a selection variable includes 2 in its binary representation, this
+value is checked 
+against a sequence's  user or reverse sequence null model
+score.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>NLLfile (string) ():</STRONG></DT>
+<DD>Alias for <TT>distfile</TT>.
+
+<P>
+</DD>
+<DT><STRONG>NLLfile2 (string) ():</STRONG></DT>
+<DD>Alias for <TT>distfile2</TT>
+
+<P>
+</DD>
+<DT><STRONG>Nmodels (integer) (3):</STRONG></DT>
+<DD>Multiple initial models can be trained simultaneously, with the best
+one being used for surgery and further training.  See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>NscoreSeq (integer) (100000):</STRONG></DT>
+<DD>Maximum number of sequences to be read by the <TT>hmmscore</TT> or <TT>align2model</TT> program.
+
+<P>
+</DD>
+<DT><STRONG>Nseq (integer) (10000):</STRONG></DT>
+<DD>Maximum number of sequences to be read from any of the up to four sequence
+files or a database files in <TT>buildmodel</TT>.  See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>nsurgery (integer) (3):</STRONG></DT>
+<DD>Maximum number of surgeries to perform.  Each surgery will result in a
+full EM cycle until <TT>stopcriterion</TT> or <TT>reestimates</TT> is reached.
+
+<P>
+</DD>
+<DT><STRONG>Ntrain (integer) (0):</STRONG></DT>
+<DD>Number of sequences to train on.  If zero, all sequences that were
+read from the files <TT>train</TT> and <TT>train2</TT> (up to a limit of
+<TT>Nseq</TT> per file) form the training set.  If <TT>Ntrain</TT> is
+greater than than the number of sequences read in from the files <TT>train</TT>, <TT>train2</TT>, <TT>test</TT>, and <TT>test2</TT>, all sequences are
+used for training.  If <TT>Ntrain</TT> is less than the total number of
+sequences read in from the four files, all the sequences are randomly
+partitioned (using <TT>trainseed</TT>) into the training set with <TT>Ntrain</TT> sequences, and of the remaining sequences (i.e., whether or
+not a sequence occured in a training file or a test file is ignored).
+See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>nucleotide_prior (string) ():</STRONG></DT>
+<DD>The prior library to use if the RNA or DNA sequences are being
+modeled and <TT>prior_library</TT> has not been set.  See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>NULLMODEL () ():</STRONG></DT>
+<DD>Identifies a user defined null model in a model file.  The parameter
+<TT>subtract_null</TT> must be set to 3 to use this null
+model. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>nullmodel_file (string) ():</STRONG></DT>
+<DD>If non-null, this file
+is read for a user's  null model.  The first model in the
+file (of any type, including MODEL, REGULARIZER, NULLMODEL, and
+FREQUENCIES) is used.  This will override any null models present in
+inserted files. To use this null model, <TT>subtract_null</TT> must be
+set to 3.  See Section&nbsp;<A HREF="node7.html#sec:files">5</A>.
+
+<P>
+</DD>
+<DT><STRONG>null_score_weight_scale (float) (10.0):</STRONG></DT>
+<DD>Used with <TT>get_fisher_scores</TT> to 
+weigh a sequences Fisher scores by how closely they match the model.
+If non-zero weigh the gradients according to the sequence NLL-NULL score,
+scaled by this parameter.  Each gradient is multiplied by
+<TT>sigmoid(-score/null_score_weight_scale)</TT>, where <TT>sigmoid</TT>
+is the logistic function. See Section&nbsp;<A HREF="node12.html#sec:get_fisher_scores">10.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>percent_id (float) (1.0):</STRONG></DT>
+<DD>For alignments passed to <TT>uniqueseq</TT>, specifies fraction
+identity to use for deleting sequences.
+If <TT>percent_id</TT> is negative, a message is printed about each sequence
+that is dropped.
+See Section&nbsp;<A HREF="node12.html#sec:uniqueseq">10.11.8</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotcolumn (integer) (3):</STRONG></DT>
+<DD>Column of score file to use in calculating plots.  Length (0), simple
+null model (1), complex or reverse null model (2), or Evalue (3).
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotleft (float) (0.0):</STRONG></DT>
+<DD>Lowest X axis value on a graph generated by <TT>gnuplot</TT>.  The X axis
+is calculated internally if  <TT>plotleft</TT>=<TT>plotright</TT>.  Used
+in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotline (float) (0.0):</STRONG></DT>
+<DD>Creates a vertical line at this value in a graph generated by <TT>gnuplot</TT>
+if plotline is nonzero.   Used in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>.  See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotmax (float) (0):</STRONG></DT>
+<DD>Highest Y axis value on a graph generated by <TT>gnuplot</TT>. The Y axis
+is calculated internally if <TT>plotmax</TT>=<TT>plotmin</TT>.  Used
+in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>.  
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotmin (float) (0):</STRONG></DT>
+<DD>Lowest Y axis value on a graph generated by <TT>gnuplot</TT>.  The Y axis
+is calculated internally if <TT>plotmax</TT>=<TT>plotmin</TT>.  Used
+in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>. 
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotnegate (int) (0):</STRONG></DT>
+<DD>Negates the scores on a graph generated by <TT>gnuplot</TT> if set to 1.
+Used in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotps (int) (1):</STRONG></DT>
+<DD>Creates a postscript file runname.ps if set to 1.  When set to 0, only a .plt
+file is generated.  A square plot postscript file is generated for a setting
+of 2.  For options 1 and 2, the .data and .plt files used to create the 
+postscript file are deleted.  When set to 3, the postscript file is generated 
+and the .data and .plt files are retained.
+Used in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>plotright (float) (0.0):</STRONG></DT>
+<DD>Highest X axis value on a graph generated by <TT>gnuplot</TT>.  The X axis
+is calculated internally if  <TT>plotleft</TT>=<TT>plotright</TT>.  Used
+in conjunction with <TT>makehist</TT>, <TT>makeroc</TT> and <TT>makeroc2</TT>. 
+See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</DD>
+<DT><STRONG>pplambda (float) (0.34657):</STRONG></DT>
+<DD>Scaling factor for <TT>pathprobs</TT>
+output scaling. For <TT>hmmscore</TT> E-value scoring use <TT>pplambda</TT> or
+<TT>swlambda</TT>. See Section&nbsp;<A HREF="node12.html#sec:pathprobs">10.7</A>. 
+
+<P>
+</DD>
+<DT><STRONG>print_all_models (0 or 1) (0):</STRONG></DT>
+<DD>When set, models are printed after each iteration
+of the forward-backward procedure.  Models are printed to files of the
+form <code>runname.a.mrrr.mod</code>, where `mrrr' is the catenation of the
+number of the model (or 1 if only one model is being estimated at a
+time) and the re-estimate number.  This variable can be toggled at
+runtime by sending a <TT>SIGUSR2</TT> signal to the program, providing a
+means to look at intermediate results while the program is running or
+checkpointing a program run.
+
+<P>
+</DD>
+<DT><STRONG>print_all_weights (0 or 1) (0):</STRONG></DT>
+<DD>When set, a weight output file is generated after each iteration
+of the forward-backward procedure.  Weights are printed to files of
+the form runname1.weightoutput, where `1' is the number of
+the iteration.
+
+<P>
+</DD>
+<DT><STRONG>print_frequencies (0 or 1) (0):</STRONG></DT>
+<DD>If this option is set, the frequency counts for each state will be
+printed as well as the model.
+
+<P>
+</DD>
+<DT><STRONG>print_surg_models (0 or 1) (0):</STRONG></DT>
+<DD>When set, models are printed after each surgery (surgery occurs after
+a sequence of EM re-estimates).  Models are printed to files of the
+form <code>runname.s.rr.mod</code>, where `rrr' is the re-estimation index for
+the run.  When surgery is used, a single winning model is
+automatically selected after the first EM re-estimation loop if
+multiple initial models are  used.  This variable can be toggled at
+runtime by sending a <TT>SIGUSR1</TT> signal to the program.
+
+<P>
+</DD>
+<DT><STRONG>prior_library (string) ():</STRONG></DT>
+<DD>When set, use Dirichlet mixture priors to regularizer the models.
+Transition costs and insert states are still regularized by the
+default (or specified) regularizer, but match states are regularized with
+Dirichlet mixtures.  
+The <TT>matchconf</TT> variable is ignored if a prior library is used,
+in favor of the <TT>prior_weight</TT> variable.  If <TT>prior_library</TT> is not set and <TT>protein_prior</TT> or <TT>nucleotide_prior</TT> is set, the indicated prior library is used.
+If neither is set, and proteins are being modeled, and internal
+default prior library is used.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>prior_weight (float) (1.0):</STRONG></DT>
+<DD>Weight of the prior library, if it is used.  See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>protein_prior (string) ():</STRONG></DT>
+<DD>The prior library to use if the proteins are being modeled and <TT>prior_library</TT> has not been set.  If not set, and proteins are being
+modeling, an internal default will be used. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>randseed (integer) (-1):</STRONG></DT>
+<DD>Random seed for noise generation and for selection
+of initial model lengths if <TT>modellength</TT> is less than one.  The
+default value causes the process's pid to be used, which will then be
+printed to the output file to enable replication of results.
+
+<P>
+</DD>
+<DT><STRONG>rdb (0 or 1) (0):</STRONG></DT>
+<DD>Create the score file in RDB format with the extension <TT>.dist-rdb</TT>
+rather than the standard <TT>.dist</TT> format.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>randomize (integer) (50):</STRONG></DT>
+<DD>Determines how noise is added to
+the model.  See Section&nbsp;<A HREF="node11.html#noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>read_smooth (0 or 1) (0):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> whether or not to read a smooth curve
+from <TT>smooth_file</TT>, or its default (<TT>runname.smooth</TT>).
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>reestimates (integer) (40):</STRONG></DT>
+<DD>Maximum number of re-estimates to perform after a surgery.  Generally,
+this should be set higher than the number of iterations that have noise.
+See Section&nbsp;<A HREF="node11.html#sec:estimation">9</A>.
+
+<P>
+</DD>
+<DT><STRONG>reglength (integer) (-1):</STRONG></DT>
+<DD>Similar to <TT>modellength</TT>, sets the length of the regularizer.
+Usually not needed.
+See Section&nbsp;<A HREF="node10.html#sec:mod_length">8.4.1</A>. 
+
+<P>
+</DD>
+<DT><STRONG>REGULARIZER () ():</STRONG></DT>
+<DD>Specify an initial regularizer. See Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>regularizer_file (string) ():</STRONG></DT>
+<DD>If non-null, this file
+is read for a single-component regularizer.  The first model in the
+file (of any type, including MODEL, REGULARIZER, NULLMODEL, and
+FREQUENCIES) is used.  This will override any regularizers present in
+inserted files.  See Section&nbsp;<A HREF="node7.html#sec:files">5</A>.
+
+<P>
+</DD>
+<DT><STRONG>rerun (integer) (-1):</STRONG></DT>
+<DD>The program optimizes Nmodels models until the first `surgery',
+and then continues with the best one.  Sometimes it is interesting
+to see how the second best would have done.  If the second
+best is number 4 (starting from 0!), a setting this parameter to 4
+would optimize that model.  Models can also be accessed using one
+<TT>print_all_models</TT>.
+
+<P>
+</DD>
+<DT><STRONG>retrain_noise_scale (float) (0.1):</STRONG></DT>
+<DD>If an initial model or alignment is passed to buildmodel, <TT>initial_noise</TT> (or <TT>anneal_noise</TT> if <TT>initial_noise is
+unspecified</TT>)is scaled by this multiplier, which must be between 0.0 
+and 1.0.  See Section&nbsp;<A HREF="node11.html#sec:noise">9.1</A>. 
+
+<P>
+</DD>
+<DT><STRONG>segments (integer) (1):</STRONG></DT>
+<DD>Number of segments <TT>hmmscore</TT> should logically split database
+into.  Segmentation is based on number of
+sequences. See Section&nbsp;<A HREF="node12.html#sec:segment">10.2.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>segment_number (integer) (1):</STRONG></DT>
+<DD>Segment number among segments.  See Section&nbsp;<A HREF="node12.html#sec:segment">10.2.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>segment_size (integer) (1000):</STRONG></DT>
+<DD>Number of sequences read in at a time and given to one of the
+segments.  See Section&nbsp;<A HREF="node12.html#sec:segment">10.2.6</A>. 
+
+<P>
+</DD>
+<DT><STRONG>select_align (integer) (0):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> what selection criteria should be used for
+placing aligned sequences  into the file <TT>runname.a2m</TT>.
+If 0, no sequences are selected; if 1, sequences are selected according
+to their simple null model scores and <TT>NLLNull</TT>; if 2, sequences
+are selected  according to their complex, user, or reverse sequence
+null model score and <TT>NLLcomplex</TT>; if 4, sequences are selected
+according to their E-values and <TT>Emax</TT>; if 8, all sequences are
+selected.  Selection criteria can be combined:  3 requires sequences
+to score better than <TT>NLLnull</TT> with the simple null model and
+<TT>NLLcomplex</TT> with the complex (user's or reverse sequence) null model.  Negative numbers
+indicate that sequences that do not pass the corresponding positive
+test should be selected. 
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>select_mdalign (integer) (0):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> what selection criteria should be used for
+performing a multiple multiple domain check on a scored sequence.
+Sequences that pass the <TT>select_mdalign</TT> criteria are analyzed
+and record is they pass the <TT>select_md</TT> criteria during the
+mult-domain Viterbi alignment pass.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>select_md (integer) (1):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> what selection criteria should be used treating a
+multiple domain alignment as found, in which case the
+alignment is written to <TT>runname.mult</TT> with scores in <TT>runname.mstat</TT>.  Functions as with 
+<TT>select_align</TT> with the variables <TT>mdNLLnull</TT>, <TT>mdNLLcomplex</TT>, and <TT>mdEmax</TT>.  Only sequences that pass the
+selection criteria (which is always based on Viterbi scores) are
+recorded in the files.   The default is to require passing the simple
+null model test. 
+See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>select_score (integer) (8):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> what selection criteria should be used for
+listing sequence scores in the file <TT>runname.dist</TT>.  Functions as
+with <TT>select_align</TT>.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>select_seq (integer) (0):</STRONG></DT>
+<DD>Tells <TT>hmmscore</TT> what selection criteria should be used for
+placing sequences in the file <TT>runname.sel</TT>.  Functions as with
+<TT>select_align</TT>
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>sequence_models (float) (0.0):</STRONG></DT>
+<DD>Build initial models from randomly-selected sequences in the training
+set when greater than zero.  Value indicates the weight the sequence
+should have when combined with the regularizer.
+ See Section&nbsp;<A HREF="node10.html#sec:alignfile">8.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>sequence_warning (integer) (0):</STRONG></DT>
+<DD>Primarily for debugging.  Set to <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img40.png"
+ ALT="$-1$"> to print out all sequences in
+which a `wrong' letter was found, or to <IMG
+ WIDTH="26" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img82.png"
+ ALT="$-2$"> to print out all
+sequences.
+
+<P>
+</DD>
+<DT><STRONG>sequence_weights (string) ():</STRONG></DT>
+<DD>File to read for sequence
+weights. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+
+<P>
+</DD>
+<DT><STRONG>simple_threshold (integer) (0):</STRONG></DT>
+<DD>User and reverse sequence scores will not be calculated
+by <TT>hmmscore</TT> unless the simple null model score is less than this
+number.   Set to 10000 to require all scores to be calculated.
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>. 
+
+<P>
+</DD>
+<DT><STRONG>sort (integer) (4):</STRONG></DT>
+<DD>Indicates whether or not sequence scores
+should be sorted by <TT>hmmscore</TT>.  With a value of 1, sequences are sorted by column 1
+(simple null model score).  With a value of 2, sequences are sorted by
+column 2 (other null model selections; see <TT>subtract_null</TT>).
+With a value of 4, sequences are sorted by E-value if available or by
+column 1.  When negative, scores are sorted in reverse order, worst
+first.  When 0, scores are not sorted.
+
+<P>
+<TT>Sort</TT> also indicates whether or not <TT>checkseq</TT> should sort
+sequence IDs 
+and sequences to check for uniqueness.    Sorting in <TT>uniqueseq</TT>
+will only take place of <TT>sort</TT> is actively set on the command
+line.    This sorting requires storing all sequences in memory, so can
+be quite time consuming.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:checkseq">10.11.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>stopcriterion (float) (0.1):</STRONG></DT>
+<DD>The re-estimation loop will stop
+whenever the improvement in the NLL score is less than this number
+(provided noise is less than 10% of its original value for that
+iteration), or when the maximum number of <TT>reestimates</TT> is
+reached.  See Section&nbsp;<A HREF="node11.html#sec:estimation">9</A>.
+
+<P>
+</DD>
+<DT><STRONG>subtract_null (integer) (1):</STRONG></DT>
+<DD>In <TT>hmmscore</TT> and other programs, decides the type of null model
+to be used.  In score files, this will be the second score column (the
+first is always the simple null model).  When set to 0, raw scores are
+reported in the second column.  Setting to 1 provides simple null
+model scores; to 2, issues a warning and uses the simple null model;
+to 3, user's input null model; and to 4, the reverse sequence null
+model. 
+
+<P>
+</DD>
+<DT><STRONG>surgery_noise_scale (float) (0.1):</STRONG></DT>
+<DD>After the first surgery, <TT>anneal_noise</TT> is scaled by this
+multiplier, which must be between 0.0 and 1.0.  See Section&nbsp;<A HREF="node11.html#sec:noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>SW (integer) (0):</STRONG></DT>
+<DD>When set to 1, <TT>hmmscore</TT> uses submodel to sequence (semilocal) scoring . 
+When set to 2, <TT>hmmscore</TT> uses submodel to subsequence (local) scoring.
+When set to 3, <TT>hmmscore</TT> uses model to subsequence (domain) scoring.
+Can also be used with <TT>align2model</TT> and <TT>buildmodel</TT>. 
+Similar to the Smith and Waterman method. Ignored in Smith and
+Waterman (<TT>query</TT>) mode. See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>swlambda (float) (0.34657):</STRONG></DT>
+<DD>Scaling factor for Smith and Waterman
+e-value calculation and for <TT>pathprobs</TT> single-digit
+scores. Default is <IMG
+ WIDTH="56" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img70.png"
+ ALT="$\ln(b)/u$">, for base 2 (bit) scoring matrices for
+which a unit indicates a half-bit.  Do not confuse with <TT>pplambda</TT> or <TT>lambda</TT>. See Section&nbsp;<A HREF="node12.html#sec:smithwaterman">10.2.7</A>.
+
+<P>
+</DD>
+<DT><STRONG>test (string) ():</STRONG></DT>
+<DD>A file to read test sequences from. See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+</DD>
+<DT><STRONG>test2 (string) ():</STRONG></DT>
+<DD>A second file to read test sequences from. See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>trackcoeff (string) ():</STRONG></DT>
+<DD>A comma-separated list of floating-point track coefficients used to
+compine character emission scores in multi-track HMMs.
+See Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>trackmod (string) ():</STRONG></DT>
+<DD>A comma-separated list of model files specying a multi-track HMM.
+See Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A>.
+
+<P>
+</DD>
+<DT><STRONG>trackprior (string) ():</STRONG></DT>
+<DD>A comma-separated list of Dirichlet mixture priors to be used in model
+calibration of a single or multi-track HMM.  Multiple tracks are
+generated independently.
+See Section&nbsp;<A HREF="node12.html#sec:multitrack">10.2.5</A> 
+and Section&nbsp;<A HREF="node12.html#sec:calibrate">10.2.9</A>.
+
+<P>
+</DD>
+<DT><STRONG>trainseed (integer) (-1):</STRONG></DT>
+<DD>Random seed for partitioning the sequences into the test set and the
+training set.  The default value causes the process's pid to be used,
+which will then be printed to the output file to enable replication of
+results. See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>train (string) ():</STRONG></DT>
+<DD>A file to read training sequences from.  See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+</DD>
+<DT><STRONG>train2 (string) ():</STRONG></DT>
+<DD>A second file to read training sequences from.   See Section&nbsp;<A HREF="node9.html#traintest">7.3</A>.
+
+<P>
+</DD>
+<DT><STRONG>train_reset_inserts (0,1,2,3, or 6) (6):</STRONG></DT>
+<DD>At the end of <TT>buildmodel</TT> training, all insert and FIM character
+tables are set according to this variable, which takes on the same
+meanings as <TT>FIM_method_train</TT>.  The default setting is to set
+all insert and FIM tables to the normalized geometric average of the
+match state costs.  See Section&nbsp;<A HREF="node10.html#sec:insert_fim">8.6</A>.
+
+<P>
+</DD>
+<DT><STRONG>trans_priors (string) ():</STRONG></DT>
+<DD>The name of the structure-specific transition prior library to use when
+structural information for transition probability estimation is to be
+used for HMM estimation.  See Section&nbsp;<A HREF="node10.html#sec:structreg">8.1.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>transweight (float) (1.0):</STRONG></DT>
+<DD>A multiplier that affects the influence of the pseudocounts generated by
+the structure-specific transition priors. See Section&nbsp;<A HREF="node10.html#sec:structreg">8.1.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>template (string) ():</STRONG></DT>
+<DD>For use with the structure-specific transition prior library. A three-
+column file (amino acid sequence, secondary structure, accessibility)
+that is used during HMM estimation to assign a structural environment
+to each model node. See Section&nbsp;<A HREF="node10.html#sec:structreg">8.1.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>use_kestrel (0 or 1) (0):</STRONG></DT>
+<DD>If <TT>1</TT>, use the Kestrel implementation of the <TT>hmmscore</TT> scoring
+algorithm.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</DD>
+<DT><STRONG>viterbi_threshold (integer) (10000):</STRONG></DT>
+<DD>If changed from the default 10000, and the dynamic programming style
+is not Viterbi, sequences must first pass the <TT>viterbi_threshold</TT> for the Viterbi NLL-NULL score before being scored
+with the selected method.  Because Viterbi scoring can be 2-5 times
+faster than EM-style scoring, this can lead to a considerable
+execution time savings.  A typical use would be to set to, for
+example, 5 greater than the <TT>simple_threshold</TT> used for
+calculating the reverse null model score.
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>. 
+
+<P>
+</DD>
+<DT><STRONG>weight_final (float) (1.0):</STRONG></DT>
+<DD>The final (steady-state)
+multiplier of sequence weights.  The default (1.0) means that, if no
+sequence weight file is used, each sequence is weighted as being one
+sequence.  If a weight file is used, all values in that file are
+multiplied by this value. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A> 
+and Section&nbsp;<A HREF="node11.html#sec:noise">9.1</A>.
+
+<P>
+</DD>
+<DT><STRONG>weight_length (float) (0):</STRONG></DT>
+<DD>An annealing schedule for the
+sequence weight multiplier.  If greater than 1.0, the weight
+multiplier is increased from zero linearly over <TT>weight_length</TT>
+re-estimates.  If less than one, increase exponentially.
+See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A> 
+and Section&nbsp;<A HREF="node11.html#sec:noise">9.1</A>. 
+
+<P>
+</DD>
+<DT><STRONG>write_dist (0 or 1) (0):</STRONG></DT>
+<DD>If a non-zero value is specified, <TT>get_fisher_scores</TT> will generate a
+<TT><EM>runname</EM>.dist-rdb</TT> score file.
+See Section&nbsp;<A HREF="node12.html#sec:get_fisher_scores">10.5</A>.
+
+<P>
+</DD>
+</DL>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html541"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html537"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html531"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html539"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html542"
+  HREF="node15.html">About this document ...</A>
+<B> Up:</B> <A NAME="tex2html538"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html532"
+  HREF="node13.html">11 System installation</A>
+ &nbsp <B>  <A NAME="tex2html540"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

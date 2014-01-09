@@ -1,0 +1,44 @@
+dpb, 1/20/2011:
+
+Fragment picking functionality now consists of frag_driver.py, fragmentor.py,
+and fragmentor.config (in the base directory), plus a 
+call to the old make_fragments.local.pl (in the scripts directory).
+
+frag_driver.py is the executable, and drives all fragment picking functionality.
+It is responsible for creating a tasks pickle populated with fasta filesnames 
+(that act as input for a sole fragmenting task), and then running fragmenting
+functionality on those tasks. It does this by creating a Fragmentor object and
+calling Fragmentor methods.
+
+fragmentor.py contains the definition of the Fragmentor class, which is responsible
+for all singular fragment picking functionality. The Fragmentor.run function is the
+only public function, and executes a fragment picking run based on make_fragments.local.pl
+
+fragmentor.config is a config file read by the Fragmentor class, and contains values
+for the location of the make_fragments script, and all tools and databases required.
+
+Old fragment functionality has been preserved, and can be access as-was via the
+frag_array.py driver, located in src/old/
+
+Note that all fragmentor functionality has been moved in the HPF repository to
+hpf/fragmentor (taken from the hpf/hddb/fragment_picker directory).
+
+
+dpb, 12/17/2010:
+
+Fragment picking functionality consists of a chain of wrappers/drivers.
+
+fragment_picker.py is our current driver for make_fragments.local.pl, and handles
+(a bunch of stuff - fasta input, directory structure creation, etc).
+
+array.sh is a simple execution wrapper for fragment_picker.py
+
+make_fragments.local.pl is the old perl script that drives fragment functionality
+by setting up environment variables, etc. make_fragments.local.pl is essentially 
+a driver for nnmake, which does the actual fragmentation.
+
+validate.py is (I THINK) used to validate the results of a fragment picking run.
+Generally, validate is not used.
+
+All other scripts in /scripts are treated as black boxes, and may or may not be
+part of the functionality chain.

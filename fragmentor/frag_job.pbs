@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=8gb
+#PBS -N frag_qr
+#PBS -q default
+#PBS -V 
+#PBS -S /bin/bash
+#PBS -d /home/dpb3/hpf/hpf/fragmentor
+#PBS -M dpb3@nyu.edu
+#PBS -m n 
+#PBS -j oe
+#PBS -o localhost:/home/dpb3/fragmentor/logs/${PBS_JOBNAME}
+
+/home/dpb3/hpf/hpf/fragmentor/frag.sh
+
+exit 0;

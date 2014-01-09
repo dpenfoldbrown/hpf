@@ -1,0 +1,24 @@
+ClassName = Alphabet
+
+Name = DMI
+IsNucleic = 0
+NormalChars = DMI
+CharName = D Del delete
+CharName = M Mat match
+CharName = I Ins insert
+
+EndClassName = Alphabet
+
+ClassName = Alphabet
+
+Name = DMIS
+IsNucleic = 0
+NormalChars = DMIS
+Alias = B S
+Alias = E S
+CharName = D Del delete
+CharName = M Mat match
+CharName = I Ins insert
+CharName = S St  start/stop
+
+EndClassName = Alphabet

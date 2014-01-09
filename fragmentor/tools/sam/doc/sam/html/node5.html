@@ -1,0 +1,1701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>4 SAM-T99</TITLE>
+<META NAME="description" CONTENT="4 SAM-T99">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html332"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html328"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html322"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html330"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html333"
+  HREF="node6.html">Bibliography</A>
+<B> Up:</B> <A NAME="tex2html329"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html323"
+  HREF="node4.html">3 Quick overview</A>
+ &nbsp <B>  <A NAME="tex2html331"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html334"
+  HREF="#SECTION00051000000000000000">4.1 SAM-T99 for superfamily modeling</A>
+<LI><A NAME="tex2html335"
+  HREF="#SECTION00052000000000000000">4.2 Improved verification of homology</A>
+<LI><A NAME="tex2html336"
+  HREF="#SECTION00053000000000000000">4.3 Family-level multiple alignments</A>
+<LI><A NAME="tex2html337"
+  HREF="#SECTION00054000000000000000">4.4 Modeling non-contiguous domains</A>
+<LI><A NAME="tex2html338"
+  HREF="#SECTION00055000000000000000">4.5 Building an HMM from a structural alignment</A>
+<LI><A NAME="tex2html339"
+  HREF="#SECTION00056000000000000000">4.6 Improving existing multiple alignments</A>
+<LI><A NAME="tex2html340"
+  HREF="#SECTION00057000000000000000">4.7 Creating a multiple alignment from unaligned sequences</A>
+<LI><A NAME="tex2html341"
+  HREF="#SECTION00058000000000000000">4.8 Parameters for <TT>target99</TT> perl script</A>
+<LI><A NAME="tex2html342"
+  HREF="#SECTION00059000000000000000">4.9 The model building scripts</A>
+<LI><A NAME="tex2html343"
+  HREF="#SECTION000510000000000000000">4.10 Installing SAM-T99</A>
+<LI><A NAME="tex2html344"
+  HREF="#SECTION000511000000000000000">4.11 SAM-T99 references</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00050000000000000000"></A><A NAME="sec:samt99"></A>
+<BR>
+4 SAM-T99
+</H1>
+
+<P>
+The SAM-T99 method is an iterative HMM method.  It is a refinement of
+the methods used at UCSC for the 1996 CASP2 protein structure
+prediction contest:
+<BLOCKQUOTE>
+K. Karplus, K. Sj&#246;lander, C. Barrett, M. Cline, D. Haussler, R. Hughey,
+L. Holm, and C. Sander, ``Predicting Protein Structure Using Hidden Markov
+Models,''  in <EM>Proteins: Structure, Function, and Genetics,</EM> 
+Supplement 1:134-139, 1997. 
+
+</BLOCKQUOTE>
+
+<P>
+as well as the 2000 CASP4 and  1998 CASP3 contests:
+
+<P>
+<BLOCKQUOTE>
+K. Karplus, R. Karchin, C. Barrett, S. Tu, M. Cline,
+  M. Diekhans, L. Grate, J. Casper, and R. Hughey,
+``What is the value added by human intervention in protein structure
+  prediction?,'' invited for
+ <EM>Proteins: Structure, Function, and Genetics</EM>, 2001.
+
+</BLOCKQUOTE>
+
+<P>
+<BLOCKQUOTE>
+K. Karplus, C. Barrett, M. Cline, M. Diekhans, L. Grate, R. Hughey,
+``Predicting Protein Structure using Only Sequence Information''  
+<EM>Proteins: Structure, Function, and Genetics,</EM>
+Supplement&nbsp;3:121-125, 1999. 
+
+</BLOCKQUOTE>
+
+<P>
+The CASP3  SAM-T98 method is described in detail in the following
+article, which should be cited along with the SAM paper whenever the
+SAM-T99 is used:
+<BLOCKQUOTE>
+K. Karplus, C. Barrett, and R. Hughey, ``Hidden Markov Models
+for Detecting Remote Protein Homologies,'' 
+<EM>Bioinformatics,</EM> 14(10):846-856, 1998.
+
+</BLOCKQUOTE>
+
+<P>
+SAM-T98 is shown to be better for remote homology detection than
+BLAST, FASTA, ISS, and PSI-BLAST  in
+
+<P>
+<BLOCKQUOTE>
+J. Park, K. Karplus, C. Barrett, R. Hughey, D. Haussler, T. Hubbard,
+and C. Chothia, ``Sequence Comparisons Using Multiple Sequences Detect
+Twice as many Remote Homologues as Pairwise Methods,'' <EM>Journal of
+Molecular Biology,</EM> 284(4):1201-1210, 1998.
+
+</BLOCKQUOTE>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:t99"></A><A NAME="975"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 6:</STRONG>
+Performance of SAM-T99 and other methods on SCOP super-familily
+discrimination.</CAPTION>
+<TR><TD><IMG
+ WIDTH="333" HEIGHT="218" BORDER="0"
+ SRC="img11.png"
+ ALT="\begin{figure}\centerline{\psfig{figure=sam-t98-t99.eps,width=0.6\textwidth}}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+The performance of SAM-T99, SAM-T98, Double-BLAST (finding a set of
+close BLAST hits to a sequence and useing them for a second BLAST
+search), and Smith and Waterman with a reverse-sequence null model are
+shown in Figure&nbsp;<A HREF="node5.html#fig:t99">6</A>.
+
+<P>
+This section illustrates the use of the SAM 3.0 programs and scripts
+to perform a remote homology search.  
+
+<P>
+The method has several options for handling somewhat
+different tasks.  The next sections will describe a few such tasks:
+
+<UL>
+<LI>Building a multiple alignment and HMM for a superfamily, starting with a
+        single sequence. See Section&nbsp;<A HREF="node5.html#sec:superfamily-align">4.1</A>.
+</LI>
+<LI>Building a family-level multiple alignment (rather than a
+        superfamily multiple alignment). See Section&nbsp;<A HREF="node5.html#sec:family-align">4.3</A>.
+</LI>
+<LI>Modeling a non-contiguous domain. See Section&nbsp;<A HREF="node5.html#sec:noncontig">4.4</A>.
+</LI>
+<LI>Building a model from a structural alignment. See Section&nbsp;<A HREF="node5.html#sec:structural-hmm">4.5</A>.
+</LI>
+<LI>Improving an existing multiple alignment (perhaps from some
+        other tool, such as ClustalW&nbsp;[<A
+ HREF="node6.html#CLUSTAL94">13</A>] or MaxHom&nbsp;[<A
+ HREF="node6.html#SanderSchneider91">11</A>]).
+        See Section&nbsp;<A HREF="node5.html#sec:tuneup-align">4.6</A>.
+</LI>
+<LI>Creating a multiple alignment from a set of unaligned sequences.  
+        See Section&nbsp;<A HREF="node5.html#sec:from-unaligned">4.7</A>.
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000"></A><A NAME="sec:superfamily-align"></A>
+<BR>
+4.1 SAM-T99 for superfamily modeling
+</H2>
+
+<P>
+The SAM-T99 method has been encapsulated in a single perl script: <TT>target99</TT>.  This script accepts a single protein sequence as input (the <EM>target</EM> sequence), does a search of a non-redundant protein
+database, and returns a multiple alignment of sequences similar to the
+target.  The default parameters have been adjusted to give good
+performance at recognizing sequences related at the superfamily level
+of the SCOP database&nbsp;[<A
+ HREF="node6.html#scop95">7</A>].
+
+<P>
+For example, let's start with a single hemoglobin (say PDB sequence
+1babA), and try to find as many other globins as we can.  The initial
+protein sequence should be in FASTA format, and all uppercase, since
+it is used by <TT>modelfromalign</TT> to build an HMM.  The 1babA
+sequence is in the demos subdirectory as <TT>1babA.seq</TT>.
+
+<P>
+The command 
+<PRE>
+
+target99 -seed 1babA.seq -out 1babA-t99
+</PRE>
+will search the non-redundant protein database (see
+Section&nbsp;<A HREF="node5.html#sec:sam-t99-install">4.10</A>) and return a multiple alignment of
+protein sequences similar to 1babA.  The seed sequence is provided
+first, followed by the similar sequences sorted in order of how well
+they fit the HMM implied by the multiple alignment.  The best-scoring
+sequence is quite frequently not the sequence that was used as the seed.
+
+<P>
+Since <TT>target99</TT> produces voluminous output to the standard error
+output (so you can see the progress of the run), you may want to
+redirect the standard-error output to a file (the syntax for this
+depends on which UNIX shell you run).  
+Note that the multiple alignment, with over 1250 sequences, contains
+not only hemoglobins, but also myoglobins and leghemoglobins.
+
+<P>
+You may want to create an HMM from the multiple alignment, in order to
+search another database (for example, the PDB database), or to score
+sequences that were selected by some other method.  Although you can
+use <TT>modelfromalign</TT> directly to do the HMM construction, we
+have provided some simple scripts that set the parameters
+appropriately. The <TT>build-weighted-model</TT> script is a simple
+wrapper for <TT>uniqueseq</TT> and <TT>modelfromalign</TT>, and scripts like
+<TT>fw0.7</TT> and <TT>w0.5</TT> set the parameters of <TT>build-weighted-model</TT>.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="t99plot"></A><A NAME="1009"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 7:</STRONG>
+Globin score histogram for SAM-T99 model trained on 1babA.</CAPTION>
+<TR><TD><IMG
+ WIDTH="240" HEIGHT="168" BORDER="0"
+ SRC="img12.png"
+ ALT="\begin{figure}\centerline{\psfig{figure=1babA-globins.ps,width=0.45\textwidth}}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+To build a model for searching for globins, try the following command:
+<PRE>
+
+fw0.7 1babA-t99.a2m 1babA-t99-fw0.7.mod
+</PRE>
+This model can then be used for scoring a set of sequences:
+<PRE>
+
+hmmscore 1babA-globins -i 1babA-t99-fw0.7.mod -db globins50.seq -sw 2
+</PRE>
+producing 1babA-globins.dist.
+Note that all the globins in this small database score extremely well (Figure&nbsp;<A HREF="node5.html#t99plot">7</A>)
+with this model (E-values 1.6e-11 or smaller, NLL<IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">reverse <IMG
+ WIDTH="72" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.png"
+ ALT="$\leq
+-28.79$">)--compare with the results presented in
+Section&nbsp;<A HREF="node10.html#sec:reg-alternatives">8.1.1</A> on page&nbsp;<A HREF="node10.html#sec:reg-alternatives"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/crossref.png"></A> 
+for models built from a few globin sequences.
+
+<P>
+In a 1995 test set of 12,219 sequences based on the PIR
+database&nbsp;[<A
+ HREF="node6.html#Pearson95">10</A>], the 1babA-t99-fw0.7 model scored all
+505 globins with E-values <IMG
+ WIDTH="67" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img15.png"
+ ALT="$\leq 0.0024$"> (and <IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$\leq$">9.2e-12, if you exclude the
+45-residue fragment GGNW3B) and all non-globins with E-values
+<IMG
+ WIDTH="39" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.png"
+ ALT="$\geq 25$"> providing a very clean separation of globins from
+non-globins.  Note that this HMM does much better than prior reports
+of HMMs constructed automatically for globin recognition, which did
+not achieve perfect separation even when given 400 or 10 known
+globins&nbsp;[<A
+ HREF="node6.html#hawaii">3</A>,<A
+ HREF="node6.html#karchin98">6</A>].  Warning: globins are a fairly easy
+protein domain to recognize, and this clean a separation cannot be
+expected for more difficult domains.
+
+<P>
+On the SCOP pdb90d domain database (version 1.37 with 2466 sequences),
+the model scored all globins with E-values <IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$\leq$"> 4.0e-07, and
+non-globins with E-values <IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img18.png"
+ ALT="$\geq$"> 0.82.
+The phycocyanins, which are in the same superfamily as globins, but a
+different family, had E-values ranging from 630 to 2000, and were
+emphatically not recognized by the HMM.
+Thus the model generated from 1babA should be regarded as a family
+model, and not as a superfamily model.
+
+<P>
+One other important warning: the E-value reported is an estimate of
+how many sequences would score that well with the final model in a
+random database.   A very low E-value means that the sequence or a
+very similar one was included in the training set from which the model
+was built--it does not necessarily mean that the sequence is very
+similar to the seed sequence.  
+With any iterated search method (SAM-T98,
+SAM-T99, PSIBLAST&nbsp;[<A
+ HREF="node6.html#psiblast97">1</A>], ISS&nbsp;[<A
+ HREF="node6.html#iss97">9</A>],&nbsp;...)
+including a false positive on any iteration results in much too strong
+a score for that sequence and similar sequences on subsequent iterations.
+
+<P>
+Since the default thresholds for
+SAM-T99 include sequences with E-values as large as 0.01 (measured in 
+the non-redundant database) for the last iteration, E-values less than
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+0.01 \frac{\mbox{size}(\mbox{searched database})}
+{\mbox{size}(\mbox{nonredundant protein database})}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="424" HEIGHT="44" BORDER="0"
+ SRC="img19.png"
+ ALT="\begin{displaymath}
+0.01 \frac{\mbox{size}(\mbox{searched database})}
+{\mbox{size}(\mbox{nonredundant protein database})}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+are roughly equivalent.  
+For the PIR test set, this threshold is about <!-- MATH
+ $0.01\ 12,216/415,133 = 0.0004$
+ -->
+<IMG
+ WIDTH="215" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.png"
+ ALT="$0.01\ 12,216/415,133 = 0.0004$">
+and for the pdb90d, the threshold is about <!-- MATH
+ $0.01\ 2466/415,133 = 0.00006$
+ -->
+<IMG
+ WIDTH="208" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img21.png"
+ ALT="$0.01\ 2466/415,133 = 0.00006$">.
+Since all the globins score much better than that, about all we can
+say is that they fit the model--there are no sequences being found
+that are very different from the ones used in creating the HMM.
+
+<P>
+On a test of 935 SCOP domains (the PDB40D Jong Families&nbsp;[<A
+ HREF="node6.html#park98">8</A>]),  
+the E-values can be seen to be somewhat conservative for values larger
+than 0.1, but the false-positive rate remains above 0.01 even for
+very small E-values (see Figure &nbsp;<A HREF="node5.html#fig:fw0.7-calibrate">8</A>).
+This ``fat-tail'' phenomenon occurs not only for
+SAM-T99, but for almost all homology-detection methods--there are
+some statistically significant sequence similarities that do not cause
+proteins to fold the same way. 
+The strongest ``false positive'' in this test set is actually a
+mislabeling of one of the domains, fixed in more recent releases of
+the SCOP domains.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:fw0.7-calibrate"></A><A NAME="1525"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 8:</STRONG>
+This graph compares the theoretically expected number of 
+false positives per query (the E-value), with the observed number of
+false positives per query in an all-vs-all
+test of 935 SCOP domains.
+The different curves reflect the different levels of similarity one
+can get from the SCOP hierarchy.
+The multiple alignments were built with the default values of the <TT>target99</TT>
+script, and the HMMs were built using <TT>fw0.7</TT>, and scored with
+<TT>hmmscore -sw 2 -fimtrans 1</TT>.
+</CAPTION>
+<TR><TD><IMG
+ WIDTH="504" HEIGHT="327" BORDER="0"
+ SRC="img22.png"
+ ALT="\begin{figure}\begin{center}
+\parbox{0pt}{\psfig{figure=t99-fw0.7-calibrate.eps,width=0.9\textwidth}}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000">
+4.2 Improved verification of homology</A>
+</H2>
+
+<P>
+If we have a conjectured homology between two sequences, perhaps as a
+result of a search using a SAM-T99 model, we can improve our
+confidence in the result by combining the results from two different
+<TT>.dist</TT> files.  For each sequence, we build a multiple alignment
+using <TT>target99</TT>, then create an HMM from the alignment and use it
+to score the other sequence.  The two ``Reverse'' scores can be
+averaged and converted to an E-value (See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.).
+Figures&nbsp;<A HREF="node5.html#fig:fw0.7-avg-vs-rev">9</A> and&nbsp;<A HREF="node5.html#fig:fw0.7-fp-vs-tp">10</A> show
+the improvement one gets from averaging scores in this way.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:fw0.7-avg-vs-rev"></A><A NAME="1527"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 9:</STRONG>
+This graph compares the theoretically expected number of 
+false positives per query (the E-value), with the observed number of
+false positives per query in an all-vs-all
+test of 935 SCOP domains.
+False positives are sequences in different folds (in the SCOP
+hierarchy), true positives are sequences in the same superfamily.
+Note that the averaging technique makes the E-value estimates
+considerably more conservative.
+The multiple alignments were built with the default values of the <TT>target99</TT>
+script, and the HMMs were built using <TT>fw0.7</TT>, and scored with
+<TT>hmmscore -sw 2 -fimtrans 1</TT>.
+</CAPTION>
+<TR><TD><IMG
+ WIDTH="504" HEIGHT="327" BORDER="0"
+ SRC="img23.png"
+ ALT="\begin{figure}\begin{center}
+\parbox{0pt}{\psfig{figure=t99-fw0.7-avg-vs-rev.eps,width=0.9\textwidth}}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:fw0.7-fp-vs-tp"></A><A NAME="1529"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 10:</STRONG>
+This graph the number of false positives (different folds in
+the SCOP hierarchy) versus the number of true positives (same superfamily)
+in an all-vs-all
+test of 935 SCOP domains.
+The multiple alignments were built with the default values of the <TT>target99</TT>
+script, and the HMMs were built using <TT>fw0.7</TT>, and scored with
+<TT>hmmscore -sw 2 -fimtrans 1</TT>.
+ The averaging method finds considerably more superfamily
+relationships at every level of false positives accepted.</CAPTION>
+<TR><TD><IMG
+ WIDTH="504" HEIGHT="330" BORDER="0"
+ SRC="img24.png"
+ ALT="\begin{figure}\begin{center}
+\parbox{0pt}{\psfig{figure=t99-fw0.7-fp-vs-tp.eps,width=0.9\textwidth}}\end{center}\par\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<H2><A NAME="SECTION00053000000000000000"></A><A NAME="sec:family-align"></A>
+<BR>
+4.3 Family-level multiple alignments
+</H2>
+
+<P>
+The default parameters for the <TT>target99</TT> script have been set
+for fairly good performance on recognizing superfamilies.
+If you want to separate one family from another (as Pfam
+does&nbsp;[<A
+ HREF="node6.html#Pfam">12</A>]), this level of generalization is usually too extreme.
+
+<P>
+By specifying the option <TT>-family</TT>, you can request a different
+set of parameters intended for building family-level multiple
+alignments from a seed sequence.  These parameters have not been
+tested yet, and are offered only as a starting point for further tweaking.
+
+<P>
+The Pfam database creates family-level HMMs from hand-curated seed
+alignments&nbsp;[<A
+ HREF="node6.html#Pfam">12</A>].
+The SAM-T99 method can also be started with a seed alignment,
+rather than a single sequence--simply provide the alignment as an a2m
+file with <TT>target99</TT>'s <TT>-seed</TT> option.
+
+<P>
+The <TT>-seed</TT> option is also useful for superfamily
+recognition--especially if a structural alignment is available to use
+as a seed.
+
+<P>
+
+<H2><A NAME="SECTION00054000000000000000"></A><A NAME="sec:noncontig"></A>
+<BR>
+4.4 Modeling non-contiguous domains
+</H2>
+
+<P>
+Some protein domains are formed from non-contiguous pieces of the
+backbone.  For example, the SCOP database&nbsp;[<A
+ HREF="node6.html#scop95">7</A>] has a
+GroES-like fold for alcohol dehydrogenase (d2ohxa1) consisting of
+residues 1-174 and 325-374, with a Rossmann-fold domain in the middle.
+
+<P>
+To model a domain like this, the HMM should have a FIM
+(See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.) for the long insert.
+The <TT>target99</TT> script can handle this--simply replace the amino
+acids of the inserted domain by a single O, which will create a FIM
+(See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>.).
+
+<P>
+The demo file <TT>d2ohxa1.seq</TT> has the appropriate seed alignment for
+the multi-helical domain,
+<PRE>
+
+&gt;d2ohxa1 2.22.1.2.1 (1-174,325-374) Alcohol dehydrogenase [horse (Equus caballus)]
+STAGKVIKCKAAVLWEEKKPFSIEEVEVAPPKAHEVRIKMVATGICRSDDHVVSGTLVTP
+LPVIAGHEAAGIVESIGEGVTTVRPGDKVIPLFTPQCGKCRVCKHPEGNFCLKNDLSMPR
+GTMQDGTSRFTCRGKPIHHFLGTSTFSQYTVVDEISVAKIDAASPLEKVCLIGC
+O
+KDSVPKLVADFMAKKFALDPLITHVLPFEKINEGFDLLRSGESIRTILTF
+</PRE>
+and the command
+<PRE>
+
+target99 -seed d2ohxa1.seq -out d2ohxa1-t99
+</PRE>
+will build the multiple alignment. 
+
+<P>
+The FIM will be created in the HMMs that are used for aligning the
+sequences found by the SAM-T99 method.  Furthermore, since the first
+sequence of the resulting multiple alignment will have an O, the FIM
+will be created in any HMMs built from the output alignment.
+
+<P>
+The HMM <TT>d2ohxa1-t99-fw0.7.mod</TT> scores the alcohol dehydrogenase
+family members (in pdb90d version 1.37) with E-values <IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$\leq$"> 6.0e-31.
+The best-scoring sequence outside the superfamily is the central
+domain of the alcohol dehydrogenase with E-value 2.0e-08, which creeps
+into the model due to misalignments despite the FIM.
+The best-scoring completely unrelated domain is d2tmda3
+(Trimethylamine dehydrogenase, middle, ADP-binding domain) with
+E-value 0.027
+
+<P>
+The chaperonin-10 sequences in the GroES-like superfamily but not the
+alcohol dehydrogenase family have E-values 16 and 270, so this HMM is
+best viewed as a family-level model, not a superfamily model.
+The E-values are reasonable estimates of the number of
+false positives (46 and 255) in the pdb90d database for this search.
+
+<P>
+The central domain of 2ohxA is an NAD(P)-binding Rossmann-fold domain,
+a large superfamily of alpha/beta/alpha units with a
+parallel beta-sheet of 6 strands (order 321456).
+This superfamily is fairly diverse, and difficult to capture in a
+single HMM.  Let's start with <TT>d2ohxa2.seq</TT>:
+<PRE>
+
+&gt;d2ohxa2 3.19.1.1.1 (175-324) Alcohol dehydrogenase [horse (Equus caballus)]
+GFSTGYGSAVKVAKVTQGSTCAVFGLGGVGLSVIMGCKAAGAARIIGVDINKDKFAKAKE
+VGATECVNPQDYKKPIQEVLTEMSNGGVDFSFEVIGRLDTMVTALSCCQEAYGVSVIVGV
+PPDSQNLSMNPMLLLSGRTWKGAIFGGFKS
+</PRE>
+and build the HMM as before
+<PRE>
+
+target99 -seed d2ohxa2.seq -out d2ohxa2-t99 
+fw0.7 d2ohxa2-t99.a2m d2ohxa2-t99-fw0.7.mod
+</PRE>
+
+<P>
+Scoring the SCOP pdb90d (version 1.37) database gives us
+the first false positive at E-value 0.022 (Dihydrolipoamide dehydrogenase) and at the
+minimum-error point (E-value 1.1), there are 35 true positives, 
+4 false positives, and 19 true negatives.  All seven members of the same
+family as d2ohxa2 score extremely well (E-values <IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.png"
+ ALT="$\leq$">9.0e-25), but
+there are 20 other members of the superfamily before the first false
+positive, so this can genuinely be viewed as a superfamily model, and
+not just a family model.
+
+<P>
+
+<H2><A NAME="SECTION00055000000000000000"></A><A NAME="sec:structural-hmm"></A>
+<BR>
+4.5 Building an HMM from a structural alignment
+</H2>
+
+<P>
+We can try to make a better model for the Rossmann-fold superfamily containing
+d2ohxa2, by starting from a structural alignment of two of its members.
+The model built using just d2ohxa2 had particular difficulty recognizing the
+lactate dehydrogenases and the malate dehydrogenases, so perhaps we
+could improve the model by including one of them in the alignment.  
+In the FSSP&nbsp;[<A
+ HREF="node6.html#fssp-science-96">5</A>] alignment for 2ohxA, the highest
+Z-score of these is for 2cmd. 
+
+<P>
+From the FSSP alignment, we can extract the aligned section that seems
+to match the domain we are interested in:
+<PRE>
+
+&gt;2ohxA-domain Alcohol dehydrogenase (holo form) complex with nadh and
+STCAVFGLGGVGLSVIMG
+CKAAGAARIIGVDINKDKFAKAKEVGATECVNPQDYKKPIQEVLTEMSNGGVDFSFEVIGRLDTMVTALS
+CCQEAYGVSVIVGVPPDSQNLSMNPMLLLSGRTWKGAIFGGFKSKDS
+&gt;2cmd-domain Malate dehydrogenase
+MKVAVLGaAGGIGQALAL
+LLKTQLpsg-SELSLYDIAPVTPGVAVDLshiptavk-IKGFSGE---DATPAL--EGADVVLIS
+AGvrrkpgmdrsdlfnvNAGIVKNLVQQVakTCPKACIGIITNPvnttvaiaa---EVLKkaGVYDk
+n--KLFGVT-TLDIiRSNT
+</PRE>
+
+<P>
+The a2m file can be a bit unreadable, but we can use prettyalign to
+make sure that the alignment is the one we intend:
+<PRE>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2ohxA-domain&nbsp;STCAVFG.LGGVGLSVIMGCKAAG...AARIIGVDINKDKFAKAKEV........GA
+2cmd-domain&nbsp;&nbsp;MKVAVLGaAGGIGQALALLLKTQLpsg-SELSLYDIAPVTPGVAVDLshiptavk-
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2ohxA-domain&nbsp;TECVNPQDYKKPIQEVLTEMSNGGVDFSFEVIG...............RLDTMVTAL
+2cmd-domain&nbsp;&nbsp;IKGFSGE---DATPAL--EGADVVLISAGvrrkpgmdrsdlfnvNAGIVKNLV
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2ohxA-domain&nbsp;SCC..QEAYGVSVIVGVP.........PDSQNLSMNP..MLLL..SGRTWKGAIFGG
+2cmd-domain&nbsp;&nbsp;QQVakTCPKACIGIITNPvnttvaiaa---EVLKkaGVYDkn--KLFGVT-TL
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2ohxA-domain&nbsp;FK.SKDS
+2cmd-domain&nbsp;&nbsp;DIiRSNT
+</PRE>
+
+<P>
+If we build the HMM as before
+<PRE>
+
+target99 -seed 2ohxA-2cmd.a2m -out 2ohxA-2cmd-t99
+fw0.7 2ohxA-2cmd-t99.a2m 2ohxA-2cmd-t99-fw0.7.mod
+</PRE>
+and score the SCOP pdb90d (version 1.37) database, we get
+the first false positive at E-value at 3.2e-04 and at the
+minimum-error point (E-value 9e-04), there are 31 true positives, 1
+false positive, and 23 false negatives.  
+
+<P>
+Although this model scores the superfamily well (40 of the 54 members
+have E-values less than 1.0), it also scores 19 incorrect domains
+as well--14 of them dihyrodolipoamide dehydrogenase and related folds.
+If we selected a threshold for the <TT>d2ohxa2-t99-fw0.7.mod</TT> HMM
+that accepted 40 of the superfamily members, we would have had 54
+false positives, so adding a structurally-aligned homolog has clearly
+let us create a better model of the superfamily.
+
+<P>
+If we add one more poorly-found sequence to the structural alignment
+(say 2pgd), we can improve the model further.  Starting from the alignment
+<PRE>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2pgd&nbsp;&nbsp;DIALIG.LAVMGQNLILNMNDHG...F.VVCAFNRTVSKVDDFLANEAKGT....KVLGAH..S
+2cmd&nbsp;&nbsp;KVAVLGaAGGIGQALALLLKTQLpsgS.ELSLYDIA-PVTPGVAVD-LSHIptavKIKGFSgeD
+2ohxA&nbsp;TCAVFG.LGGVGLSVIMGCKAAG...AaRIIGVDINKDKFAKAKEV---ga..-TECVN..P
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+2pgd&nbsp;&nbsp;.....LEEMVSKLKKPR.RIILLVK.....AGQAVDNFIEKL....VPLLDIGDIIIDGGNSEY
+2cmd&nbsp;&nbsp;.....ATPALEGA--D.VVLISAGv15nvNAGIVKNLVQQV....AKTCP-KACIGIITNPVN
+2ohxA&nbsp;qd7piQEVLTEMSNGGVdFSFEVIG.....--RLDTMVTAlscc--QEAYGVSVIVGVPPD
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2pgd&nbsp;&nbsp;RD.....TMRRCRDLK..DKGI..LFVGSGVS
+2cmd&nbsp;&nbsp;TT.....VAIAAEVLKkaGVYDknKLFGVTTL
+2ohxA&nbsp;SQnlsmn---PMLL..LSGR..TWKGAIFG
+</PRE>
+and building a SAM-T99 alignment as before, the <TT>2pgd-2cmd-2ohxA-t99-fw0.7.mod</TT> HMM finds 24 true positives before the
+first false positive, and 19 false positives at 40
+true positives.
+There are still some bad true negatives--the worst is d1scua2
+(Succinyl-CoA synthetase, alpha-chain, N-terminal (CoA-binding)
+domain) at E-value 570, with 346 incorrect sequences 
+scoring better. 
+
+<P>
+If we have a structural alignment of dissimilar homologs, it may
+not seem necessary to run the <TT>target99</TT> method.
+If we build a model from the structural alignment with the command
+<PRE>
+
+fw0.7 2pgd-2cmd-2ohxA.a2m 2pgd-2cmd-2ohxA-fw0.7.mod
+</PRE>
+we can get 23 true positives before any false positives, 26 true
+positives with only 4 false positives, and 40 true positives with 129
+false positives.  
+
+<P>
+For very low false-positive rates, our best results on this domain
+were with the SAM-T99 method applied to a single sequence, with 27
+true positives before a false positive.
+If we want to find the remote homologs, accepting a few false
+positives, we get better results by using a structural alignment as
+the seed (40 true positives with only 19 false positives).
+The SAM-T99 method does get better results on this example than using
+just a structural alignment without searching for more homologs.
+
+<P>
+
+<H2><A NAME="SECTION00056000000000000000"></A><A NAME="sec:tuneup-align"></A>
+<BR>
+4.6 Improving existing multiple alignments
+</H2>
+
+<P>
+You can clean up an existing multiple alignment by using it as a seed
+and specifying the <TT>-tuneup</TT> option.  This option turns off the
+search for similar sequences and turns off the <code>-force_seed 1</code>
+option that normally copies the seed alignment without modification.
+
+<P>
+The seed alignment will be used to create an HMM, then the sequences in
+the alignment will be used as the set of potential homologs to search
+and align.  The output alignment may contain only a subset of the
+original sequences, if some of the sequences score too poorly to meet
+the thresholds.  If you want to include all the sequences, set the
+<TT>-thresholds</TT> variable to have a very large final threshold.
+
+<P>
+The <TT>-tuneup</TT> option can also be used to add unaligned sequences
+to an existing multiple alignment with the <TT>-homologs</TT> option.
+For example, 
+<PRE>
+
+target99 -seed 1babA.seq -homologs globins50.seq -tuneup 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-db_size 400000 -out 1babA-50
+</PRE>
+adds 50 globin sequences to the single 1babA globin alignment,
+creating a multiple alignment of 51 sequences.  The <TT>-db_size</TT>
+option says what size database should be assumed for computing E-values.
+If it is omitted, the size of the non-redundant database that would
+normally be searched is used.
+
+<P>
+
+<H2><A NAME="SECTION00057000000000000000"></A><A NAME="sec:from-unaligned"></A>
+<BR>
+4.7 Creating a multiple alignment from unaligned sequences
+</H2>
+
+<P>
+It isn't really necessary to specify a seed for the SAM-T99
+method--if the <TT>-close</TT> or <TT>-homologs</TT> option is used, then an
+initial multiple alignment can be created by <TT>buildmodel</TT> from the
+specified unaligned sequences.   If both <TT>-close</TT> and <TT>-homologs</TT> are given, then only the close set are used for the initial
+alignment, but the full set of homologs are used for subsequent iterations.
+
+<P>
+For example, 
+<PRE>
+
+target99 -homologs globins50.seq -tuneup -db_size 400000 -out globins50-tuned
+</PRE>
+will align the 50 globin sequences without using a seed sequence,
+leaving the alignment in globins50-tuned.a2m.
+
+<P>
+
+<H2><A NAME="SECTION00058000000000000000">
+4.8 Parameters for <TT>target99</TT> perl script</A>
+</H2>
+
+<P>
+The parameters of the <TT>target99</TT> perl script are not described in
+the parameters section (See Section&nbsp;<A HREF="node8.html#params">6</A>.), since they are not parameters
+to the SAM programs and are not parsed by the same routines.  One
+important difference is that the <TT>target99</TT> parameters are
+interpreted in the order they are seen on the command line--if two
+options conflict, the one that is set later overrides the earlier one.
+
+<P>
+The <TT>target99</TT> parameters can be roughly grouped into four classes:
+<DL>
+<DT><STRONG>required parameters</STRONG></DT>
+<DD>The <TT>-out</TT> parameter is always
+required, to specify where the results are to be put, and at least one of <TT>-seed</TT>, <TT>-close</TT>, and <TT>-homologs</TT> (usually <TT>-seed</TT>) must
+be specified to tell the script what to build a model for. 
+The <TT>-seed</TT>, <TT>-close</TT>, and <TT>-homologs</TT> files may be gzipped.
+
+<P>
+</DD>
+<DT><STRONG>modes</STRONG></DT>
+<DD>The <TT>-superfamily</TT>, <TT>-family</TT>, and <TT>-tuneup</TT> parameters set many internal variables for three of the most
+common tasks expected for the script. The <TT>superfamily</TT> settings
+are the default values if they are not overridden by explicit
+parameter settings.  
+
+<P>
+</DD>
+<DT><STRONG>major parameters</STRONG></DT>
+<DD>There are many parameters that can be used to
+override the settings given by the major modes.  The most commonly used
+parameters are probably <TT>-iter</TT>, <TT>-thresholds</TT>,
+<TT>-db_size</TT>, <TT>-homologs</TT>, <TT>-close</TT>, and <TT>-db</TT>.
+
+<P>
+</DD>
+<DT><STRONG>minor parameters</STRONG></DT>
+<DD>Many of the other parameters are provided
+mainly for developers who want to tweak various internal parameters to
+get better performance.
+
+<P>
+</DD>
+</DL>
+
+<P>
+Here are the individual parameters to <TT>target99</TT> in alphabetical order:
+
+<P>
+<DL>
+<DT><STRONG><TT>-all</TT></STRONG></DT>
+<DD>Requests that the intermediate multiple alignments created on
+        each iteration be kept as  <I>root</I>_1.a2m, <I>root</I>_2.a2m,&nbsp;...&nbsp;.
+        This option is very useful for determining when contaminating
+        sequences were introduced into a multiple alignment, so that
+        thresholds can be appropriately modified to exclude them.
+
+<P>
+</DD>
+<DT><STRONG><TT>-aweight_bits 0.8</TT></STRONG></DT>
+<DD>How many bits/column the HMM should save relative tot he
+        background distribution after regularizing a multiple
+        alignment with the Dirichlet mixture specified by <TT>-mixture</TT>.
+
+<P>
+We have gotten the best results with about 0.8 bits/column for
+        the mixture recode4.20comp, and around 0.5 bits/column for
+        recode3.20comp.  You may want to increase the bits/column for
+        short models or for doing family-level models.
+
+<P>
+There is a variable weighting option to get more bits/column
+        for shorter seed--put <TT>var</TT> before the number (no spaces)
+        to specify the total number of bits to save.
+        That is use <code>-aweight_bits var50</code>  to save  50.0/predicted_alignment_length
+        bits per column.  SAM-T98 used var50, but we have not tested
+        it much with SAM-T99--what little testing we have done shows
+        no improvement from using it.
+
+<P>
+</DD>
+<DT><STRONG><TT>-aweight_exponent 10</TT></STRONG></DT>
+<DD>This exponent is interpreted in two different ways, depending
+        on the setting of <TT>-aweight_method</TT>. (See Section&nbsp;<A HREF="node11.html#sec:aweights">9.4.2</A>.)
+        For <code>-aweight_method 1</code> (the EntropyWeight method), the
+        exponent should be large (around 10 works well).  
+<BR>
+For <code>-aweight_method 2</code> (the Henikoffs'
+        method[<A
+ HREF="node6.html#henikoff-jmb94">4</A>]), the 
+        exponent only affects the initial values, and a value around
+        0.5 works well.
+
+<P>
+</DD>
+<DT><STRONG><TT>-aweight_method 1</TT></STRONG></DT>
+<DD>The <code>-aweight_method</code> is used with
+        <code>-aweight_exponent</code> and    <code>-aweight_bits</code>
+        to specify how sequence weighting is done:
+        1=EntropyWeight, 2=HenikoffWeight, 3=FlatWeight.
+        See Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A>..
+
+<P>
+</DD>
+<DT><STRONG><TT>-blast2</TT></STRONG></DT>
+<DD>Use NCBI BLAST2 for initial prefilter.  SAM-T99's BLAST paramater
+        settings were developed with WU-BLAST, the preferred BLAST
+        prefilter.  BLAST2 results may be slightly different.  The
+        <TT>-wublast</TT> option specifies use of WU-BLAST, when
+        available.  See Section&nbsp;<A HREF="node5.html#sec:sam-t99-install">4.10</A>.
+
+<P>
+</DD>
+<DT><STRONG><TT>-blast_close 5.e-4</TT></STRONG></DT>
+<DD><IMG
+ WIDTH="18" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img25.png"
+ ALT="$P$">-value for close homologs in WU-BLAST prefilter.
+        Sequences which have a <IMG
+ WIDTH="18" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img25.png"
+ ALT="$P$">-value (probability of arising by
+        chance) lower than this threshold in the search of the
+        non-redundant protein database are included in the set of <EM>        close</EM> sequences that are used on the first iteration.
+        The sequences must also pass the <TT>-blast_e</TT> test for
+        potential homologs.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-blast_e 300</TT></STRONG></DT>
+<DD>Sequences found by wu-blastp to have an E-value (expected
+        number of sequences with that good a score by chance) less than
+        <TT>-blast_e</TT> are used as the set of potential homologs 
+        in building the SAM-T99 multiple alignments.  On the first
+        iteration, only the subset that also passes the <TT>-blast_close</TT>
+        test is used.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-blast_max_report 10000</TT></STRONG></DT>
+<DD>Maximum number sequences reported by wu-blastp.  Currently,
+        the wu-blastp program will only allow up to 10,000 sequences
+        to be reported, and so this is the default value.  You can set
+        this parameter smaller to speed up the script, at the cost of losing 
+        a fair amount of generality on some models (such as
+        immunoglobulins and zinc fingers), where there are many very
+        similar sequences.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-close</TT> <I>filename</I></STRONG></DT>
+<DD>File containing close homologs of the seed sequence (may be
+        compressed with gzip).
+        These close homologs are used to train the model on the first
+        training iteration. 
+        If this parameter is not specified, but
+        <TT>-homologs</TT> is specified, then the file from the <TT>-homologs</TT>
+        option is used for the close homologs. 
+        If neither <TT>-close</TT> nor
+        <TT>-homologs</TT> are specified, then 
+        the close homologs and potential homologs are searched for
+        in the non-redundant protein database
+        using blastp, but with a much tighter threshold for the close set than
+        the potential-homolog set.
+
+<P>
+It is a good idea to set <TT>-db_size</TT> explicitly when no
+        search is being done.
+
+<P>
+</DD>
+<DT><STRONG><TT>-constraints 1</TT></STRONG></DT>
+<DD><P>
+Should constraints be used?  Zero means no constraints; one means
+        use constraints generated from the seed alignment.
+        See Section&nbsp;<A HREF="node11.html#sec:constraints">9.6</A>. Even if the
+        <TT>-force_seed</TT> option is set, and the seed alignment will be copied
+        directly to the multiple alignment on each iteration, the constraints
+        are useful to keep <TT>buildmodel</TT> from modifying the seed alignment
+        while it works.
+
+<P>
+Not only does <TT>-constraints 1</TT> keep the seed alignment
+        intact, it also propagates <TT>.cst</TT> files through the entire
+        process, so that they can be used with the final multiple
+        alignment.
+
+<P>
+</DD>
+<DT><STRONG><TT>-db nr</TT></STRONG></DT>
+<DD>Specifies the filename for the non-redundant database to
+        search and to use 
+        for determining <TT>-db_size</TT> for E-value calculations.
+        The database <EM>must</EM> be in FASTA format and have a wu-blastp index.
+        Because it is searched by wu-blastp, it cannot be compressed
+        with gzip.
+
+<P>
+The script provided has ``nr'' as a legal value for <TT>-db</TT>,
+        which expands to the filename of 
+        the non-redundant protein database specified when the script
+        was installed.  It is straightforward to add more such
+        shorthand names for databases (in the
+        <code>process_command_line</code> subroutine).
+
+<P>
+If <TT>-db</TT> is not specified, then the filename that ``nr''
+        expands to is used.
+
+<P>
+</DD>
+<DT><STRONG><TT>-db_size  408000</TT></STRONG></DT>
+<DD>Specifies number of sequences to assume are being searched for
+        E-value calculations.  If not specified, then
+        size of database specified in <TT>-db</TT> is assumed.
+
+<P>
+Note: when using <TT>-tuneup</TT>, <TT>-no_search</TT>, <TT>        -homologs</TT>, or <TT>-close</TT>, no search of the database is
+        done, but the count of the default database (or database
+        specified with <TT>-db</TT>)
+        is still done to get the appropriate size for E-value
+        calculations unless <TT>-db_size</TT> is explicitly set.
+
+<P>
+</DD>
+<DT><STRONG><TT>-family</TT></STRONG></DT>
+<DD>Sets options appropriately for modeling a family.  
+        These options have <B>not</B> been carefully tuned, and are just a
+        guess at initial parameters.  
+        Individual parameters can be overridden by specifying them
+        later in the command.
+
+<P>
+</DD>
+<DT><STRONG><TT>-fimstrength 1.0</TT></STRONG></DT>
+<DD>Probability multiplier for letters in FIMs.
+        This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-fimtrans -1.0</TT></STRONG></DT>
+<DD>FIM and standard insert-to-insert transitions.  
+        Absolute value is the cost (negative-log probability) of FIM
+        insert-to-insert transition divided by average match-to-match
+        cost.  When negative, non-FIM insert-to-insert transitions are
+        set to <IMG
+ WIDTH="98" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.png"
+ ALT="$p-(1-f)p^2$">, where <IMG
+ WIDTH="14" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.png"
+ ALT="$p$"> is the regularized and
+        normalized frequency counts for the transition and <IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img28.png"
+ ALT="$f$"> is the
+        FIM insert-to-insert transition.
+        This parameter controls how much the model prefers to absorb
+        letters into FIMs rather than accepting poor matches at the
+        ends of the matched region.  Values around 1.0 and <IMG
+ WIDTH="39" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img29.png"
+ ALT="$-1.0$"> generally work
+        best.
+
+<P>
+</DD>
+<DT><STRONG><TT>-final_trans_reg fssp-trained.regularizer</TT></STRONG></DT>
+<DD>Transition regularizer used for the last iteration. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-force_seed 1</TT></STRONG></DT>
+<DD>Set to 1 (default) to force all of the seed alignment into the
+        training set and the multiple alignment at each iteration.
+
+<P>
+The <TT>-tuneup</TT> option implies <TT>-force_seed 0</TT>, with
+        the expectation that the seed alignment is to be modified.
+        It is possible to override <TT>-tuneup</TT>'s setting, which
+        might be desirable when adding a new homologs to a seed
+        alignment that isn't to be changed.
+
+<P>
+</DD>
+<DT><STRONG><TT>-full_seq_align 0</TT></STRONG></DT>
+<DD>Set to 1 to use full-sequence alignment, not multiple-domain
+        alignment for final alignment. 
+        If you want to preserve the original sequence names, this
+        option is essential, since the normal action of
+        multiple-domain alignment modifies the names to include information
+        about which domain was found.
+
+<P>
+</DD>
+<DT><STRONG><TT>-homologs</TT> <I>filenname</I></STRONG></DT>
+<DD>specifies a file containing potential homologs of the seed
+        (may be compressed with gzip).
+        When <TT>-homologs</TT> is set, no search of the database is
+        done, as it is assumed that all potential homologs have been
+        identified.   
+        If this parameter is not specified, but
+        <TT>-close</TT> is specified, then the file from the <TT>-close</TT>
+        option is used for the potential homologs as well as for the
+        close homologs.  
+        If neither <TT>-close</TT> nor
+        <TT>-homologs</TT> are specified, then 
+        the close homologs and potential homologs are searched for
+        in the non-redundant protein database
+        using blastp, but with a much tighter threshold for the close set than
+        the potential-homolog set.
+
+<P>
+If the option is not used, the database
+        specified in <TT>-db</TT> (or the default non-redundant database)
+        is searched with blastp to find potential homologs.
+
+<P>
+It is a good idea to set <TT>-db_size</TT> explicitly when no
+        search is being done.
+
+<P>
+</DD>
+<DT><STRONG><TT>-init_trans_reg long_match.regularizer</TT></STRONG></DT>
+<DD>Transition regularizer used for the first iteration. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-iter 4</TT></STRONG></DT>
+<DD>The number of iterations of <TT>hmmscore</TT> and <TT>        buildmodel</TT> to perform.  Normally, <TT>-iter</TT> is set to
+        match the number of E-value thresholds set--if <TT>-iter</TT> is
+        smaller, the extra thresholds are ignored, and if <TT>-iter</TT> is
+        larger the final threshold is repeated for subsequent iterations.
+
+<P>
+</DD>
+<DT><STRONG><TT>-jump 1.0</TT></STRONG></DT>
+<DD>Probability associated with jump-in and jump-out on local alignment.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-keep_temporary</TT></STRONG></DT>
+<DD>Don't delete temporary directories.  
+        The temporary directories can get fairly
+        large, so they are deleted when the <TT>target99</TT>
+        script finished normally.
+        When a part of the script fails badly, the temporaries are
+        usually kept to help track down the problem.
+
+<P>
+When the script runs to completion, but produces a poor
+        result, finding the problem can be difficult, so the
+        <TT>-keep_temporary</TT> option is available to aid debugging.
+        This option is not only useful to script developers, but also
+        to users who want to look ``under-the-hood'' to see how the
+        script is producing the results it gets.
+
+<P>
+</DD>
+<DT><STRONG><TT>-mainline_cutoff 0.4</TT></STRONG></DT>
+<DD>This parameter is passed to <TT>buildmodel</TT> to control how
+        surgery is done.  Since <TT>-nsurgery</TT> is normally set to 0
+        to turn surgery off, this parameter is usually irrelevant.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-mid_trans_reg long_match.regularizer</TT></STRONG></DT>
+<DD>Transition regularizer for all iterations except the first
+        (<code>-init_trans_reg</code>) and last (<code>-final_trans_reg</code>) iteration.
+        See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-mixture recode4.20comp</TT></STRONG></DT>
+<DD>Dirichlet mixture to use for regularizing amino acid distributions.
+        We have gotten the best results on aligning remote homologs by
+        using <TT>recode4.20comp</TT>, but <TT>recode3.20comp</TT> may work
+        better for more similar sequences. See Section&nbsp;<A HREF="node10.html#sec:reg-alternatives">8.1.1</A>.
+
+<P>
+</DD>
+<DT><STRONG><TT>-no_search</TT></STRONG></DT>
+<DD>Use only the sequences from <TT>-seed</TT>, <TT>-homologs</TT>,
+         or <TT>-close</TT> as potential homologs-don't look for more.
+
+<P>
+The <TT>-no_search</TT> option is implied by <TT>-homologs</TT>m
+        <TT>-close</TT>, and <TT>-tuneup</TT>.  There is currently no option
+        for turning the search back on.
+
+<P>
+It is a good idea to set <TT>-db_size</TT> explicitly when no
+        search is being done.
+
+<P>
+</DD>
+<DT><STRONG><TT>-nsurgery 0</TT></STRONG></DT>
+<DD>Specifies the number of surgery steps to allow on
+        each iteration  (default 0).
+        Surgery is always allowed when creating an initial alignment
+        (<TT>-seed</TT> not specified).
+
+<P>
+Setting <TT>-nsurgery</TT> positive is not compatible with <TT>        -force_seed 1</TT>--try <TT>-force_seed 0</TT> and <TT>-constraints 1</TT>
+        instead. 
+
+<P>
+</DD>
+<DT><STRONG><TT>-out root</TT></STRONG></DT>
+<DD>creates root.a2m for output
+        (also root.cst if constraints are
+        turned on).  This is the only absolutely essential parameter.
+
+<P>
+</DD>
+<DT><STRONG><TT>-reverse_diff 4</TT></STRONG></DT>
+<DD>How much tighter is the simple  threshold than the
+        reversed-sequence threshold, in nats
+        The selection of sequences to include in the multiple
+        alignment at each iteration requires passing four tests:
+        
+<OL>
+<LI>NLL<IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">null score for all-paths local scoring better than
+                some threshold.
+</LI>
+<LI>NLL<IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">reversed E-value for all-paths local scoring better than
+                some threshold.
+</LI>
+<LI>NLL<IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">null score for Viterbi local scoring of found domain better than
+                some threshold.
+</LI>
+<LI>NLL<IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">reversed E-value for Viterbi local scoring of
+                found domain better than some threshold.
+        
+</LI>
+</OL>
+        The simple tests (steps 1 and 3) require a threshold in nats.
+        This threshold is computed from the E-value threshold used for
+        steps 2 and 4, then tightened by <TT>-reverse_diff</TT>.
+
+<P>
+Making <TT>-reverse_diff</TT> very small (say <IMG
+ WIDTH="34" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.png"
+ ALT="$-10$">) essentially
+        turns off steps 1 and 3, slowing down the script but possibly
+        increasing the number of things found (both true and false positives).
+
+<P>
+Making <TT>-reverse_diff</TT> very large requires very good
+        matches to the model before more detailed scoring is done,
+        speeding the script up, but possibly losing some true positives.
+
+<P>
+This is a minor parameter, intended only to allow developers
+        to tweak parameters without modifying the installed script.
+
+<P>
+</DD>
+<DT><STRONG><TT>-seed file.a2m</TT></STRONG></DT>
+<DD>a guide sequence (or multiple alignment) in a2m format (may be
+        compressed with gzip). See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+        The seed is usually expected, but if none is provided and
+        either <TT>-homologs</TT> or <TT>-close</TT> is specified, then an initial alignment will
+        be built from the homologs (the close ones being preferred if
+        both are specified).
+
+<P>
+</DD>
+<DT><STRONG><TT>-superfamily</TT></STRONG></DT>
+<DD>Sets many options appropriately for modeling a superfamily
+        given a single sequence.
+        These are the default options.
+        Individual parameters can be overridden by specifying them
+        later in the command.
+
+<P>
+</DD>
+<DT><STRONG><TT>-thresholds 0.00001, 0.0001, 0.001,0.01</TT></STRONG></DT>
+<DD>specifies the E-value thresholds to use for each iteration
+        (E-value is expected number of false positives).
+        The values should be given as a comma-separated list with no spaces.
+        If the number of thresholds is more than the <TT>-iter</TT> parameter,
+        then the extra ones are ignored.  If there are fewer
+        thresholds than iterations, the last threshold is repeated as needed.
+        The E-values are computed for a database the size of the
+        non-redundant database searched (unless <TT>-db_size</TT> is specified).
+
+<P>
+</DD>
+<DT><STRONG><TT>-tuneup</TT></STRONG></DT>
+<DD>Sets many options, under the assumption that what is wanted is
+an improvement of an exiting alignment, or the alignment of an already
+selected set of homologs.
+        Some of the important parameters it sets are <TT>-no_search</TT>,
+        <TT>-force_seed 0</TT>, <TT>-full_seq_align</TT>, 
+        and the thresholds.  
+        Eliminates search, assumes that all
+        Individual parameters can be overridden by specifying them
+        later in the command, except that there is no way to turn
+        searching back on.
+
+<P>
+</DD>
+<DT><STRONG><TT>-wublast</TT></STRONG></DT>
+<DD>Use WU-BLAST for initial prefilter.  SAM-T99's BLAST 
+        paramaters were developed with WU-BLAST, the preferred BLAST
+        prefilter.  The
+        <TT>-blast2</TT> option specifies use of NCBI BLAST2, when
+        available.  See Section&nbsp;<A HREF="node5.html#sec:sam-t99-install">4.10</A>.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00059000000000000000"></A><A NAME="sec:sam-t99-mbuild"></A>
+<BR>
+4.9 The model building scripts
+</H2>
+
+<P>
+The model building scripts primarily differ on the alignments waiting
+methods that is used. The primary parameter is the number of bits to
+save in each column of the alignment in comparison to the background.
+Saving more bits will result in a more specialized model, while saving
+fewer bits will result in a more general model. The various scripts
+default to certain transition regularizers that also affect the
+generality of the model.  Readers may wish to read the perl source
+code to find out more about these routine, for example to change the
+parameter settings passed to build-weighted-model to only drop of
+sequences with 100% identity.
+See Section&nbsp;<A HREF="node11.html#sec:alignweight">9.4.3</A> 
+and Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:logo0.7"></A><A NAME="1531"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 11:</STRONG>
+Sequence logo of the 2ohxA model built using the <TT>fw0.7</TT>
+model building script.</CAPTION>
+<TR><TD><IMG
+ WIDTH="446" HEIGHT="427" BORDER="0"
+ SRC="img30.png"
+ ALT="\begin{figure}\begin{center}
+\psfig{width=0.8\textwidth,figure=d2ohxa1-t99-fw0.7.eps}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:logo0.5"></A><A NAME="1532"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 12:</STRONG>
+Sequence logo of the 2ohxA model build using the <TT>fw0.5</TT>
+model building script.  The specificity of the model is reduced, as
+indicated by the lower bits per column.</CAPTION>
+<TR><TD><IMG
+ WIDTH="446" HEIGHT="427" BORDER="0"
+ SRC="img31.png"
+ ALT="\begin{figure}\begin{center}
+\psfig{width=0.8\textwidth,figure=d2ohxa1-t99-fw0.5.eps}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:logo0.1"></A><A NAME="1533"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure:</STRONG>
+Sequence logo of the 2ohxA model build
+using the <TT>fw0.1</TT> 
+model building script. The specificity of the model is greatly
+reduced. The large `O' indicates that one of the
+sequences in the alignment had been cut (such as in FSSP), resulting
+in an internal FIM position. (See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>.) This
+sequence is trimmed by the fw0.7 script as having greater than 
+80% identity to another sequence.</CAPTION>
+<TR><TD><IMG
+ WIDTH="446" HEIGHT="205" BORDER="0"
+ SRC="img32.png"
+ ALT="\begin{figure}\begin{center}
+\psfig{width=0.8\textwidth,figure=d2ohxa1-t99-fw0.1.eps}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+Our favored all-around model building script is <TT>w0.5</TT>, which
+builds a SAM HMM with a target entropy of 0.5 bits per column.  The
+<TT>fw0.1</TT> script produces an HMM that is more general than <TT>w0.5</TT>, and thus will have more positives at a given scoring
+threshold.  Figure&nbsp;<A HREF="node5.html#fig:logo0.7">11</A> shows the 2ohxA model built using
+<TT>fw0.7</TT>, while Figure&nbsp;<A HREF="node5.html#fig:logo0.1">13</A> shows the <TT>fw0.1</TT>
+model.  Note the shorter columns in the second case, indicating less
+negative entropy in the distribution.  Searchers with this more
+general model will find more false postives, and may also find more
+true positives. 
+
+<P>
+The model building scripts include:
+<DL>
+<DT><STRONG>build-weighted-model</STRONG></DT>
+<DD>A general script for building models
+using most of the features of SAM.  The default Dirichlet mixture
+prior <TT>recode2.20comp</TT>.  The default transition regularizers is
+<TT>fssp-trained.regularizer</TT>, uniform alignment waiting, 0.5 bits
+per column is the target.  This script is called by the various scrips
+discussed next, each of which will build a model from a multiple alignment
+(possibly with constraints).   
+</DD>
+<DT><STRONG>fh0.3</STRONG></DT>
+<DD>Build a model with target Henikoff weighting for 0.3 bits per
+column using <TT>recode4.20comp</TT>
+</DD>
+<DT><STRONG>fh0.5</STRONG></DT>
+<DD>Building model with a target Henikoff weighting of 0.5 bits per
+column, using <TT>recode4.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with 
+less than 80% identity.
+</DD>
+<DT><STRONG>fw0.1</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.1 bits
+per column using <TT>recode4.20comp</TT>.
+</DD>
+<DT><STRONG>fw0.2</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.2 bits
+per column using <TT>recode4.20comp</TT>.
+</DD>
+<DT><STRONG>fw0.3</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.3 bits
+per column using <TT>recode4.20comp</TT>.
+</DD>
+<DT><STRONG>fw0.5</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.5 bits
+per column using <TT>recode4.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with 
+less than 80% identity.
+</DD>
+<DT><STRONG>fw0.7</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.7 bits
+per column using <TT>recode4.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with  less than 80% identity.
+A good general-purpose script for building models from alignments.
+</DD>
+<DT><STRONG>fw0.8</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.8 bits
+per column using <TT>recode4.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with 
+less than 80% identity.
+</DD>
+<DT><STRONG>fw1.0</STRONG></DT>
+<DD>Build a model with target entropy weighting of 1.0 bits
+per column using <TT>recode4.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with 
+less than 80% identity.
+</DD>
+<DT><STRONG>w0.5</STRONG></DT>
+<DD>Build a model with target entropy weighting of 0.5 bits
+per column using <TT>recode3.20comp</TT> and <TT>fssp-trained.regularizer</TT>.
+The alignment is trimmed to sequences with 
+less than 80% identity.
+</DD>
+<DT><STRONG>varh50</STRONG></DT>
+<DD>Build a model with that varies the target Henikoff
+weighting per column in attempts to achieve 50 bits for the entire alignment
+using <TT>recode3.20comp</TT> and <TT>cheap_gap.regularizer</TT>.
+The alignment is trimmed to sequences with less than 80% identity.
+This will combination will result in a relatively loose model.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000510000000000000000"></A><A NAME="sec:sam-t99-install"></A>
+<BR>
+4.10 Installing SAM-T99
+</H2>
+
+<P>
+To install SAM-T99, you must have version 5 of PERL installed, as 
+<TT>target99</TT> is a PERL5 script.  The <TT>sam-t99-configure</TT> script
+can take care of this when run in the directory in what the scripts
+are installed.
+
+<P>
+The other changes needed are in the 
+in the <TT>sam-t99.conf</TT> perl module.
+
+<UL>
+<LI>You need to have <TT>blastp</TT> from the Washington University
+Blast 2.0 installed
+(<A NAME="tex2html43"
+  HREF="http://blast.wustl.edu/">http://blast.wustl.edu/</A>)
+and/or <TT>blastall</TT>  
+from the NBCI version of Blast 2.0
+(<A NAME="tex2html44"
+  HREF="http://www.ncbi.nlm.nih.gov/BLAST/">http://www.ncbi.nlm.nih.gov/BLAST/</A>).
+For WU-BLAST,  the full path of the program (usually
+called <TT>blastp</TT> or <TT>wu-blastp</TT>) 
+should be named in <code>$blast_prog</code>. For NCBI BLAST2,
+the full path of the program (<TT>blastall</TT>)
+should be named in <code>$blast2_prog</code>. Also for NCBI BLAST, the
+appropriate <TT>.ncbirc</TT> text (the matrix data directory path) should
+be provided in <code>$blast2_ncbirctext</code>.  
+
+<P>
+If you would like to make NCBI Blast the default prefilter, change the
+line of the <TT>target99</TT> that says
+<PRE>
+
+$blast2 = 0; # 1 for DEFAULT NCBI BLAST 2
+</PRE>
+to
+<PRE>
+
+$blast2 = 1; # 0 for DEFAULT WU BLAST 2
+</PRE>
+If both programs are available, the <TT>-blast2</TT> and <TT>-wublast</TT>
+options can be used to specify which BLAST prefilter to use.
+The <TT>target99</TT> script has not been extensively evaluated with NCBI's
+version of <TT>blastp</TT>.  
+
+<P>
+</LI>
+<LI>For the standard use of the SAM-T99 method, 
+you need a non-redundant protein database in fasta format, which has
+been indexed for use with the Blast prefilter program.
+The variable <code>$::NR</code> should be set to the full filename for the 
+non-redundant protein database.  We use the NR database from NCBI
+available from  <A NAME="tex2html45"
+  HREF="ftp://ncbi.nlm.nih.gov/blast/db/nr.Z"><TT>ftp://ncbi.nlm.nih.gov/blast/db/nr.Z</TT></A>.
+
+<P>
+</LI>
+<LI>The variable <code>$::reg_lib_dir</code> should be set to the directory in
+which regularizers and Dirichlet mixtures are kept.  The lib directory
+of the SAM installation package should contain all the necessary
+regularizers, and others can be downloaded from the web site
+<DIV ALIGN="CENTER">
+<A NAME="tex2html42"
+  HREF="http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html"><TT>http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html</TT></A>.
+
+</DIV>
+
+<P>
+</LI>
+<LI>The script needs to create a temporary directory (which it discards
+when it is done).  This temporary directory can be created under <TT>/tmp</TT>, under the current directory (.), or elsewhere.  The
+superdirectory for the temporary directory should be specified in
+<code>$::tmp_root_dir</code>. 
+
+<P>
+</LI>
+<LI>The directory for the SAM executables should be specified in
+<code>$sam_bin_dir</code>. 
+
+<P>
+</LI>
+<LI>The search path for executables should be completed with
+whatever standard directories need to be searched for commands like <TT>cat</TT>, <TT>cp</TT>, <TT>echo</TT>, <TT>gunzip</TT>, <TT>rm</TT>, and so forth.
+The Unix <TT>whereis</TT> and <TT>which</TT> commands may help you locate
+these programs.   Need of the <TT>gunzip</TT> program can be avoided if
+the initial alignment is not a gnu-compressed file.
+
+<P>
+</LI>
+<LI>The <code>make_directories</code> subroutine (at the end of <TT>SamT99.pm</TT> changes the permission
+and group ownership of the temporary directories.  This was done to
+make it easier for us to clean up temporary directories that were left by
+processes that failed.  You may want to change the name of the group
+that is used (from ``protein''), or you may want to comment out the
+lines that do the ``chmod'' and ``chgrp''.
+
+<P>
+</LI>
+</UL>
+
+<P>
+The scripts <TT>build-weighted-model</TT>, <TT>fh0.3</TT>, <TT>fh0.5</TT>, 
+<TT>fw0.1</TT>, <TT>fw0.2</TT>, <TT>fw0.3</TT>, <TT>fw0.5</TT>, <TT>fw0.7</TT>, <TT>fw0.8</TT>, 
+<TT>fw1.0</TT>,  <TT>w0.5</TT>, and <TT>varh50</TT> use the <TT>Setpaths.pm</TT>
+perl module, and so should not need any changes except for the
+location of perl.
+
+<P>
+
+<H2><A NAME="SECTION000511000000000000000">
+4.11 SAM-T99 references</A>
+</H2>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html332"
+  HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html328"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html322"
+  HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html330"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html333"
+  HREF="node6.html">Bibliography</A>
+<B> Up:</B> <A NAME="tex2html329"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html323"
+  HREF="node4.html">3 Quick overview</A>
+ &nbsp <B>  <A NAME="tex2html331"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

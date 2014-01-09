@@ -1,0 +1,117 @@
+#!/usr/bin/perl -w
+#
+#       SAM: Sequence Alignment and Modeling Software System                 
+#  (c) 1992-1999 Regents of the University of California, Santa Cruz
+#
+#          Sequence Alignment and Modeling Software System
+#         http://www.cse.ucsc.edu/research/compbio/sam.html
+#
+# ------------- Citations (SAM, SAM-T99, HMMs) -----------------
+# R. Hughey, A. Krogh, Hidden Markov models for sequence analysis:
+#  Extension and analysis of the basic method, CABIOS 12:95-107, 1996.
+# K. Karplus, C. Barrett, R. Hughey, Hidden Markov models for detecting
+#  remote protein homologies, Bioinformatics 14(10):846-856, 1999.
+# A. Krogh et al., Hidden Markov models in computational biology:
+#  Applications to protein modeling, JMB 235:1501-1531, Feb 1994.
+# --------------------------------------------------------------
+#
+#          Distributed with signed license agreement only.
+#  
+#          Questions or comments to sam-info@cse.ucsc.edu
+#
+
+
+#
+# fw0.3 -constraints a2m-constraints
+#        -constraints_out new-constraints
+#        -constraints_from_align
+#         file.a2m file.mod
+#
+# fw0.3 is a plug-in script for building a model (file.mod) from a
+#	multiple alignment (file.a2m).
+# It demonstrates the use of the build-weighted-model script.
+# 
+#
+# It creates a model using entropy weighting at 0.3 bits/char.
+
+# It can optionally propagate or create constraints.
+#       -constraints specifies a constraints file to use.
+#       
+#       -constraints_out specifies a constraints file to create.
+#       
+#       -constraints_from_align indicates constraints should be built
+#       from the alignment.
+#
+# $Id: fw0.3,v 1.4 1999/10/31 19:41:33 markd Exp $ 
+#
+
+use English;
+use File::Basename;
+use lib dirname($PROGRAM_NAME);
+
+use SamT99;
+$reg = "$reg_lib_dir/recode4.20comp";
+
+&process_command_line;
+
+$aweight_method= 1;	# entropy method
+$aweight_bits = 0.3;
+$aweight_exponent = 10.;
+
+$cmd = "build-weighted-model \\\
+	-a2m $a2m_file -mod $mod_file \\\
+	-aweight_method $aweight_method \\\
+	-aweight_bits $aweight_bits \\\
+	-aweight_exponent $aweight_exponent \\\
+	-prior $reg";
+if ($constraints_from_align) 
+{    $cmd .= "  -constraints_from_align";
+}
+if (defined $constraints) 
+{    $cmd .= " -constraints $constraints"
+}
+if (defined $constraints_out) 
+{    $cmd .= " -constraints_out $constraints_out"
+}
+  
+if (system($cmd))
+{   die "Error: building weighted model $mod_file failed\n";
+}
+
+exit (0);
+
+# Parse the command line
+sub process_command_line 
+{
+  local($i) = 0;
+  
+  $constraints_from_align = 0;
+
+  # Get user specified values
+  while (($i <= $#ARGV) && ($ARGV[$i] =~ /^-/)) {
+    $_ = $ARGV[$i++];
+    if (/^-constraints$/) {
+        $constraints = $ARGV[$i++];
+    } elsif (/^-constraints_out$/) {
+        $constraints_out = $ARGV[$i++];
+    } elsif (/^-constraints_from_align$/) {
+        $constraints_from_align = 1;
+    } else {
+        print STDERR "bad option \"$_\"\n";
+        exit(1);
+    }
+  }
+  if ($i != $#ARGV-1) {
+      print STDERR "ERROR: wrong # args: fw0.3 [-constraints a2m-constraints] [-constraints_out new-constraints] [-constraints_from_align] file.a2m file.mod\n";
+      exit(1);
+      
+  }
+  $a2m_file = $ARGV[$i++];
+  $mod_file = $ARGV[$i++];
+
+  return;
+}
+
+# Local Variables:
+# mode: perl
+# End:

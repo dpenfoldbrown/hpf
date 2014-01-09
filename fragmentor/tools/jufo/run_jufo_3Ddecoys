@@ -1,0 +1,19 @@
+#!/bin/tcsh
+
+set dbname = /scratch/shared/genomes/filtnr
+set ncbidir = ${HOME}/src/shareware/blast
+set executeable = ${HOME}/src/shareware/jufo
+set rundir = $1
+ 
+set basename = $2:r
+set rootname = $basename:t
+ 
+\cp -f $2 $1/psitmp.fasta
+ 
+echo "Running PSI-BLAST with sequence" $2 "..."
+$ncbidir/blastpgp -b 0 -j 3 -h 0.001 -d $dbname -i $rundir/psitmp.fasta -C $rundir/psitmp.chk -Q $rundir/psitmp.ascii > & $rundir/psitmp.blast
+ 
+echo "Running JUFO with with sequence" $2 "and rosetta decoys" $3 "..."
+$executeable/decoys_protein_sec.exe $rundir/psitmp.fasta $rundir/psitmp.ascii abcdefgh $3 $rundir/$rootname.jufo_1D_ss abcdefgh $rundir/$rootname.decoys.jufo_3D_ss
+ 
+\rm -f $rundir/psitmp.* $rundir/error.log

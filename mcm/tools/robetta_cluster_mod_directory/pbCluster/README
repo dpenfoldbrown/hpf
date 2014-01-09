@@ -1,0 +1,3 @@
+patrick 9-18-2008
+Fixed an inconsistency between the cluster and rms files.  It hinged on the rmsfit_ and npoints being declared as int and long int in their 
+respective files.

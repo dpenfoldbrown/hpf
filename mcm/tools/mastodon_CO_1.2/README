@@ -1,0 +1,15 @@
+instructions for compilation in 1mammoth.f
+
+
+perl scripts to prepare for batch use in mammoth
+check_mammoth.pl
+  checks any single pdb file for illegal pdb usage and reports-- doesn't
+  change file
+
+
+groom_mammoth.pl 
+  operates on a directory of pdbs; OVERWRITES all pdb files with 'fixed' versions
+  (ie only CA, no extra models, tries to fix illegal pdb usage)
+
+
+

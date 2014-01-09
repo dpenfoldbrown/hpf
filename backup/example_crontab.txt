@@ -1,0 +1,5 @@
+#m  h   dom mon dow command
+
+# Custom backup script (dpb 12/06/2012)
+# Every Weds and Sat at 2 AM
+0   2   *   *   3,6 /data/backup/backup.sh >> /data/backup/backup.log 2>&1

@@ -1,0 +1,13 @@
+ClassName = Alphabet
+
+Name = RBK
+IsNucleic = 0
+NormalChars = RBK
+AllMatch = X
+
+CharName = R remove 	column_to_remove
+CharName = B borderline	borderline_removal_column
+CharName = K keep	column_to_keep
+
+EndClassName = Alphabet
+

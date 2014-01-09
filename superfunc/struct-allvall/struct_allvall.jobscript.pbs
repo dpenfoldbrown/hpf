@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=8
+#PBS -N human_homstruct_allvall
+#PBS -q long
+#PBS -V 
+#PBS -S /bin/bash
+#PBS -d /home/dpb3/superfunc
+#PBS -j oe
+#PBS -o /home/dpb3/superfunc/logs
+
+
+/home/dpb3/hpf/superfunc/struct_allvall.sh
+
+exit 0;

@@ -1,0 +1,26 @@
+ClassName = ExtDNAAlphabet
+
+Name = ExtDNA
+IsNucleic = 1
+NormalChars = AGCT
+Wildcard = K GT
+Wildcard = W AT
+Wildcard = Y CT
+Wildcard = M AC
+Wildcard = R AG
+Wildcard = S GC
+Wildcard = V AGCMRS
+Wildcard = B GCTKYS
+Wildcard = D AGTKWR
+Wildcard = H ACTWYM
+AllMatch = N
+Alias = U T
+Alias = X N
+CharName = A Adenine Adenine
+CharName = G Guanine Guanine
+CharName = C Cytosine Cytosine
+CharName = T Thymine Thymine
+CharName = Y Pyrimidine Pyrimidine
+CharName = R Purine Purine
+
+EndClassName = ExtDNAAlphabet

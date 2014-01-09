@@ -1,0 +1,1215 @@
+#!/usr/bin/perl -w
+#
+#       SAM: Sequence Alignment and Modeling Software System                 
+#  (c) 1992-1999 Regents of the University of California, Santa Cruz
+#
+#          Sequence Alignment and Modeling Software System
+#         http://www.cse.ucsc.edu/research/compbio/sam.html
+#
+# ------------- Citations (SAM, SAM-T99, HMMs) -----------------
+# R. Hughey, A. Krogh, Hidden Markov models for sequence analysis:
+#  Extension and analysis of the basic method, CABIOS 12:95-107, 1996.
+# K. Karplus, C. Barrett, R. Hughey, Hidden Markov models for detecting
+#  remote protein homologies, Bioinformatics 14(10):846-856, 1999.
+# A. Krogh et al., Hidden Markov models in computational biology:
+#  Applications to protein modeling, JMB 235:1501-1531, Feb 1994.
+# --------------------------------------------------------------
+#
+#          Distributed with signed license agreement only.
+#  
+#          Questions or comments to sam-info@cse.ucsc.edu
+#
+
+# target99
+# builds an alignment of probable homologs of an initial seed sequence
+# or alignment, with homologs chosen from NR.
+#
+# This script is an updated and re-parameterized version of the older
+# target98 and target98-with-param scripts.
+#
+# WARNING: the defaults may change.
+#
+# This script takes one required and several optional arguments:
+#  REQUIRED:
+#	-out root		creates root.a2m for output
+#				(also root.cst if constraints are
+# 				turned on)
+#  OPTIONAL MAJOR CHOICES:
+#	-seed file.a2m		a guide sequence (or alignment)
+#				The seed is usually expected, but if none
+#				is provided and -homologs or -close is
+#				specified, then an initial alignment will
+#				be built from the (close) homologs.
+#	-superfamily		Sets many options appropriately for
+#				modeling a superfamily given a single sequence.
+#				[Default choice.  Tuned somewhat for SCOP test]
+#	-family			Sets options appropriately for
+# 				modeling a family.  These options have NOT
+#				been carefully tuned, and are just a
+# 				guess at initial parameters.
+#	-tuneup			Eliminates search, assumes that all
+# 				that is wanted is improvement of
+# 				initial alignment (weeding out
+# 				too-distant sequences, realigning).
+#       -blast2                 Use blast2 rather than the preferred WU-blast
+#       -wublast                Use WU-blast rather than blast2 (default)
+#
+
+# OPTIONAL MINOR CHOICES:
+#	-iter 4			number of iterations
+#	-all			creates root_1.a2m, root_2.a2m, ...
+#					for the multiple iterations
+#	-thresholds 0.001,0.02,0.2,1.0 specifies the E-value
+#				thresholds to use for each iteration
+#				(E-value is expected number of false positives)
+#	-db_size  408000	Specify number of sequences in database to assume for
+#				E-value calculations.  If not specified, then
+#				size of database in -db is assumed.
+#       -homologs               File containing homologs of the guide
+#                               sequence. If this parameter is not specified
+#                               the default action is to extract homologs
+#                               from NR using blast.
+#       -close                  File containing close homologs of the guide
+#                               sequence. These close homologs are used to
+#                               train the model on the first training
+#                               iteration. If this parameter is not specified,
+#                               but -homologs is specified, then the file from
+#                               the -homologs option is used for the close
+#                               homologs. If neither -close nor -homologs are
+#                               specified, then the default is obtain both
+#                               from NR using blast, but -close uses a
+#				much tighter threshold.
+#	-no_search		use only the -seed and -homologs or -close
+#				homologs--don't look for more.
+#				-db_size should probably be specified
+#				with -no_search
+#       -constraints 1          Should constraints be used?
+#				0 means no constraints.
+#				1 means use constraints on seed
+# 					alignment only.
+#				(Right now, constraints are for the entire
+#				alignment, but this should be changed to
+#				allow user-specified initial constraints.)
+#	-force_seed 1		set (default) to force all of seed
+#				into the training set.
+#	-db nr			Which non-redundant database to use.
+#				Note: database MUST be in FASTA format
+#				and have a wu-blastp index.
+#	-nsurgery 0		number of surgery steps to allow on
+#				each iteration	(default 0)
+#				(Note: surgery always allowed in
+#				 creating initial alignment when no
+#				 seed is provided.) 
+#				-nsurgery >0 and -force_seed 1 are incompatible.
+
+# VERY MINOR OPTIONS (developer use only?)
+#	-tmp_dir /projects/compbio/tmp	where to build the temporary 
+#					subdirectories
+#	-jump 1.0		probability associated with jump-in and
+#				jump-out on local alignment
+#	-fimstrength 1.0	probability multiplier for letters in fims
+#	-fimtrans 1.0		another parameter affecting loops on fims
+#	-mainline_cutoff 0.4	mainline_cutoff in buildmodel for surgery
+#	-reverse_diff 4		how much tighter is the simple
+# 				threshold than the reversed-sequence threshold
+#				(This is just a heuristic to reduce
+#			the number of reverse-scores that are computed.)
+#	-blast_e 500		E_value threshold for remote homologs
+# 				in WU-BLAST prefilter
+#	-blast_close 3.e-5	P_value for close homologs in WU-BLAST prefilter
+#	-blast_max_report 10000	too many!  IgG gets stuck!  use 1000 instead
+#	-blast_max_report 1000	Maximum number sequences reported by WU-BLAST
+#
+# 	-aweight_method 2	Henikoff weighting
+#				(1=EntropyWeight, 2=HenikoffWeight, 3=FlatWeight)
+#	-aweight_bits 0.5	(can say "var50" to get variable weighting
+#				 50/predicted_alignment_length)
+#	-aweight_exponent 0.5	Remember to change to 10 or so if using
+#				EntropyWeight (-aweight_method=1)
+#	-mixture recode4.20comp Dirichlet mixture to use for
+#				regularizing amino acid distributions.
+# 	-init_trans_reg bl29.regularizer	transition regularizer
+#				for first iteration
+#	-mid_trans_reg long_match.regularizer	transition regularizer for
+#				middle iterations
+#	-final_trans_reg fssp-trained.regularizer transition regularizer for
+#				final iteration
+#	-keep_temporary		don't delete temporary directories
+#	-full_seq_align 1	Use full sequence alignment, not multiple-domain
+#				for final alignment.
+
+# NOT IMPLEMENTED YET:
+#	-constraints 2		2 means constrain alignment on each iteration
+#				to full alignment at beginning of iteration
+
+# WARNING: This script is designed to use new features of SAM version 3
+# It will NOT work with earlier versions, though they may
+# not give error messages.
+#
+
+# Markd's notes of things to do:
+#   o Script makes too much noise (mostly SAM needs to be shut up).  Problems
+#     are often missed because of the noise.
+#   o Should stop on all errors. This has been improved with a common proc.
+#   o Need option to enable tracing of SAM commands (and arguments) that
+#     are executed (currently echos all to STDERR).
+
+# Kevin's notes of things to do:
+#   o Try to make -constraints 2 work (constraining alignment on each iteration),
+#	by using new domain-map feature	Mark Diekhans added to hmmscore.
+
+# INSTALLATION DEPENDENCIES:
+#	o The first line of the file should give the path name for perl5.
+#	o The perl module SamT99.pm is loaded from the same directory containing
+#         this file.
+#       o It will in turn load SamT99Conf.pm of a file pointed to by
+#         sam_
+#	The set_paths procedure at the end of the script sets
+#       variables for all directories and should set the path to include all the
+#	necessary programs (listed in set_paths).
+#
+# $Id: target99,v 1.2 2004/05/02 22:29:15 dylan Exp $ 
+#
+
+sub process_command_line;
+sub echo_parameters();
+sub copy_initial_alignment($);
+sub build_initial_alignment($);
+sub check_initial_alignment();
+sub accumulate_blast_hits($$);
+sub blast_query_to_database($$$$$$);
+sub build_query_files($);
+sub get_initial_constraints($$) ;
+sub select_and_train($$$$$$$$$$);
+sub select_seqs($$$$$$$$);
+sub thin_a2m($$$);
+sub retrain($$);
+sub realign($$$$$$);
+sub count_seqs($);
+sub superfamily_params();
+sub family_params();
+sub tuneup_params();
+
+
+{   use FileHandle;
+    STDOUT->autoflush(1);
+    STDERR->autoflush(1);
+    use English;
+    use File::Basename;
+    use lib dirname($PROGRAM_NAME);
+
+    use SamT99;
+
+    # Set up defaults
+    $blast2 = 1; # 1 for DEFAULT NCBI BLAST,  0 for WU-BLAST
+    $HOMO = "";
+    $CLOSE = "";
+    $save_all = 0;
+    $no_search = 0;
+    $force_seed = 1;
+    $keep_temporary=0;
+    
+    # adjustments to threshold for scoring against reversed sequence
+    $reverse_diff = 4;
+
+    $which_database = $NR;	# default 
+
+    superfamily_params();
+    &process_command_line;
+
+    $use_binary = 1;	#switch to 0 if readable models needed for debugging.
+    $ALLPARAM = "-fimtrans $fimtrans\\\
+    	-fimstrength $fimstrength\\\
+        -ins_jump_conf $trans_stiffness \\\
+	-match_jump_conf $trans_stiffness \\\
+	-del_jump_conf $trans_stiffness \\\
+	-binary_output $use_binary\\\
+	-prior_library $MIXTURE \\\
+	-a2mdots 0 \\\
+	-a protein \\\
+	-aweight_method $aweight_method\\\
+	-aweight_bits $aweight_bits\\\
+	-aweight_exponent $aweight_exponent\\\
+        -sw 2 -jump_in_prob $jump -jump_out_prob $jump";
+
+    $MODELFROMALIGNPARAM = "$ALLPARAM";
+    $BUILDPARAM= "$ALLPARAM\\\
+            -sw 3\\\
+	    -modellength 0 \\\
+	    -internal_weight 0 \\\
+	    -initial_noise 0.0001 -anneal_noise 0.000001 \\\
+	    -anneal_length 2 \\\
+	    -many_files 1 \\\
+	    -Nseq 20000\\\
+	    -nsurgery $nsurgery -mainline_cutoff $mainline_cutoff";
+
+    $hostname = `hostname`;
+    chomp $hostname;
+    
+    $WORKDIR  = absolute("$tmp_root_dir/target99-$hostname-$$");
+    make_directories($WORKDIR);
+    chdir $WORKDIR;
+
+
+    if (defined($seed_a2m))
+    {    copy_initial_alignment($seed_a2m);
+    }
+    elsif ($CLOSE ne "")
+    {    build_initial_alignment($CLOSE);
+    }
+    else
+    {    fatal("No initial alignment.  Need to specify -seed, -homologs, or -close.\n");
+    }
+    check_initial_alignment();
+    
+    
+    $motif_cutoff = 40 / $length;   # normally require 40 residues in homolog
+    $motif_cutoff = 0.6 if $motif_cutoff >0.6;
+
+    $HMMSCOREPARAM="$ALLPARAM\\\
+    	    -viterbi 0 -subtract_null 4 \\\
+	    -select_seq 4 -select_score 4 -sort 2 \\\
+	    -select_mdalign 4 -select_md 4 -Motifcutoff $motif_cutoff";
+
+
+    if ($aweight_var_bits > 0)
+    {   $pred_len_align = 140.0* (1.0-exp(-0.008*$length));
+	$pred_len_align = $length if $pred_len_align > $length;
+	# Attempting a bug fix:
+	# The number of bits to save got too large for very
+	#    short alignments, so bound length from below.
+	$pred_len_align = 50.0 if $pred_len_align < 50.0;
+	$aweight_bits = (0.0+$aweight_var_bits) / $pred_len_align;
+    }
+
+    if (! defined($db_size))
+    {	$db_size = count_seqs($which_database);
+    }
+    # echoing had to wait until $aweight_bits and $db_size computed
+    echo_parameters();	
+
+    if ($HOMO eq "" && ! $no_search)
+    {	$blast_dir = "blast-$$";
+	make_directories($blast_dir);
+	chdir $blast_dir;
+
+	# Should redo build_query files to build one file, do query,
+	# accumulate results, and continue
+	run_prog("uniqueseq init -alignfile ../m0.a2m -a protein -a2mdots 0",
+                 "uniqueseq of initial alignment failed");
+        build_query_files("init.a2m");
+	# Make an .ncbirc file for data directory
+	if ($blast2)
+	{
+	    run_prog ("echo $blast2_ncbirctext > .ncbirc",
+		      "Creation of .ncbirc in $blast_dir failed.");
+	}
+	foreach $query (@queries)
+	{   $blast_out = "$query-blast.out";
+	    blast_query_to_database($blast_prog, $blast2_prog, $blast2,
+				    $query, $which_database, $blast_out);
+	    accumulate_blast_hits($blast_out, $blast2);
+	    if (! $keep_temporary)
+	    {   run_prog("rm -f $query < /dev/null", "removing blast query file failed");
+		run_prog("rm -f $blast_out < /dev/null", "removing blast output failed");
+	    }
+	}
+	chdir "..";
+	run_prog("rm -rf $blast_dir < /dev/null", "removing blast temporary directory failed") if (! $keep_temporary);
+
+        # HERE WE EXTRACT homolog sequences fron $which_database and put them
+        # into a file called $HOMO
+	print STDERR "$PROGRAM_NAME: BLAST found $#blast_hits scores.";
+        $HOMO = "found-by-wu-blast";
+        $close_from_blast =  ($CLOSE eq "");
+	$CLOSE = "close-homologs-by-blast" 	if $close_from_blast;
+
+        open(NRP_IN, "< $which_database") || fatal("Can't read $which_database");
+        open(HOMO_FILE, ">$HOMO") || fatal("Can't open $HOMO for writing");
+        if ($close_from_blast)
+        {   open(CLOSE_HOMO, ">$CLOSE")
+		|| fatal("Can't open $CLOSE_HOMO for writing");
+        }
+
+        $copying=0;
+        $copying_close= 0;
+        while(<NRP_IN>)
+        {   if (/^>\s*(\S+)[, ]?/)
+	    {   # new id
+	        $id = $1;
+		$copying = defined $blast_hits{$id};
+		if (!$copying)
+		{   $id =~ /^(gi\|\d+)|/;
+		    $short_id = $1;
+		    if (defined $short_id && defined $blast_hits{$short_id})
+		    {	 # BLAST truncated the identifier
+		    	$id=$short_id;
+		    	$copying=1;
+		    }
+		}
+	        $copying_close = $copying && ($blast_hits{$id} <= $blast_close);
+		if ($copying)
+		{   # print STDERR "copying $id\n";
+		    $blast_hits{$id} = "copied";
+		}
+	    }
+	    print HOMO_FILE $_ if $copying;
+	    print CLOSE_HOMO $_ if $copying_close && $close_from_blast;
+        }
+        close NRP_IN;
+	close HOMO_FILE;
+        close CLOSE_HOMO if $close_from_blast;
+	foreach $missing (keys(%blast_hits))
+	{   if ($blast_hits{$missing} ne "copied")
+	    {	print STDERR "Error: $PROGRAM_NAME couldn't find $missing in $which_database\n";
+	    }
+	}
+    }
+
+    # Build initial model using only the input sequence
+    # This model is not as good as I'd like, but so far haven't found a
+    # better model-building method for use with single sequences.
+    # Select from the CLOSE homologs training set,
+    # threshold set conservatively.
+
+    if ($use_constraints==1) 
+    {	get_initial_constraints("m0.a2m", "m0.cst");
+    }
+    $name = "m0";
+    $num_seed_seq = count_seqs("m0.a2m");
+    $num_close_seq = count_seqs($CLOSE);
+    $num_homo_seq = count_seqs($HOMO);
+    
+    for ($iter=1; $iter<=$num_iter; $iter++)
+    {   $possible = ($iter==1? $CLOSE: $HOMO);
+	$num_seq = $num_seed_seq + ($iter==1? $num_close_seq: $num_homo_seq);
+	# Note: it would probably be best to find one transition regularizer
+	# and use it consitently
+	$trans_reg= ($iter==$num_iter?  $final_trans_reg:
+		    ($iter==1? $initial_trans_reg: $middle_trans_reg));
+
+	$prev=$name;
+	$name = ($save_all? $root : "m") ."_" . $iter;
+	&select_and_train("$prev.a2m", "$prev.cst", "$name.a2m", "$name.cst",
+                          "tmp_$iter", $possible, $num_seq, $db_size,
+			  $thresholds[$iter-1], $trans_reg);
+    }
+
+    select_seqs("$name.a2m", "$name.cst", 
+    	"tmp_$iter", $HOMO, $num_seed_seq+$num_homo_seq, $db_size,
+		 $thresholds[$num_iter-1], $final_trans_reg);
+    
+    # Have to do a copy rather than a rename for the final alignment,
+    # because it may be across different file systems.
+    $dest_a2m = $root . ".a2m";
+    if ($full_seq_align)
+    {   if ($force_seed)
+    	{   run_prog("cat m0.a2m tmp_$iter-a.a2m > $dest_a2m", 
+			"cat seed tmp_$iter-a.a2m to $dest_a2m failed");
+	}
+	else
+	{   run_prog("cp tmp_$iter-a.a2m $dest_a2m", 
+			"copy tmp_$iter-a.a2m  to $dest_a2m failed");
+	}
+    }
+    else 
+    {   run_prog("cp tmp_$iter-a.train.seq $dest_a2m",
+			"copy tmp_$iter-a.train.seq  to $dest_a2m failed");
+    }
+    $dest_cst = $root . ".cst";
+    if ($use_constraints) 
+    {   run_prog("cp tmp_$iter-a.train.cst $dest_cst",
+			"copy tmp_$iter-a.train.cst  to $dest_cst failed");
+    }
+
+    chdir "..";
+    run_prog("rm -rf $WORKDIR < /dev/null",
+    		"removing temporary $WORKDIR failed") if (! $keep_temporary);
+
+    exit 0;
+}
+
+#--------------------------------------------------
+# subroutines
+
+# parse arguments
+
+sub process_command_line
+{   local($i) = 0;
+
+    while ($i <= $#ARGV) 
+    {	$_ = $ARGV[$i++];
+	if (/^-seed$/)	{   $seed_a2m  = absolute( $ARGV[$i++]);
+			    (-e $seed_a2m) ||
+				fatal("$seed_a2m doesn't exist");
+			}
+	elsif (/^-out/)	{   $root = absolute($ARGV[$i++]);	}
+	elsif (/^-iter/){   $num_iter	=  $ARGV[$i++];		}
+	elsif (/^-jump/){   $jump	=  $ARGV[$i++];		}
+	elsif (/^-fimstrength/)
+			{   $fimstrength =  $ARGV[$i++];	}
+	elsif (/^-fimtrans/)
+			{   $fimtrans =  $ARGV[$i++];	}
+	elsif (/^-all/) {   $save_all = 1;			}
+	elsif (/^-aweight_method/)
+			{   $aweight_method =  $ARGV[$i++];	}
+	elsif (/^-aweight_bits/)
+			{   $aweight_bits =  $ARGV[$i++];
+			    if ($aweight_bits =~ /^[vV][aA][rR](\S+)/)
+			    {    $aweight_var_bits = $1;
+			    }
+			    elsif ($aweight_bits =~ /^[vV][aA][rR]$/)
+			    {    $aweight_var_bits = $ARGV[$i++];
+			    }
+			}
+	elsif (/^-aweight_exponent/)
+			{   $aweight_exponent =  $ARGV[$i++];	}
+	elsif (/^-blast_e/)
+			{   $blast_e =  $ARGV[$i++];	}
+	elsif (/^-blast_close/)
+			{   $blast_close =  $ARGV[$i++];	}
+	elsif (/^-blast_max_report/)
+			{   $blast_max_report =  $ARGV[$i++];	}
+	elsif (/^-db_size/)
+			{   $db_size = $ARGV[$i++];		}
+	elsif (/^-reverse_diff/)
+			{   $reverse_diff =  $ARGV[$i++];	}
+	elsif (/^-thresholds/)
+	{   $threshold_spec= $ARGV[$i++];
+	    @thresholds = split(/,/ , $threshold_spec);
+	}
+	elsif (/^-homologs/)
+	{    $HOMO = absolute($ARGV[$i++]);
+	     (-e $HOMO) || fatal("$HOMO doesn't exist");
+        }
+	elsif (/^-close/)
+	{    $CLOSE = absolute($ARGV[$i++]);
+	     (-e $CLOSE) || fatal("$CLOSE doesn't exist");
+        }
+	elsif (/^-init_trans_reg/) 
+	{   $initial_trans_reg = absolute_or_in_dir($ARGV[$i++], $reg_lib_dir);
+	}
+	elsif (/^-mid_trans_reg/) 
+	{   $middle_trans_reg = absolute_or_in_dir($ARGV[$i++], $reg_lib_dir);
+	}
+	elsif (/^-final_trans_reg/) 
+	{   $final_trans_reg = absolute_or_in_dir($ARGV[$i++], $reg_lib_dir);
+	}
+	elsif (/^-mixture/) 
+	{   $MIXTURE = absolute_or_in_dir($ARGV[$i++], $reg_lib_dir);
+	}
+	elsif (/^-tmp_dir/)
+	{    $tmp_root_dir = absolute($ARGV[$i++]);
+	}
+
+		
+	elsif (/^-superfamily/)	{   superfamily_params();	}
+	elsif (/^-family/)	{   family_params();		}
+	elsif (/^-tuneup/)	{   tuneup_params();	}
+	elsif (/^-blast2/)	{   $blast2 = 1;	}
+	elsif (/^-wublast/)	{   $blast2 = 1;	}
+	elsif (/^-no_search/)	{   $no_search = 1;		}
+	elsif (/^-full_seq_align/)	{   $full_seq_align = $ARGV[$i++];	}
+	elsif (/^-force_seed/)	{   $force_seed = $ARGV[$i++];	}
+	elsif (/^-nsurgery/)	{   $nsurgery   = $ARGV[$i++];	}
+	elsif (/^-mainline_cutoff/){   $mainline_cutoff = $ARGV[$i++];	}
+	elsif (/^-constraints/) {   $use_constraints = $ARGV[$i++];	}
+	elsif (/^-db/)	{   $which_database = $ARGV[$i++];
+			    if ($which_database eq "nr") {$which_database=$NR;}
+			    else {$which_database = absolute($which_database);}
+			}
+	elsif (/^-keep_temporary/)	{   $keep_temporary = 1; }
+	else	{ fatal("Invalid option '$ARGV[$i-1]'");
+		}
+    }
+
+    # Make certain that required parameters were provided.
+    defined($root) || fatal("Must specify '-out root' with $PROGRAM_NAME");
+
+    if ($HOMO eq "")
+    {    (-e $which_database) || fatal("Can't find database file $which_database");
+    }
+
+    # 10000 is maximum permissible value for E
+    $blast_e = ($blast_e> 10000)? 10000 : $blast_e;
+
+    # verify that $num_iter>0
+    if ($num_iter <=0)
+    {	print STDERR "Warning: -iter specifed with number <=0, using 1\n";
+	$num_iter = 1;
+    }
+
+    # Pad @thresholds if it doesn't have the right number of thresholds
+    $num_thresh =  $#thresholds +1;
+    if ($num_thresh  <$num_iter)
+    {	print STDERR "Warning:	# thresholds ($num_thresh) < # iterations ($num_iter)\n";
+    }
+    for ($i=0; $i<=$#thresholds; $i++)
+    {   if ($thresholds[$i] <=0 )
+	{   print STDERR "$PROGRAM_NAME: Thresholds must be >0, not $thresholds[$i]\n";
+	    @thresholds= @thresholds[0..$i-1];
+	}
+    }
+    if ($#thresholds==-1)
+    {   push @thresholds, -40;
+    }
+    while ($#thresholds < $num_iter-1)
+    {   push @thresholds, ($thresholds[$#thresholds] * 0.75);
+    }
+
+    $CLOSE = $HOMO if ($CLOSE eq "");
+    $HOMO = $CLOSE if ($HOMO eq "");
+    defined($seed_a2m) 
+	|| defined($CLOSE) 
+	|| defined($HOMO) 
+    	|| fatal("Must specify '-seed file.a2m', '-close file.seqs', or '-homologs file.seqs' with $PROGRAM_NAME");
+
+    if ($force_seed>0 && $nsurgery >0)
+    {    print STDERR "-force_seed $force_seed is incompatible with "
+    		. "-nsurgery $nsurgery\n"
+		. "Setting -nsurgery 0\n";
+    	$nsurgery = 0;
+    }
+
+}
+
+
+sub echo_parameters()
+{    # Echo the parameters to stderr
+    print STDERR "$PROGRAM_NAME: E-value thresholds used are $thresholds[0]";
+    for ($i=1; $i<$num_iter; $i++)
+    {	print STDERR ", $thresholds[$i]";
+    }
+    print STDERR "\n";
+
+    print STDERR "$PROGRAM_NAME: db_size= $db_size reverse_diff= $reverse_diff\n";
+    if ($HOMO eq "")
+    {	print STDERR "$PROGRAM_NAME: blast_e= $blast_e, blast_close= $blast_close\n";
+    	print STDERR "$PROGRAM_NAME: blast2= $blast2, blast_max_report= $blast_max_report\n";
+    	print STDERR "$PROGRAM_NAME: db=$which_database\n";
+    }
+    else
+    {	print STDERR "$PROGRAM_NAME: homologs=$HOMO close=$CLOSE\n";
+    }
+    print STDERR "$PROGRAM_NAME: aweight_method=$aweight_method aweight_bits=$aweight_bits aweight_exponent=$aweight_exponent\n";
+    print STDERR "$PROGRAM_NAME: force_seed=$force_seed constraints=$use_constraints\n";
+    print STDERR "$PROGRAM_NAME: jump=$jump fimstrength=$fimstrength fimtrans=$fimtrans\n";
+    if ($nsurgery>0)
+    {	print STDERR "$PROGRAM_NAME: nsurgery=$nsurgery mainline_cutoff=$mainline_cutoff\n";
+    }
+    return;
+}
+
+# Look up alignment and copy to init.a2m
+sub copy_initial_alignment($)
+{
+    my($from_seed_a2m) = @_;
+    $BASE_A2M = ($from_seed_a2m =~ /(\S+)[.]gz$/ )? $1 : $from_seed_a2m;
+    if (-e $BASE_A2M)
+    {    run_prog("cp $BASE_A2M m0.a2m", 
+    		"Copying initial alignment to m0.a2m failed");
+    }
+    elsif (-e "$BASE_A2M.gz")
+    {   # Use gunzip to avoid picking up the wrong zcat
+        run_prog("gunzip -c $BASE_A2M.gz > m0.a2m",
+    		"uncompress to m0.a2m failed");
+    }
+    else
+    {   fatal("Error: can't find seed alignment \"$BASE_A2M\" or \"$BASE_A2M.gz\"");
+    }
+}
+
+
+# Build initial alignment from a set of unaligned homologs
+# leaving the result in m0.a2m
+sub build_initial_alignment($)
+{
+    my ($unaligned_file) = @_;
+    # build a model by attempting to align the unaligned sequences
+    run_prog("buildmodel m0 -train $unaligned_file \\\
+    	$BUILDPARAM \\\
+	-Nmodels 5 -sequence_models 1.0\\\
+	-insert $initial_trans_reg",
+		"buildmodel failed");
+    
+    # align all the sequences, no matter how they score.
+    run_prog("hmmscore m0 -i m0.mod -db $unaligned_file \\\
+	$ALLPARAM \\\
+        -select_align 8",
+		"hmmscore failed");
+
+
+}
+
+
+# check the initial alignment and get the number of alignment columns
+# (returned as $length)
+sub check_initial_alignment()
+{    
+    run_prog("checkseq foo -alphabet protein -db m0.a2m > init.check",
+             "checkseq failed on initial alignment");
+
+    open(CHECK, "<init.check");
+    while(<CHECK>)
+    {	if (/^Alignment:\s+no/)
+	{    fatal("$BASE_A2M not recognized as an alignment");
+	}
+	if (/^AlignColumns:\s+(\d+)/)
+	{   $length = $1;
+	    if ($length <= 1)
+	    {   fatal("$BASE_A2M has $length alignment columns\n" .
+                      "A2M format requires upper-case for aligned residues");
+	    }
+	}
+    };
+    close CHECK;
+}
+
+
+#  accumulate_blast_hits(blast_output)
+#	reads the blast_output file and collects ids of hits
+#	adding them to hash %blast_hits
+#
+sub accumulate_blast_hits($$)
+{   my($blast_out_file, $blast2) = @_;
+
+    open(BLASTOUT_IN, "<$blast_out_file")
+	|| fatal("can't open file $blast_out_file");
+
+    #
+    # seek Query line
+    #
+    my($blastout_in_line);
+    my($query_id);
+    $blastout_in_line = <BLASTOUT_IN>;
+    while ($blastout_in_line
+	   and $blastout_in_line !~ /^Query=/)
+    {	$blastout_in_line = <BLASTOUT_IN>;
+    }
+    if ($blastout_in_line
+	and $blastout_in_line =~ /^Query=\s+(\S+)/)
+    {	$query_id = $1;
+    }
+    else
+    {	print STDERR "Error: file $blast_out_file has no Query line\n";
+	close(BLASTOUT_IN);
+	return;
+    }
+
+    # seek to count of sequences
+    $blastout_in_line = <BLASTOUT_IN>;
+    while ($blastout_in_line
+	   and $blastout_in_line !~ /sequences;/)
+    {	$blastout_in_line = <BLASTOUT_IN>;
+    }
+    ## Could grab first token of non-blanks from $blastout_in_line
+    ## remove commas from it, and use it for $db_size (if that is undefined)
+
+
+    # seek to summary of hits to query
+    #
+    my($hits_table_hdr);
+    $hits_table_hdr = "Sequences producing";
+
+    $blastout_in_line = <BLASTOUT_IN>;
+    while ($blastout_in_line
+	   and $blastout_in_line !~ /^$hits_table_hdr/)
+    {	$blastout_in_line = <BLASTOUT_IN>;
+    }
+    # skip blank link following header
+    #
+    $blastout_in_line = <BLASTOUT_IN>;
+
+    # Read first score line
+    #
+    $blastout_in_line = <BLASTOUT_IN>;
+
+    my($hits_table_line_pat);
+    if ($blast2) {
+	$hits_table_line_pat = '^(\S+)\s+.*(\d+)\s+(\S+)\s*$';
+    #			     $1          $2    $3      
+    #			     id  comment score E(N)    
+    } else {
+	$hits_table_line_pat = '^(\S+)\s+.*(\d+)\s+(\S+)\s+(\d+)';
+    #			     $1             $2      $3      $4
+    #			     id  comment   score    P(N)     N
+    }
+    while ($blastout_in_line
+	   and $blastout_in_line =~ /$hits_table_line_pat/)
+    {	my($hitseq_id, $high_score, $pvalue, $nfrag, $log_p, $fchar);
+	$hitseq_id = $1;
+	$pvalue = $3;
+        $fchar = substr $pvalue, 0, 1;
+	# Blast2 will compress 3-digit exponents to E127 
+        if ($fchar eq "e") {
+	   $pvalue = "1" . $pvalue;
+        }
+	$blast_hits{$hitseq_id} = $pvalue;
+	$blastout_in_line = <BLASTOUT_IN>;
+    }
+    close(BLASTOUT_IN);
+}
+
+#
+# sub blast_query_to_database($blast_prog, $blast2_prog, $blast2,
+#			      $query_file, $database_file,
+#			      $blast_out_file);
+#
+sub blast_query_to_database($$$$$$)
+{    my($blast_prog, $blast2_prog, $blast2,
+	$query_file, $database_file,
+	$blast_out_file) = @_;
+     my($blast_cmd);
+     if ($blast2) {
+	 
+	 $blast_params = 
+         " -e $blast_e -v $blast_max_report -K $blast_max_report -b 0 -I T";
+	 $blast_cmd = "$blast2_prog -p blastp -d $database_file -i $query_file"
+	     . " $blast_params > $blast_out_file";
+	 run_prog($blast_cmd, "$blast2_prog failed");
+     } else {
+    # report up to $blast_max_report sequences, but don't report any alignments.
+	 $blast_params = " E=$blast_e V=$blast_max_report B=0 -gi";
+	 $blast_cmd = "$blast_prog $database_file $query_file"
+	     . " $blast_params > $blast_out_file";
+	 run_prog($blast_cmd, "$blast_prog failed");
+     }
+}
+
+#
+# sub build_query_files(database_file)
+#	builds query files named 1.fasta, 2.fasta, ...
+#	leaves names of files in @queries
+#
+sub build_query_files($)
+{    my($database_file) = @_;
+
+    open(DB_IN, "<$database_file")
+	|| fatal("can't open file $database_file");
+
+    my $query_count = 0;
+    my($db_in_line);
+    my($new_seq_pat);
+    $new_seq_pat = '^>(\S+)(.*)';
+
+    $db_in_line = <DB_IN>;
+    while ($db_in_line)
+    {	my($seq_id, $seq_info, $seq);
+	($db_in_line =~ /$new_seq_pat/o)
+		|| fatal("bad line in file $database_file");
+
+	$seq_id = $1;
+	$seq_info = $2;
+
+	$db_in_line = <DB_IN>;
+	$seq = "";
+	while ($db_in_line
+	       and $db_in_line !~ /$new_seq_pat/o)
+	{   $seq .= $db_in_line;
+	    chomp($seq);
+	    $db_in_line = <DB_IN>;
+	}
+
+	$query_count ++;
+	my($query_out_file) = $query_count . ".fasta";
+	push @queries, $query_out_file;
+	open(QUERY_OUT, ">$query_out_file")
+	    || fatal("can't open file $query_out_file");
+	print QUERY_OUT ">$seq_id\n";
+	print QUERY_OUT "$seq\n";
+	close (QUERY_OUT);
+    }
+    close (DB_IN);
+}
+
+#
+# Create initial constraints for initial alignment.  Although this
+# could be done by the first select_and_train, doing it upfront
+# keeps that code cleaner.
+#   o inita2m - Input a2m
+#   o initcst - Output constraints.
+#
+sub get_initial_constraints($$) 
+{   my ($align_in, $constraints_out) = @_;
+    run_prog("modelfromalign unused -alignfile $align_in -a protein \\\
+             -constraints_from_align 1 -constraints_out $constraints_out",
+	     "modelfromalign for initial constraints failed");
+}
+
+
+# Do one round of selection and training, starting and ending with an alignment
+#	o name of initial alignment
+#       o name of initial alignment's constraints file
+#	o name of final alignment
+#       o name of final alignment's constraints file
+#	o base name for temporaries
+#	o set of possible homologs to search
+#	o max number of sequences in possible+initial
+#	o number of sequences in database to assume for E-value computations
+#	o threshold to use
+#	o transition regularizer to use
+sub select_and_train($$$$$$$$$$)
+{    my ($align_in, $constraints_in, $align_out, $constraints_out,
+	$base, $homologs, $num_homolog_seqs,
+	$num_db_seqs, $e_thresh, $trans_reg) = @_;
+
+    select_seqs($align_in, $constraints_in,
+	$base, $homologs, $num_homolog_seqs, $num_db_seqs, $e_thresh, $trans_reg);
+    
+    thin_a2m("$base-a.train.seq", $nll_thresh, "$base-a.train.seq");
+    retrain($base, $trans_reg);   
+    realign($align_out, $constraints_out, $base, $db_size, 
+    	$e_thresh, $trans_reg);   
+}
+
+# select domains from $homologs (and maybe $align_in)
+# Leave alignment in file $base-a.trans.seq
+# 	and constraints in $base-a.trans.cst
+sub select_seqs($$$$$$$$)
+{    my ($align_in, $constraints_in, 
+	$base, $homologs, $num_homolog_seqs, $num_db_seqs,
+	$e_thresh, $trans_reg) = @_;
+
+    $db_over_expected = ($num_db_seqs +0.0)/ $e_thresh ;
+    # compute thresholds from E values.
+    # NOTE: thresholds are global, since they are used in select_and_train.
+    $nll_thresh = $db_over_expected<=1.0000001? 16.: -log($db_over_expected-1);
+    $simple_thresh = $nll_thresh - $reverse_diff;
+
+    $align_for_model = $align_in;
+#    thin_a2m($align_in, $nll_thresh, "$base-a-thin_init.a2m");
+#    $align_for_model = "$base-a-thin_init.a2m";
+    
+    # build inital model
+    $cmd = "modelfromalign $base-a -alignfile $align_for_model \\\
+		-insert $trans_reg \\\
+		$MODELFROMALIGNPARAM";
+    if ($use_constraints !=0)
+    {   if (defined($constraints_in))
+	{   $cmd .= " -constraints $constraints_in";
+	}
+	else
+	{   $cmd .= " -constraints_from_align 1";
+	}
+	$cmd .= " -constraints_out $base-a.cst";
+    }
+    run_prog($cmd, "modelfromalign for initial model failed");
+
+    if (($force_seed || !defined($seed_a2m)) && $homologs ne "")
+    {   if (-z $homologs)
+	{   # oops no known homologs in $homologs, nothing to look for.
+	    run_prog("cp $homologs  $base-a-sort.a2m",
+		"empty copy of $homologs failed");
+	    run_prog("cp $seed_a2m $base-a.train.seq",
+	    	"copying seed to next iteration failed");
+	    run_prog("cp $seed_a2m $base-a.sel",
+	    	"copying seed to sequence set for realignment failed");
+	    if ($use_constraints)
+	    {   run_prog("cp m0.cst $base-a.train.cst",
+			"copying seed constraints failed");
+            }
+	    return;
+	}
+    }
+
+    # select from possible homologs (using simple null and reverse sequence)
+    # then reselect only the relevant parts
+    #	(but add some extra residues for context)
+    $cmd = "hmmscore $base-a -i $base-a.mod $HMMSCOREPARAM \\\
+	-db_size $num_db_seqs \\\
+	-simple_threshold $simple_thresh -Emax $e_thresh \\\
+	-select_align 4 \\\
+	-align_short 50	-mdEmax $e_thresh";
+    if (! $force_seed && defined($seed_a2m))
+    {	$cmd .= " -db $seed_a2m";
+    }
+
+    if ($homologs ne "")
+    {	$cmd .= " -db $homologs";
+    }
+    if ($use_constraints) 
+    {	$cmd .= " -constraints $base-a.cst";
+	$cmd .= " -constraints_out $base-a-md.cst";
+    }
+    run_prog($cmd, "hmmscore to select sequences failed");
+
+    if (-z "$base-a.mult")
+    {   # nothing found
+        if ($force_seed)
+	{   # no problem, just continue using only the seed. 
+	    run_prog("cp $base-a.mult  $base-a-sort.a2m",
+		"empty copy failed");
+	}
+    	else
+	{   # Damn, nothing found and the seed is not forced.
+	    # Have to try again or we'll fail on the next iteration.
+	    # Let's just align everything.
+	    $cmd = "hmmscore $base-a -i $base-a.mod $ALLPARAM \\\
+	    	-viterbi 0 -subtract_null 4 \\\
+		-select_seq 8 -select_score 8 -sort 2 \\\
+		-select_mdalign 8 -select_md 8 \\\
+		-Motifcutoff $motif_cutoff \\\
+		-db_size $num_db_seqs \\\
+		-simple_threshold $simple_thresh -Emax $e_thresh \\\
+		-select_align 4 \\\
+		-align_short 50	-mdEmax $e_thresh";
+	    if (! $force_seed && defined($seed_a2m))
+	    {	$cmd .= " -db $seed_a2m";
+	    }
+
+	    if ($homologs ne "")
+	    {	$cmd .= " -db $homologs";
+	    }
+	    if ($use_constraints) 
+	    {	$cmd .= " -constraints $base-a.cst";
+		$cmd .= " -constraints_out $base-a-md.cst";
+	    }
+	    run_prog($cmd, "hmmscore to select and align all sequences failed");
+	    run_prog("sortseq $base-a-sort -alignfile $base-a.mult \\\
+    		-NLLfile $base-a.mstat -a2mdots 0 -a protein", 
+		"sortseq of all sequences failed");
+	}
+    }
+    else
+    {   run_prog("sortseq $base-a-sort -alignfile $base-a.mult \\\
+    		-NLLfile $base-a.mstat -a2mdots 0 -a protein", 
+		"sortseq failed");
+    }
+    # $base-a.sel has the selected homologs
+    # $base-a.a2m has the best alignment of selected homologs
+    # $base-a.mult has parts of the selected homologs to train on
+    # $base-a-sort.a2m has parts of the selected homologs to train on
+    #		sorted best first
+    # $base-a-md.cst has the constraints for the .mult sequences.
+
+    # add the initial alignment to the training set, to make sure it doesn't
+    # get lost along the way
+    if ($force_seed)
+    {	run_prog("cat m0.a2m $base-a-sort.a2m > $base-a.train.seq",
+    		"adding seed to $base-a-sort.a2m failed");
+        if ($use_constraints)
+	{   run_prog("cat m0.cst $base-a-md.cst > $base-a.train.cst",
+		"adding seed constraints failed");
+        }
+    }
+    else
+    {	rename("$base-a-sort.a2m", "$base-a.train.seq");
+        if ($use_constraints)
+	{   rename("$base-a-md.cst", "$base-a.train.cst");
+        }
+    }
+}
+
+# thin the specified alignment, removing duplicate (and near_duplicate) ids
+sub thin_a2m($$$)
+{   my ($thick_file, $nll_thresh, $thin_file) = @_;
+    # Set fraction identical heuristically based on $nll_thresh and
+    #	alignment size
+    # As $nll_thresh->-inf, $frac_id->1.0,  as $nll_thresh->inf, $frac_id->$min_frac_id
+    # As $num_seqs -> inf, fraction identical->$min_frac_id
+    $num_seqs = count_seqs($thick_file);
+    ( $num_seqs > 0 ) 
+    	|| fatal("No sequences in $thick_file in thin_a2m\n" );
+    $min_frac_id = 0.2;
+    $frac_id =  $min_frac_id + (1.-$min_frac_id)*
+    	(1.- 1/(1+exp(-10.0*$nll_thresh/$num_seqs)));
+
+    run_prog("uniqueseq thinned_tmp -alignfile $thick_file -a protein \\\
+        -percent_id $frac_id -a2mdots 0","uniqueseq failed");
+    rename "thinned_tmp.a2m", $thin_file;
+}
+
+
+
+# Build a new model $base-b.mod, starting from $base-a.mod
+# using training sequences in $base-1.train.seq.
+sub retrain($$)
+{    my ($base, $trans_reg) = @_;
+    
+    if ($weighted_build)
+    {	# get weights from initial alignment of training sequences
+    	run_prog("modelfromalign junk_for_weights \\\
+    		-alignfile $base-a.train.seq \\\
+    		$MODELFROMALIGNPARAM",
+		"modelfromalign to get sequence weights failed");
+	rename("junk_for_weights.weightoutput", "$base-a.w");
+    }
+
+    $cmd = "buildmodel $base-b -insert $base-a.mod\\\
+	 $BUILDPARAM -train $base-a.train.seq \\\
+	-nmodels 1\\\
+	-insert $trans_reg";
+    if 	($weighted_build)
+    { 	$cmd .= " -sequence_weights $base-a.w";
+    }
+    if ($use_constraints)
+    {	$cmd .= " -constraints $base-a.train.cst";
+    }
+    run_prog($cmd, "buildmodel failed");
+}
+
+# Build a new alignment in $align_out, using $base-b.mod,
+# using sequences from $base-a.sel
+sub realign($$$$$$)
+{    my ($align_out, $constraints_out, $base, $num_db_seqs,
+	$e_thresh, $trans_reg) = @_;
+    
+    #
+    # Reselect interesting pieces out of the selection set.
+    #
+    $cmd = "hmmscore $base-b -i $base-b.mod $HMMSCOREPARAM \\\
+	-db m0.a2m \\\
+	-db $base-a.sel \\\
+	-db_size $num_db_seqs \\\
+	-simple_threshold $simple_thresh -Emax $e_thresh \\\
+	-align_short 5	-mdEmax $e_thresh";
+    if ($use_constraints)
+    {	$cmd .= " -constraints $base-a.train.cst";
+        $cmd .= " -constraints_out $constraints_out";
+    }
+    run_prog($cmd,"hmmscore to realign sequences failed");
+
+    #
+    # Return output files.
+    #
+    if ("$base-b.mult" ne $align_out)
+    {	run_prog("cp -f $base-b.mult $align_out", 
+    		"copyin realigned sequences failed");
+    }
+
+    if (-z $align_out)
+    {	print STDERR "*** Warning: Alignment $align_out empty, copying initial alignment\n";
+	run_prog("cp -f m0.a2m $align_out", "copying seed failed");
+        if ($use_constraints) 
+	{   run_prog("cp -f m0.cst $constraints_out", "copying seed constraints failed");
+        }
+    }
+}
+
+#
+#  count the number of sequences in a FASTA file
+#
+sub count_seqs($)
+{   my ($file_name) = @_;
+    return 0 if (!defined($file_name) || $file_name eq "");
+    print STDERR "# Counting sequences in $file_name\n";
+    $wc_ret = `grep '^>' $file_name | wc`;
+    $wc_ret =~ /\s*(\d+)/;
+    return $1;
+}
+
+
+# Set parameters appopriately for a superfamily alignment starting
+# from a single sequence
+sub superfamily_params()
+{
+    $num_iter=4;
+    # thresholds for E-value for full NR size
+    @thresholds= (0.00001, 0.0001, 0.001, 0.01);
+    
+    $blast_e = 300;
+    $blast_close = 5.e-4;
+    # 10000 was too many for deep families like IgG.  would get stuck.
+    $blast_max_report= 1000;
+    
+    $jump = 1.0;
+    $fimstrength= 1.0;
+    $fimtrans = -1.0;
+    
+    $use_constraints = 1;
+    $force_seed=1;
+    
+    $weighted_build = 1;
+    $aweight_method = 1;
+    $aweight_bits = 0.8;
+    $aweight_exponent = 10.0;
+    $aweight_var_bits=0;
+    
+    $trans_stiffness = 1.0;
+    
+    $nsurgery=0;
+    $mainline_cutoff=0.4;
+    
+    $MIXTURE = "$reg_lib_dir/recode4.20comp";
+    $initial_trans_reg = "$reg_lib_dir/long_match.regularizer";
+    $middle_trans_reg = "$reg_lib_dir/long_match.regularizer";
+    $final_trans_reg = "$reg_lib_dir/fssp-trained.regularizer";
+    
+    $full_seq_align=0;
+}
+
+# Set parameters appopriately for a family alignment starting
+# from a single sequence.
+# WARNING: THIS IS ONLY A FIRST GUESS
+sub family_params()
+{
+    $num_iter=3;
+    # thresholds for E-value
+    @thresholds= (1.e-6, 1.e-5, 1.e-4);
+    
+    $blast_e = 50;
+    $blast_close = 1.e-6;
+    # 10000 was too many for deep families like IgG.  would get stuck.
+    $blast_max_report= 1000;
+
+    $jump = 1.0;
+    $fimstrength= 1.0;
+    $fimtrans = 0.9;
+
+    $use_constraints = 1;
+    $force_seed=1;
+    
+    $weighted_build = 1;
+    $aweight_method = 1;
+    $aweight_bits = 0.8;
+    $aweight_exponent = 10.;
+    $aweight_var_bits=0;
+    
+    $trans_stiffness = 1.0;
+
+    $nsurgery=0;
+    $mainline_cutoff=0.4;
+    
+    $MIXTURE = "$reg_lib_dir/recode3.20comp";
+    $initial_trans_reg = "$reg_lib_dir/cheap_gap.regularizer";
+    $middle_trans_reg = "$reg_lib_dir/long_match.regularizer";
+    $final_trans_reg = "$reg_lib_dir/fssp-trained.regularizer";
+    
+    $full_seq_align=0;
+}
+
+
+# Set parameters appopriately for tuning up an initial alignment.
+# WARNING: THIS IS ONLY A FIRST GUESS
+sub tuneup_params()
+{
+    $num_iter=3;
+    # thresholds for E-value
+    @thresholds= (1.e-4, 1.e-1, 10.0);
+    
+    $no_search=1;
+    $jump = 1.0;
+    $fimstrength= 1.0;
+    $fimtrans = 0.9;
+    $use_constraints = 0;
+    $force_seed=0;
+    
+    $weighted_build = 1;
+    $aweight_method = 2;
+    $aweight_bits = 0.5;
+    $aweight_exponent = 0.5;
+    $aweight_var_bits=0;
+    
+    $trans_stiffness = 1.0;
+    
+    $nsurgery=10;
+    $mainline_cutoff=0.4;
+    
+    $MIXTURE = "$reg_lib_dir/recode3.20comp";
+    $initial_trans_reg = "$reg_lib_dir/cheap_gap.regularizer";
+    $middle_trans_reg = "$reg_lib_dir/long_match.regularizer";
+    $final_trans_reg = "$reg_lib_dir/fssp-trained.regularizer";
+    
+    $full_seq_align=1;
+}
+

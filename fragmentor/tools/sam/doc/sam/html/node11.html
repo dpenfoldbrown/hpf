@@ -1,0 +1,1344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>9 The buildmodel estimation process</TITLE>
+<META NAME="description" CONTENT="9 The buildmodel estimation process">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node12.html">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html431"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html427"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html421"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html429"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html432"
+  HREF="node12.html">10 Related programs</A>
+<B> Up:</B> <A NAME="tex2html428"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html422"
+  HREF="node10.html">8 Regularizers and models</A>
+ &nbsp <B>  <A NAME="tex2html430"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html433"
+  HREF="#SECTION000111000000000000000">9.1 Noise and annealing</A>
+<LI><A NAME="tex2html434"
+  HREF="#SECTION000112000000000000000">9.2 Surgery</A>
+<LI><A NAME="tex2html435"
+  HREF="#SECTION000113000000000000000">9.3 Training statistics</A>
+<LI><A NAME="tex2html436"
+  HREF="#SECTION000114000000000000000">9.4 Weighted training</A>
+<UL>
+<LI><A NAME="tex2html437"
+  HREF="#SECTION000114100000000000000">9.4.1 External weighting</A>
+<UL>
+<LI><A NAME="tex2html438"
+  HREF="#SECTION000114110000000000000">9.4.1.1 Multi-subfamily weighting</A>
+</UL>
+<LI><A NAME="tex2html439"
+  HREF="#SECTION000114200000000000000">9.4.2 Annealing with Weights</A>
+<LI><A NAME="tex2html440"
+  HREF="#SECTION000114300000000000000">9.4.3 Internal weighting of alignments</A>
+<LI><A NAME="tex2html441"
+  HREF="#SECTION000114400000000000000">9.4.4 Internal weighting during training</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html442"
+  HREF="#SECTION000115000000000000000">9.5 Viterbi training</A>
+<LI><A NAME="tex2html443"
+  HREF="#SECTION000116000000000000000">9.6 Building models with constraints</A>
+<UL>
+<LI><A NAME="tex2html444"
+  HREF="#SECTION000116100000000000000">9.6.1 Model Node Labels</A>
+<LI><A NAME="tex2html445"
+  HREF="#SECTION000116200000000000000">9.6.2 Constraints Definition File</A>
+<LI><A NAME="tex2html446"
+  HREF="#SECTION000116300000000000000">9.6.3 Using Constraints</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION000110000000000000000"></A><A NAME="sec:estimation"></A>
+<BR>
+9 The <TT>buildmodel</TT> estimation process
+</H1>
+
+<P>
+A detailed discussion of the estimation process can be found in
+``Hidden Markov models in computational biology: Applications to
+protein modeling,'' mentioned in the Introduction.  This section
+provides an overview of the mechanics of model estimation.
+
+<P>
+After the sequences have been divided into training and test sets, and
+the initial model or models have been created, <TT>buildmodel</TT> will
+iteratively train the model using expectation-maximization (EM).  For
+each iteration, a comment line (beginning with a percent sign
+`<code>%</code>') is written to the output file (e.g., <code>test.mod</code>) that
+includes the iteration number and the average NLL distance between the
+set of training sequences and the model.  Iterations continue until
+either an iteration gains less improvement than the <TT>stopcriterion</TT> (and noise is less than 10% of its starting value)  or
+<TT>re-estimates</TT> iterations have been performed. 
+When multiple models are being trained (but not multiple subfamily
+models) training on each model is stopped
+individually when that model reaches the <TT>stopcriterion</TT>
+(provided noise is less than one tenth its initial
+value).
+
+<P>
+If surgery and multiple initial models are used, one model is selected
+for the surgery procedure, which will attempt to prune and grow the
+model as appropriate.  After each surgery procedure (up to <TT>nsurgery</TT>), the re-estimation process is repeated.  Once either the
+limit on the number of surgeries is reached, or the surgery parameters
+produce no model modifications, the training procedure is complete.
+
+<P>
+After the model has been trained, the NLL scores for the test set are
+computed and reported, and the final model is written to the output
+file.  This model file may be used as an input file to further refine
+the model, perhaps by setting the <TT>stopcriterion</TT> to a smaller
+value.
+
+<P>
+
+<H2><A NAME="SECTION000111000000000000000"></A><A NAME="noise"></A><A NAME="sec:noise"></A>
+<BR>
+9.1 Noise and annealing
+</H2>
+
+<P>
+It is possible to add noise to the initial model(s).  By setting <TT>initial_noise</TT> to a positive number that amount of noise is added to
+a model in the beginning of the program.  It serves the important
+purpose to make models differ, if the program runs many models
+simultaneously -- each model will have a different noise added.
+
+<P>
+To try to avoid local minima, one can add noise to the models during their
+estimation, and decrease the noise level gradually in a technique similar 
+to the general optimization method called simulated annealing.  The initial
+level of the noise in this annealing process is called <TT>anneal_noise</TT>.
+If <TT>anneal_noise</TT> is greater than 0, annealing is performed. (If 
+<TT>initial_noise</TT> is also given, that will determine the noise for the 
+first iteration, and <TT>anneal_noise</TT> the noise in the following 
+iterations.)  During the estimation process the annealing noise is 
+decreased by a speed determined by <TT>anneal_length</TT>.  There are
+two ways it can be done:
+
+<P>
+<DL>
+<DT><STRONG>Linearly:</STRONG></DT>
+<DD>If <TT>anneal_length</TT> is greater than or equal to
+1, the noise is  decreased linearly to zero in <TT>anneal_length</TT>
+iterations by the formula 
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\mbox{noise} = \mbox{\tt anneal\_noise}(1-\mbox{number\_of\_iterations}/\mbox{\tt anneal\_length})
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="505" HEIGHT="28" BORDER="0"
+ SRC="img44.png"
+ ALT="\begin{displaymath}
+\mbox{noise} = \mbox{\tt anneal\_noise}(1-\mbox{number\_of\_iterations}/\mbox{\tt anneal\_length})
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+</DD>
+<DT><STRONG>Exponentially:</STRONG></DT>
+<DD>If <TT>anneal_length</TT> is less than 1, the
+noise is decreased exponentially by multiplying the noise with <TT>anneal_length</TT> in each iteration, which gives the noise
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\mbox{noise} = \mbox{\tt anneal\_noise} *
+\mbox{\tt anneal\_length}^{\mbox{\scriptsize number\_of\_iterations}}.
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="478" HEIGHT="28" BORDER="0"
+ SRC="img45.png"
+ ALT="\begin{displaymath}
+\mbox{noise} = \mbox{\tt anneal\_noise} *
+\mbox{\tt anneal\_length}^{\mbox{\scriptsize number\_of\_iterations}}.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+In the exponential schedule, noise injection is halted when the amount
+of noise reaches 10% of its initial value.
+</DD>
+</DL>
+
+<P>
+Once the noise level has been calculated, there are three possible
+ways noise can be added, as controlled by whether <TT>randomize</TT> is
+positive, negative, or zero.
+
+<P>
+<DL>
+<DT><STRONG>positive</STRONG></DT>
+<DD>A set of <TT>randomize</TT> random paths are calculated
+through the model according the the regularizer probabilities.  Each
+of these sequences is weighted by the amount of noise.  These
+sequences are added to the counts generated by the real frequencies,
+thus the noise setting is somewhat dependent on the number of
+sequences being trained.  
+
+<P>
+</DD>
+<DT><STRONG>negative</STRONG></DT>
+<DD>A set of <TT><IMG
+ WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.png"
+ ALT="$-$">randomize</TT> random paths are
+calculated through the model. With a weight of
+<!-- MATH
+ $-\mbox{noise}/\mbox{\tt randomize}$
+ -->
+<IMG
+ WIDTH="136" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img46.png"
+ ALT="$-\mbox{noise}/\mbox{\tt randomize}$">, these counts are added to the
+<EM>normalized</EM> (probability, rather frequency) model, and than the
+model is renormalized.  Thus, the noise generation is similar to that
+of the first case, but total noise added is independent of both the
+number of sequences and the <TT>randomize</TT> setting.
+
+<P>
+</DD>
+<DT><STRONG>zero</STRONG></DT>
+<DD>For each probability parameter in the model, a random
+number between 0 and the corresponding parameter in the normalized
+regularizer is found.  This number is scaled by the level of the
+noise, given for instance by <TT>initial_noise</TT>, and added to the
+probability in the model.  After doing this for the whole model, all
+the probabilities are normalized.  For example, if the noise is a
+random number between 0 and 2, random pseudo counts corresponding to
+up to two sequences will be added to each transition and each match
+state.  This is the fastest means of noise generation.
+
+<P>
+</DD>
+</DL>
+
+<P>
+Note that the annealing schedules are <EM>ad hoc</EM>.  Still, according
+to our experience even fast and crude annealing generally improves
+performance.  By default, exponential noise at a ration of 0.8 is used with
+no <TT>initial_noise</TT>, an <TT>anneal_noise</TT> of 5, and a <TT>randomize</TT> setting of 50 (corresponding to 50 random sequences).
+These values were chosen experimentally (see the Hughey and Krogh
+paper mentioned in the introduction).
+
+<P>
+After a model has been created, adding too much noise to the model may
+eliminate all the trained information.  Therefore, if an initial model
+or an initial alignment is specified, noise (<TT>initial_noise</TT> or
+<TT>anneal_noise</TT>) is reduced from the default setting by a factor
+of <TT>retrain_noise_scale</TT>, which has a default of 0.1.  Thus,
+the effective noise during a retraining would be 0.5 rather than 5.
+The same is true of surgery iterations, discussed in the next section.
+In this case, the starting noise of the re-estimation process after a
+surgery, whether or not an initial model is specified, is the <TT>anneal_noise</TT> scaled by <TT>surgery_noise_scale</TT> parameter, which
+also has a default of 0.1.
+
+<P>
+A second annealing option, one based on slowing increasing the weights
+of the sequences being trained is discussed in
+Section&nbsp;<A HREF="node11.html#sec:aweights">9.4.2</A>.  
+
+<P>
+
+<H2><A NAME="SECTION000112000000000000000"></A><A NAME="sec:surgery"></A>
+<BR>
+9.2 Surgery
+</H2>
+
+<P>
+It is often the case that during the course of learning, some match
+states in the model are used by few sequences, while some insertion
+states are used by many sequences.  <EM>Model Surgery</EM> is a means of
+dynamically adjusting the model during training.
+
+<P>
+Surgery will be <TT>nsurgery</TT> times: a full re-estimation process is
+performed including <TT>reestimates</TT> re-estimations, or until the
+<TT>stopcriterion</TT> is reached.  By default, as in the tRNA example
+above, surgery is performed up to two times.
+
+<P>
+The basic operation of surgery is to delete unused match states and to
+insert match states in place of over-used insert states (the
+special node types described in Section&nbsp;<A HREF="node10.html#sec:spec-nodes">8.4.2</A> are never
+subjected to surgery modification).  In the default case, any match
+state used by less than one half of the sequences is removed, forcing
+those sequences to use an insert state or to significantly change
+their alignment to the model.<A NAME="tex2html51"
+  HREF="footnode.html#foot3079"><SUP>2</SUP></A>  Similarly, any insert state used by more than
+half sequences is replaced with a number of match states approximating
+the average number of characters inserted by that insert state.
+
+<P>
+The surgery heuristic can be adjusted with one parameter or with
+three.  In the first case, setting <TT>mainline_cutoff</TT> to a number
+other than the default 0.5 will indicate how much non-match, or main
+line, activity will be accepted.  For example, a setting of
+0.25 indicates that any match state used by less than one quarter of
+the sequences should be removed, while any insert state used by more
+than one quarter of the sequences should be expanded into a number of
+match states approximately equal to the average number of characters
+emitted by that state.
+
+<P>
+For finer tuning of the surgery process, the parameters <TT>cutmatch</TT>, <TT>cutinsert</TT>, and <TT>fracinsert</TT>, can be used.
+During surgery, any match state with a smaller portion of sequences
+than <TT>cutmatch</TT> is removed, and any insert state with a higher
+portion of sequences than <TT>cutinsert</TT> is replaced by the average
+number of characters emitted by that insert state multiplied by <TT>fracinsert</TT>.  By default, <TT>fracinsert</TT> is 1.0, and <TT>cutmatch</TT> and <TT>cutinsert</TT> are both equal to <TT>mainline_cutoff</TT>.
+
+<P>
+These parameters can be set in ways that cause large amounts of
+surgery.  For example, setting <TT>cutmatch</TT> to 0.5 and <TT>cutinsert</TT> to 0.25 will delete any match state used by fewer than half
+the sequences, and insert match states for any insert node used by
+greater than one quarter of the sequences.  Typically, this will
+result in an oscillating model in several positions -- those
+positions used by more than one quarter and less than one half of the
+sequences.  Such excessive surgery can sometimes aid in forming a good
+model.
+
+<P>
+
+<H2><A NAME="SECTION000113000000000000000"></A><A NAME="sec:trainstat"></A>
+<BR>
+9.3 Training statistics
+</H2>
+
+<P>
+In addition to the trained model, a report of the training procedure
+is included in <TT>buildmodel</TT>'s output.  The comment sections of
+this file for the training example in the introduction is reproduced
+below.
+<PRE>
+
+%&nbsp;&nbsp;SAM:&nbsp;buildmodel&nbsp;v3.3.1&nbsp;(December&nbsp;20,&nbsp;2001)&nbsp;compiled&nbsp;12/27/01_15:14:02
+%&nbsp;&nbsp;(c)&nbsp;1992-2001&nbsp;Regents&nbsp;of&nbsp;the&nbsp;University&nbsp;of&nbsp;California,&nbsp;Santa&nbsp;Cruz
+%
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sequence&nbsp;Alignment&nbsp;and&nbsp;Modeling&nbsp;Software&nbsp;System
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.cse.ucsc.edu/research/compbio/sam.html
+%
+%&nbsp;---------&nbsp;Citations&nbsp;(SAM,&nbsp;SAM-T99,&nbsp;HMMs)&nbsp;----------
+%&nbsp;R.&nbsp;Hughey,&nbsp;A.&nbsp;Krogh,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;for&nbsp;sequence&nbsp;analysis:
+%&nbsp;&nbsp;Extension&nbsp;and&nbsp;analysis&nbsp;of&nbsp;the&nbsp;basic&nbsp;method,&nbsp;CABIOS&nbsp;12:95-107,&nbsp;1996.
+%&nbsp;K.&nbsp;Karplus,&nbsp;C.&nbsp;Barrett,&nbsp;R.&nbsp;Hughey,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;for&nbsp;detecting
+%&nbsp;&nbsp;remote&nbsp;protein&nbsp;homologies,&nbsp;Bioinformatics&nbsp;14(10):846-856,&nbsp;1998.
+%&nbsp;A.&nbsp;Krogh&nbsp;et&nbsp;al.,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;in&nbsp;computational&nbsp;biology:
+%&nbsp;&nbsp;Applications&nbsp;to&nbsp;protein&nbsp;modeling,&nbsp;JMB&nbsp;235:1501-1531,&nbsp;Feb&nbsp;1994.
+%&nbsp;-----------------------------------
+%&nbsp;&nbsp;test&nbsp;&nbsp;&nbsp;Host:&nbsp;perch&nbsp;&nbsp;&nbsp;&nbsp;Thu&nbsp;Dec&nbsp;27&nbsp;16:02:45&nbsp;2001
+%&nbsp;&nbsp;rph&nbsp;&nbsp;&nbsp;&nbsp;Dir:&nbsp;&nbsp;/projects/kestrel/rph/sam32/SAMBUILD/perch/demos
+%&nbsp;-----------------------------------
+%&nbsp;Internal&nbsp;sequence&nbsp;weighting&nbsp;method&nbsp;1
+%&nbsp;Regularizer&nbsp;FIM_method_train&nbsp;training&nbsp;letter&nbsp;frequencies&nbsp;(1)
+%&nbsp;Regularizer&nbsp;Insert_method_train&nbsp;training&nbsp;letter&nbsp;frequencies&nbsp;(1)
+%&nbsp;Model&nbsp;initial&nbsp;FIM_method_train&nbsp;training&nbsp;letter&nbsp;frequencies&nbsp;(1)
+%&nbsp;Model&nbsp;initial&nbsp;insert_method_train&nbsp;training&nbsp;letter&nbsp;frequencies&nbsp;(1)
+%&nbsp;Generic,&nbsp;Insert,&nbsp;and&nbsp;FIM&nbsp;tables&nbsp;dynamically&nbsp;reset&nbsp;to&nbsp;
+%&nbsp;&nbsp;&nbsp;train_reset_inserts&nbsp;geometric&nbsp;mean&nbsp;of&nbsp;match&nbsp;probabilities&nbsp;(6)
+%&nbsp;All&nbsp;models&nbsp;generated&nbsp;from&nbsp;regularizer.
+%&nbsp;Sequence-model&nbsp;(global)&nbsp;(SW&nbsp;=&nbsp;0)
+%&nbsp;Sequence-model&nbsp;(global)&nbsp;(SW&nbsp;=&nbsp;0)
+%&nbsp;Sequence-model&nbsp;(global)&nbsp;(SW&nbsp;=&nbsp;0)
+%
+%&nbsp;&nbsp;Model&nbsp;lengths:&nbsp;&nbsp;&nbsp;&nbsp;79&nbsp;&nbsp;77&nbsp;&nbsp;71
+%&nbsp;Itera-&nbsp;&nbsp;&nbsp;Average
+%&nbsp;tion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;105.476&nbsp;&nbsp;&nbsp;105.322&nbsp;&nbsp;&nbsp;108.176
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;104.216&nbsp;&nbsp;&nbsp;104.560&nbsp;&nbsp;&nbsp;104.437
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;103.944&nbsp;&nbsp;&nbsp;103.390&nbsp;&nbsp;&nbsp;103.529
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;103.810&nbsp;&nbsp;&nbsp;103.632&nbsp;&nbsp;&nbsp;104.093
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;104.238&nbsp;&nbsp;&nbsp;102.931&nbsp;&nbsp;&nbsp;103.757
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;104.922&nbsp;&nbsp;&nbsp;103.555&nbsp;&nbsp;&nbsp;104.190
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;104.146&nbsp;&nbsp;&nbsp;102.260&nbsp;&nbsp;&nbsp;103.825
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;103.410&nbsp;&nbsp;&nbsp;103.806&nbsp;&nbsp;&nbsp;103.212
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9&nbsp;&nbsp;&nbsp;102.292&nbsp;&nbsp;&nbsp;100.572&nbsp;&nbsp;&nbsp;101.983
+%&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;101.249&nbsp;&nbsp;&nbsp;100.869&nbsp;&nbsp;&nbsp;101.556
+%&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;100.166&nbsp;&nbsp;&nbsp;100.650&nbsp;&nbsp;&nbsp;100.988
+%&nbsp;&nbsp;&nbsp;&nbsp;12&nbsp;&nbsp;&nbsp;&nbsp;99.637&nbsp;&nbsp;&nbsp;&nbsp;97.719&nbsp;&nbsp;&nbsp;&nbsp;99.634
+%&nbsp;&nbsp;&nbsp;&nbsp;13&nbsp;&nbsp;&nbsp;&nbsp;98.986&nbsp;&nbsp;&nbsp;&nbsp;96.319&nbsp;&nbsp;&nbsp;&nbsp;96.970
+%&nbsp;&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;&nbsp;96.642&nbsp;&nbsp;&nbsp;&nbsp;94.471&nbsp;&nbsp;&nbsp;&nbsp;95.979
+%&nbsp;&nbsp;&nbsp;&nbsp;15&nbsp;&nbsp;&nbsp;&nbsp;80.853&nbsp;&nbsp;&nbsp;&nbsp;72.673&nbsp;&nbsp;&nbsp;&nbsp;75.154
+%&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;&nbsp;&nbsp;&nbsp;74.963&nbsp;&nbsp;&nbsp;&nbsp;69.673&nbsp;&nbsp;&nbsp;&nbsp;70.740
+%&nbsp;&nbsp;&nbsp;&nbsp;17&nbsp;&nbsp;&nbsp;&nbsp;71.174&nbsp;&nbsp;&nbsp;&nbsp;68.998&nbsp;&nbsp;&nbsp;&nbsp;69.168
+%&nbsp;&nbsp;&nbsp;&nbsp;18&nbsp;&nbsp;&nbsp;&nbsp;70.187&nbsp;&nbsp;&nbsp;&nbsp;68.709&nbsp;&nbsp;&nbsp;&nbsp;68.662
+</PRE>
+<PRE>
+
+%&nbsp;&nbsp;&nbsp;&nbsp;19&nbsp;&nbsp;&nbsp;&nbsp;69.642&nbsp;&nbsp;&nbsp;&nbsp;68.457&nbsp;&nbsp;&nbsp;&nbsp;68.336
+%&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;69.402&nbsp;&nbsp;&nbsp;&nbsp;68.197&nbsp;&nbsp;&nbsp;&nbsp;68.177
+%&nbsp;&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;&nbsp;69.271&nbsp;&nbsp;&nbsp;&nbsp;68.003&nbsp;&nbsp;&nbsp;&nbsp;68.077
+%&nbsp;&nbsp;&nbsp;&nbsp;22&nbsp;&nbsp;&nbsp;&nbsp;69.164&nbsp;&nbsp;&nbsp;&nbsp;67.803&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;&nbsp;69.061&nbsp;&nbsp;&nbsp;&nbsp;67.615&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;24&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;67.482&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;67.339&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;26&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;67.189&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;27&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;67.040&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;28&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;66.861&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;29&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;66.697&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;&nbsp;&nbsp;&nbsp;30&nbsp;&nbsp;&nbsp;&nbsp;68.978&nbsp;&nbsp;&nbsp;&nbsp;66.629&nbsp;&nbsp;&nbsp;&nbsp;68.001
+%&nbsp;Model&nbsp;1&nbsp;(counting&nbsp;from&nbsp;0)&nbsp;wins!!
+%&nbsp;-----------------------------------
+%&nbsp;&nbsp;TRAIN&nbsp;10&nbsp;sequences&nbsp;(average&nbsp;length&nbsp;74).&nbsp;&nbsp;Distance&nbsp;statistics...
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Min:-41.36&nbsp;(&nbsp;&nbsp;2)&nbsp;Max:-34.91&nbsp;(&nbsp;&nbsp;6)&nbsp;Ave:-37.52&nbsp;SampDev:&nbsp;&nbsp;1.97&nbsp;
+%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MinSDs:&nbsp;&nbsp;-1.95&nbsp;&nbsp;MaxSDs:&nbsp;&nbsp;&nbsp;1.33
+%
+%&nbsp;&nbsp;Total&nbsp;CPU&nbsp;time:&nbsp;&nbsp;user&nbsp;&nbsp;&nbsp;0:&nbsp;0:&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;system&nbsp;&nbsp;&nbsp;0:&nbsp;0:&nbsp;0
+%&nbsp;&nbsp;Finished&nbsp;at:&nbsp;&nbsp;Thu&nbsp;Dec&nbsp;27&nbsp;16:02:50&nbsp;2001
+%&nbsp;-----------------------------------
+%
+%&nbsp;Parameters&nbsp;from&nbsp;command&nbsp;line&nbsp;and&nbsp;insert&nbsp;files:&nbsp;
+%
+%&nbsp;trainseed&nbsp;4989
+%&nbsp;randseed&nbsp;0
+train&nbsp;/projects/kestrel/rph/sam32/demos/trna10.seq
+a&nbsp;RNA
+print_frequencies&nbsp;1
+%
+%&nbsp;-----------------------------------
+%&nbsp;-----------------------------------
+MODEL&nbsp;-&nbsp;&nbsp;Final&nbsp;model&nbsp;for&nbsp;run&nbsp;test
+</PRE>
+Here, the initial information includes program version and run
+information.  In this case, no initial models were specified, so <TT>buildmodel</TT> created 3 models (the default value of <TT>Nmodels</TT>)
+from the regularizer of the specified lengths.  Next, all three models
+are trained, and the one with the best score is selected.  In this
+case, the best model did not require any surgery, so the process was
+complete.  If the best model did need surgery, that single model would
+be further refined.  Next, statistics on the scores of the training
+sequences (and test sequences, if present) and CPU time are presented,
+followed by non-default parameter settings.  The <TT>randseed</TT> entry is
+commented out to prevent any future training iterations from reusing
+the old seed.  Finally, the model, along with its generic, letter
+count, and frequency average nodes is printed.  The model has not been
+included in the example.
+
+<P>
+If the <TT>many_files</TT> variable is set, then the results of <TT>buildmodel</TT> are broken up into three files:  the <TT>.stat</TT> file
+contains the run statistics and parameter settings, the <TT>.mod</TT>
+file contains the final model, and the <TT>.freq</TT> file contains the
+frequency model if <TT>print_frequencies</TT> is set.
+
+<P>
+
+<H2><A NAME="SECTION000114000000000000000"></A><A NAME="sec:weights"></A>
+<BR>
+9.4 Weighted training
+</H2>
+
+<P>
+SAM is able to perform a variety of
+weighted training options. Sequence weighting is particularly
+important when, as 
+normal, the sequence data given to SAM is biased toward some type or
+subfamily of sequences (for example, from those organisms that have
+been most studied).  Prior to Version&nbsp;2.0, the SAM software system did not
+include any internal sequence weighting schemes, but could use weights
+generated by some other program.  Version&nbsp;2.0 added two internal
+weighting methods described below, the first of which is turned on by
+default when external weighting is not used.  Version&nbsp;3.0 includes
+internal weighting of alignments with several algorithm choices, which
+is the preferred form of sequence weighting.
+
+<P>
+
+<H3><A NAME="SECTION000114100000000000000">
+9.4.1 External weighting</A>
+</H3>
+
+<P>
+For all external sequence weighting options, a sequence weights file
+is specified with either the <TT>sequence_weights</TT> variable (for
+<TT>buildmodel</TT> training sets) or the <TT>alignment_weights</TT>
+variable (for <TT>buildmodel</TT> or <TT>modelfromalign</TT> initial
+alignments).  In this file, any line starting with a percent sign
+(<code>%</code>) is ignored as a comment.  The first non-comment line is
+presumed to be a description of the weights file, for example
+including the program that generated the sequence weights.  The next
+non-comment line contains two integers, the number of weighted
+sequences and the number of weighted subfamilies.  Remaining
+uncommented lines consist of a sequence identifier, white-space, and
+floating-point sequence weights, one per family.  Weights can be
+positive, negative, or zero, and need not sum to one. If a sequence
+does not have a corresponding weight, its weight is set to 1.0 and a
+message is printed.  If a weight does not have a corresponding
+sequence, a message is printed.  Sequences and weights do not need to
+be in the same order within their respective files.
+
+<P>
+For plain sequence weighting, the number of families is set to 1, and
+each sequence is assigned a single weight in the <TT>sequence_weights</TT> file.  During the re-estimation cycle, the frequency
+counts for each sequence will be multiplied by its weight.
+
+<P>
+Sequence weighting is particularly important in database
+discrimination: without sequence weighting, the model may specialize
+to an over-represented subset of the sequences, meaning that family
+members that do not happen to be in that sub-family will receive low
+scores.
+
+<P>
+The file <code>gseg4.seq</code> contains the initial 70-character segments
+of each of 4 globins.  The last three are quite similar.
+<PRE>
+
+;
+BAHG$VITSP
+mldqqtiniikatvpvlkehgvtitttfyknlfakhpevrplfdmgrqesleqpkalamtvlaaaqnien
+;
+GLB$APLJU
+alsaadagllaqswapvfansdangasflvalftqfpesanffndfkgksladiqaspklrdvssrifar
+;
+GLB$APLKU
+slsaaeadlvgkswapvyankdadganfllslfekfpnnanyfadfkgksiadikaspklrdvssriftr
+;
+GLB$APLLI
+slsaaeadlagkswapvfanknangadflvalfekfpdsanffadfkgksvadikaspklrdvssriftr
+</PRE>
+When a model is trained on this file without weighted training, the
+model is pecialized to the latter group of sequences, resulting in
+the following scores:
+<PRE>
+
+GLB$APLKU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-142.44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-135.82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.15e-59
+GLB$APLLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-142.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-134.61&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.38e-58
+GLB$APLJU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-135.59&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-128.07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.55e-56
+BAHG$VITSP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-101.36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-94.29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.49e-41
+</PRE>
+
+<P>
+The following simple weight file is an attempt to correct this bias:
+<PRE>
+
+%&nbsp;gseg4.weights
+Weight&nbsp;file&nbsp;for&nbsp;the&nbsp;simple&nbsp;globin&nbsp;segment&nbsp;example.
+%&nbsp;4&nbsp;sequences&nbsp;and&nbsp;1&nbsp;family
+4&nbsp;1
+BAHG$VITSP&nbsp;&nbsp;2.0
+GLB$APLJU&nbsp;&nbsp;&nbsp;0.66
+GLB$APLKU&nbsp;&nbsp;&nbsp;0.66
+GLB$APLLI&nbsp;&nbsp;&nbsp;0.66
+
+<P>
+&nbsp;
+</PRE>
+Note that in this weight file, to make the results of the two examples
+comparable, the weights were made to sum to 4.  The reason for this is
+that in addition to sequences, the regularizer (provided the various
+confidence parameters are non-zero) shapes the model.  Setting all
+sequence weights uniformly high (e.g., 100.0) will have a similar
+effect to setting all the regularizer confidences to 0.
+
+<P>
+With the simple weight file, the following scores are produced.
+<PRE>
+
+BAHG$VITSP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-134.24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-126.82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.34e-55
+GLB$APLKU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-118.19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-111.71&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.23e-48
+GLB$APLLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-118.40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-111.26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.91e-48
+GLB$APLJU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-111.35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-104.36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.90e-45
+</PRE>
+Here, with the three similar sequences weighted less, the model better 
+matches (perhaps too much) the dissimilar sequence.
+
+<P>
+The above example is definitely a toy problem:  weights must be set
+using statistically and biologically valid means.
+
+<P>
+
+<H4><A NAME="SECTION000114110000000000000"></A><A NAME="sec:subfamily"></A>
+<BR>
+9.4.1.1 Multi-subfamily weighting
+</H4>
+
+<P>
+<EM>Warning:  This feature is not completely available or completely
+debugged.</EM> 
+
+<P>
+A particularly interesting use of weighting schemes is when a family
+of sequences can be divided into several subfamilies.  This special
+type of training is used whenever the number of families in a weights
+file is greater than one.
+
+<P>
+In this case, SAM will train one model per family in parallel so that
+each model can specialize to its subfamily.  Although this sounds just
+like training each subfamily separately, there is an important
+difference.  During the regularization procedure, the counts across
+all subfamily models are taken into account when re-estimating each
+subfamily's model.  This means that, in the case of multiple
+alignments, a full-family multiple alignment can be generated by
+aligning each sequence to its appropriate subfamily model and
+combining the results.  At the moment, subfamily modeling is not
+fully implemented and not recommended for use.
+
+<P>
+There are a few changes in the functionality of <TT>buildmodel</TT> when
+subfamily modeling is used.  First, only a single suite of subfamily
+models is trained at a time, so multiple runs must be performed to
+match the functionality of starting with more than one model and
+selecting the best.  Second, prior libraries must be used.  Third, a
+more conservative approach to model surgery is taken.  The subfamily
+models are always modified in parallel, and only if all the subfamily
+models agree on the surgery procedure (if all subfamily models believe
+inserting new model positions is appropriate, the minimum of all
+proposed insertion lengths is used).  To encourage more surgery, users
+may wish to lower the surgery thresholds when training with multiple
+models.  See Section&nbsp;<A HREF="node11.html#sec:surgery">9.2</A>.
+
+<P>
+Also, model files are treated somewhat differently.  The <TT>many_files</TT> option is always turned on.  The subfamily models are
+writing to files named, for example, <TT>runname.3.mod</TT>, where the
+number indicates which subfamily (starting from zero) that model is
+for.  It is possible to retrain a suite of subfamily models by setting
+<TT>family_base_file</TT> to the root name of the suite of models
+(i.e., <TT>runname</TT> in the above example).
+
+<P>
+The <TT>hmmscore</TT> program does not yet score against multiple
+models--to perform database search against a suite of models, <TT>hmmscore</TT> must be run independently for each subfamily, and then the
+results combined by, for example, classifying each sequence as a
+member of the subfamily with which it scored best.
+
+<P>
+
+<H3><A NAME="SECTION000114200000000000000"></A><A NAME="sec:aweights"></A>
+<BR>
+9.4.2 Annealing with Weights
+</H3>
+
+<P>
+Sequence weights can also be an effective means of annealing
+(Section&nbsp;<A HREF="node11.html#noise">9.1</A>) during the training process.  When using
+this option, the sequence weights are slowly increased over the first
+several re-estimation cycles.  Thus, at first, the sequences will have
+little effect on the model for the next training iteration:  the
+regularizer and prior library will dominate, though particularly strong
+signals in the sequences, such as strongly conserved regions, will
+show through.  As the training continues, the sequence weight multiplier
+is brought up to its final value,  giving full weight to the
+sequences.
+
+<P>
+The annealing schedule options are similar to that available with noise
+generation.  The relevant parameters are <TT>weight_length</TT>, which
+indicates how long the annealing should last, and <TT>weight_final</TT>, indicating the final sequence weight multiplier (the
+default is 1.0).  The sequence weight multiplier found be the formulas
+below is multiplier by the sequence weight (which is 1.0 if no weight
+file is used in training) to find each sequence's weight during the
+given re-estimation iteration.
+
+<P>
+<DL>
+<DT><STRONG>Linearly:</STRONG></DT>
+<DD>If <TT>weight_length</TT> is greater than or equal to
+1, the weight multiplier is increased linearly to <TT>weight_final</TT>
+in <TT>anneal_length</TT> iterations by the formula
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\mbox{multiplier} = \mbox{\tt weight\_final} *
+\mbox{number\_of\_iterations} / \mbox{\tt weight\_length}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="511" HEIGHT="28" BORDER="0"
+ SRC="img47.png"
+ ALT="\begin{displaymath}
+\mbox{multiplier} = \mbox{\tt weight\_final} *
+\mbox{number\_of\_iterations} / \mbox{\tt weight\_length}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+</DD>
+<DT><STRONG>Exponentially:</STRONG></DT>
+<DD>If <TT>weight_length</TT> is less than 1, the
+multiplier is increased exponentially until the multiplier reaches
+90% of its final value as follows:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\mbox{multiplier} = \mbox{\tt weight\_final} *
+(1.0-\mbox{\tt weight\_length}^{\mbox{\scriptsize number\_of\_iterations}}).
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="520" HEIGHT="28" BORDER="0"
+ SRC="img48.png"
+ ALT="\begin{displaymath}
+\mbox{multiplier} = \mbox{\tt weight\_final} *
+(1.0-\mbox{\tt weight\_length}^{\mbox{\scriptsize number\_of\_iterations}}).
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+</DD>
+</DL>
+Sequence weights are never zero:  the first re-estimation cycle uses
+the first non-zero value of the weight formula.
+
+<P>
+
+<H3><A NAME="SECTION000114300000000000000"></A><A NAME="sec:alignweight"></A>
+<BR>
+9.4.3 Internal weighting of alignments
+</H3>
+
+<P>
+Version&nbsp;3.0 of SAM incorporates the weighting methods used in the
+SAM-T99 remote homology detection method. See Section&nbsp;<A HREF="node5.html#sec:samt99">4</A>..
+Relevant parameters include: <TT>aweight_method</TT>, for which 0
+indicates no internal alignment weighting, 1 indicates Karplus
+relative weighting, 2 Henikoff relative weighting, and 3 flat relative
+weighting; <TT>aweight_bits</TT> indicating the target number of bits
+to save per column; and <TT>aweight_exponent</TT> indicating the
+weighting exponent.  The Dirichlet <TT>prior_library</TT> and <TT>alignfile</TT> specified for <TT>buildmodel</TT> or <TT>modelfromalign</TT> are
+the remaining components of the method.
+
+<P>
+For the Henikoff and flat weighting schemes, if <TT>aweight_bits</TT> is
+set negative, the initial weighting is used, without adjusting the
+total weights to get a specified number of bits saved.  The initial
+weighting in these schemes has a total weight of
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+\mbox{number\_sequences}^{\mbox{\tt aweight\_exponent}}.
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="411" HEIGHT="27" BORDER="0"
+ SRC="img49.png"
+ ALT="\begin{displaymath}\mbox{number\_sequences}^{\mbox{\tt aweight\_exponent}}.\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+By default, internal weighting of alignments is turned on, with
+Henikoff relative weighting, 0.5 target bits per column, and a 0.5
+exponent.  If an <TT>alignment_weights</TT> file is specified, the
+external weights are used, and unless <TT>aweight_method</TT> is set to
+zero, a warning message is printed.
+
+<P>
+
+<H3><A NAME="SECTION000114400000000000000"></A><A NAME="sec:internalweight"></A>
+<BR>
+9.4.4 Internal weighting during training
+</H3>
+
+<P>
+Version&nbsp;2.0 of SAM introduced two methods of internal weighting during
+<TT>buildmodel</TT> training.  These methods are based
+entirely on the log-odds score of the sequence against the model being
+trained.  Their invention was motivated by HMMer's maximum-discrimination
+training method.  In general, these methods do not produce as good
+results as the alignment-based weighting.
+
+<P>
+Given a linear hidden Markov model <IMG
+ WIDTH="23" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img50.png"
+ ALT="$M$">, a dynamic programming
+calculation can be used to calculate, for a given sequence, the
+probability that sequence <IMG
+ WIDTH="14" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img51.png"
+ ALT="$a$"> was generated by the model,  <IMG
+ WIDTH="61" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img52.png"
+ ALT="$P(a\vert M)$">.
+The question of interest is, however, does that model match the
+sequence?  That is, is the sequence more likely to be generated by the
+hidden Markov model than some other, less structured null model,
+<IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img53.png"
+ ALT="$\phi$">.  Making the assumption that the models <IMG
+ WIDTH="23" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img50.png"
+ ALT="$M$"> and <IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img53.png"
+ ALT="$\phi$"> are <EM>a priori</EM> equally likely, this reduces to the log-odds probability of
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+P(M|a) = \frac{p(a|M)}{p(a|M)+p(a|\phi)}.
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="379" HEIGHT="44" BORDER="0"
+ SRC="img54.png"
+ ALT="\begin{displaymath}
+P(M\vert a) = \frac{p(a\vert M)}{p(a\vert M)+p(a\vert\phi)}.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+Typically, a log-odds score <IMG
+ WIDTH="17" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img55.png"
+ ALT="$S$"> is used instead&nbsp;[<A
+ HREF="node6.html#altschul91">2</A>]:
+<P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{eqnarray*}
+S_a&=&\ln\frac{P(a|M)}{ P({\phi}|a)}\\
+P(M|a)& =& \frac{1}{1+e^{-S}}
+\end{eqnarray*}
+ -->
+<IMG
+ WIDTH="366" HEIGHT="84" BORDER="0"
+ SRC="img56.png"
+ ALT="\begin{eqnarray*}
+S_a&amp;=&amp;\ln\frac{P(a\vert M)}{ P({\phi}\vert a)}\\
+P(M\vert a)&amp; =&amp; \frac{1}{1+e^{-S}}
+\end{eqnarray*}">
+<BR CLEAR="ALL"></DIV><P></P>
+<BR CLEAR="ALL"><P></P>
+<BR CLEAR="ALL"><P></P>
+This score measures whether the probability that the sequence was generated by
+the model is greater than the probability it was generated by a
+null model.  This log-odds score is used to calculate
+the weight of a sequence.  As model training iterations proceed, sequences 
+that poorly match the model (i.e. with poor log-odds scores) are given higher
+weight. 
+
+<P>
+Internal weighting method 1 uses the following equation to calculate a
+sequence weight.
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+W = e^{ (w-S) * (\frac{\ln K}{(w-b)} )}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="347" HEIGHT="24" BORDER="0"
+ SRC="img57.png"
+ ALT="\begin{displaymath}
+W = e^{ (w-S) * (\frac{\ln K}{(w-b)} )}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+
+<P>
+<IMG
+ WIDTH="17" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img55.png"
+ ALT="$S$"> is the log-odds score of the sequence. The program keeps track of
+the current worst score <IMG
+ WIDTH="18" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img58.png"
+ ALT="$w$"> and the current best score <IMG
+ WIDTH="13" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img59.png"
+ ALT="$b$"> and these are 
+used to decide on the two extreme weights.  The worst scoring sequence will
+have a weight of 1, while the best scoring sequence will have a weight of <IMG
+ WIDTH="21" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img60.png"
+ ALT="$K$">,
+typically in the 0.01 to 0.1 range.  <IMG
+ WIDTH="21" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img60.png"
+ ALT="$K$"> is a user-controlled
+parameter entered on the command line as <IMG
+ WIDTH="59" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img61.png"
+ ALT="$iweight$">.
+
+<P>
+To use method 1 with <IMG
+ WIDTH="21" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img60.png"
+ ALT="$K$">=.1, run buildmodel with the following arguments:
+<PRE>
+
+ buildmodel runname -train train.seq -internal_weight 1 -iweight .1 
+</PRE>
+
+<P>
+Internal weighting method 2 is a variation of method 1.  When using
+method 1, sequences with very poor scores may get excessively large
+weights.  Method 2 modifies the weights of such outlier sequences.  If
+a sequence scores so badly that it exceeds the median score by three
+standard deviations, it is weighted with a decreasing linear weight
+function, reaching a minimum of 1.0 for the sequence with the worst
+score.
+
+<P>
+Method 2:
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+W = e^{ ( w-S * \frac{\ln K}{(w-b)} )}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="342" HEIGHT="24" BORDER="0"
+ SRC="img62.png"
+ ALT="\begin{displaymath}
+W = e^{ ( w-S * \frac{\ln K}{(w-b)} )}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+is applied to scores no more than 3 deviations below the
+median, while
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{displaymath}
+W = 1 -  \frac{S-w}{b-w}
+\end{displaymath}
+ -->
+
+<IMG
+ WIDTH="335" HEIGHT="40" BORDER="0"
+ SRC="img63.png"
+ ALT="\begin{displaymath}
+W = 1 - \frac{S-w}{b-w}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+is applied to the remaining sequences.
+
+<P>
+To use method 1 with <IMG
+ WIDTH="21" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img60.png"
+ ALT="$K$">=0.05, run buildmodel with the following arguments:
+<PRE>
+
+ buildmodel runname -train train.seq -internal_weight 2 -iweight 0.05 
+</PRE>
+
+<P>
+The current SAM default is to not use internal weighting.  If internal
+weighting is selected and no iweight parameter entered, SAM defaults
+to an iweight of 0.1.
+
+<P>
+Looking again at the toy problem example demonstrated in the previous
+section, we saw the following scores when a model was trained on 4
+globins without weighting.
+
+<P>
+<PRE>
+
+GLB$APLKU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-142.44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-135.82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.15e-59
+GLB$APLLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-142.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-134.61&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.38e-58
+GLB$APLJU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-135.59&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-128.07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.55e-56
+BAHG$VITSP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-101.36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-94.29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.49e-41
+</PRE>
+
+<P>
+The unweighted model is overspecialized.
+
+<P>
+Internal weighting method 1 produces these scores:
+
+<P>
+<PRE>
+
+GLB$APLKU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-107.98&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-99.96&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.56e-43
+GLB$APLLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-109.40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-99.94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.57e-43
+GLB$APLJU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-106.94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-98.36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.65e-43
+BAHG$VITSP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-103.21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-95.55&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.27e-41
+</PRE>
+
+<P>
+Internal weighting method 2 produces these scores:
+
+<P>
+<PRE>
+
+GLB$APLLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-111.28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-101.90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.23e-44
+GLB$APLKU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-109.35&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-101.45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.49e-44
+GLB$APLJU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-109.54&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-101.03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.34e-44
+BAHG$VITSP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-104.57&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-96.92&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.23e-42
+</PRE>
+
+<P>
+When using internal weighting, you can inspect all sequence weights 
+generated during each iteration of the model building process.
+
+<P>
+<PRE>
+
+buildmodel runname -train train.seq -internal_weight 2 -iweight 0.05 -print_all_weights 1
+</PRE>
+
+<P>
+The <TT>print_all_weights</TT> option when set to 1 will produce a weight output
+file once per iteration.  The files are named <TT>runname1.weightoutput</TT>,
+where 1 is the iteration number.
+
+<P>
+By default, <TT>print_all_weights</TT> is set to off.
+
+<P>
+Continuing the example of Figure&nbsp;<A HREF="node10.html#regfig">14</A> on
+page&nbsp;<A HREF="node10.html#regfig"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/crossref.png"></A>, performing the two commands:
+<PRE>
+
+buildmodel train4w -train globins50.seq
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-randseed 0 -trainseed 0 -ntrain 4 -internalweight 2
+buildmodel train4wreg -train globins50.seq
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-priorlibrary recode1.20comp 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-regularizerfile weak-gap.regularizer 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-randseed 0 -trainseed 0 -ntrain 4 -internalweight 2   
+hmmscore train4w  -i train4w.mod  -db globins50.seq -sw 2
+hmmscore train4wreg -i train4wreg.mod -db globins50.seq -sw 2
+</PRE>
+results in the score histograms of Figure&nbsp;<A HREF="node11.html#weightfig">15</A>, in which
+the scores improve even further from the use of regularizers and
+Dirichlet mixtures.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="weightfig"></A><A NAME="4263"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 15:</STRONG>
+Weighting performance</CAPTION>
+<TR><TD><IMG
+ WIDTH="645" HEIGHT="202" BORDER="0"
+ SRC="img64.png"
+ ALT="\begin{figure}\small\begin{tabular}{cc}
+\psfig{figure=train4reg.ps,width=0.43\te...
+...
+Ntrain=10, Dirichlet, weak-gap, internal weighting\\
+\end{tabular}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<H2><A NAME="SECTION000115000000000000000"></A>
+<A NAME="sec:vtrain"></A>
+<BR>
+9.5 Viterbi training
+</H2>
+
+<P>
+For increased speed and performance (and possible worse results),
+Viterbi training is now possible (though in some instances not
+robust).  The <TT>dpstyle</TT> parameter should be set to 1 for Viterbi
+training, rather than the default 0, which indicates EM training.  It
+can also be set to 4 or 5 to train based on the posterior-decoded
+alignments (these options will more than double computation time and
+are not recommended).  See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>. Two other values should
+only be used for scoring.  Setting <TT>dpstyle</TT> to 2 will produce a
+very large dump of the posterior probabilities of the entire dynamic
+programming table in the file <TT>runname.pdoc</TT>.  This option should
+be used in conjunction with the <TT>grabdp</TT> program.
+See Section&nbsp;<A HREF="node12.html#sec:grabdp">10.4</A>. Setting <TT>dpstyle</TT> to 3 will produce a
+frequency dump for each sequence against each model as scored or
+aligned, using the EM dynamic programming method (also for use with
+<TT>grabdp</TT>).  Files will be of the form <TT>runname.id.freq</TT>.
+
+<P>
+The related <TT>adpstyle</TT> parameter can be used to choose beteen
+Viterbi (1), posterior-decoded alignment based on transitions and
+character emission posteriors (4), and posterior-decoded alignment
+based solely on emission posteriors (5) for alignments and
+multiple domain alignments.   See Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>.
+
+<P>
+Future research will help determine the usefulness of these option.
+Fragment training (Section&nbsp;<A HREF="node12.html#sec:fragalign">10.1.2</A>) with the <TT>SW</TT>
+variable can also be used with both the Viterbi and EM training
+algorithms, but has not been completely evaluated.
+
+<P>
+
+<H2><A NAME="SECTION000116000000000000000"></A><A NAME="sec:constraints"></A>
+<BR>
+9.6 Building models with constraints
+</H2>
+
+<P>
+SAM HMM constraints provide a mechanism for associating position in
+a sequence with a specific node in a model.  During model training, a
+constrained position remains associated with its node, allowing the
+remaining portions of the sequence to align naturally to the model.  This
+serves as a method of incorporating prior knowledge about the 
+training sequence, such as structurally similar regions.
+
+<P>
+Currently, there is an inconsistency in scoring constraints, in that
+for EM-style scoring, the constrained score is reported, which will
+generally provide a very strong signal.  For Viterbi or
+posterior-alignment scoring, constraints are used to find the best
+path, but the unconstrained score of that path is reported, and thus
+the score of a constrained sequence is similar to that of an
+unconstrained sequence.
+
+<P>
+
+<H3><A NAME="SECTION000116100000000000000">
+9.6.1 Model Node Labels</A>
+</H3>
+
+<P>
+The node a residue is constrained to is specified using a <EM>node label</EM>.
+A node label is a unique, positive integer assigned to a node.  Often
+it is the same as the node number, however this is not required.  This
+is useful for allowing model surgery to add or remove a node.  
+It is specified using the <TT>NODELABELS</TT> declaration in a model
+(see Section&nbsp;<A HREF="node10.html#sec:node_labels">8.4.3</A>).
+
+<P>
+Node labels must be increasing in value from from left to right in the model.
+Labels are normally specified as contiguous numbers for a set of contiguous
+nodes to allow for easier constraint definition for contiguous residues.
+Labeled nodes will not be removed by model surgery; it is
+possible to have nodes added between labeled nodes.
+
+<P>
+When creating a model from an alignment, SAM will define node labels
+automatically.
+
+<P>
+
+<H3><A NAME="SECTION000116200000000000000">
+9.6.2 Constraints Definition File</A>
+</H3>
+
+<P>
+Constraints for individual residues are specified in line-oriented
+constraint definition files separate from the sequence databases.  By
+convention, they have an extension of <TT>.cst</TT>.  These files are specified
+using the <TT>-constraints</TT> option, which may be specified multiple times.
+Certain SAM programs can create new constraint definition files using the <TT>-constraints_out</TT>.
+
+<P>
+Lines containing only whitespace and those where the first non-whitespace
+character is ``#'' are comments and ignored. For all types of lines,
+leading white spaces are ignored.
+
+<P>
+The file is divided into sections starting with a line containing only 
+the section name followed by a colon.  Currently there is only one type
+of section containing sequence constraints, starting with
+
+<P>
+<PRE>
+
+    constraints:
+</PRE>
+
+<P>
+Multiple constraints sections may appear, allowing for the easy combining of
+files.
+
+<P>
+A constraint entry defines the model nodes to which residues of a sequence
+are constrained.  Multiple entries may appear for a sequence, however a
+given residue of a sequence may be constrained only once.
+Constraints entries consists of lines in the form:
+<PRE>
+
+    seqid constrdef, constrdef, ...
+</PRE>
+
+<P>
+Where the <TT>seqid</TT> is any sequence identifier consisting of 
+non-whitespace characters and
+<TT>constrdef</TT> defines a set of model node labels for a range of positions in
+the sequence in any combination of the following formats:
+
+<UL>
+<LI><TT>startpos-endpos: startlabel</TT> <BR>
+Specifies that consecutive residues starting at <TT>startpos</TT> and ending
+     at <TT>endpos</TT> are constrained to consecutive node labels starting at
+     <TT>startlabel</TT>.
+</LI>
+<LI><TT>seqpos: label</TT> <BR>
+Constrains a single position to a node label.
+</LI>
+<LI><TT>startpos-endpos</TT> <BR>
+Specifies that these residues are to be constrained, but doesn't actually
+     associate a label with the positions.  This is used when the labels are
+     to be assigned from an alignment by <TT>modelfromalign</TT>.
+</LI>
+<LI><TT>seqpos</TT> <BR>
+Specifies a single residue to be constrained from an alignment.
+</LI>
+<LI><EM>empty</EM> <BR>
+An entry may be empty (zero or more white space) and is ignored.
+     This can be useful when generating constraint files.
+</LI>
+</UL>
+
+<P>
+Positions in sequences are identified by one-based indices and node labels are
+positive numbers.  
+
+<P>
+A simple example of a constraint file is shown here.
+
+<P>
+<PRE>
+
+constraints:
+PROT1   10-30: 8, 80-82: 100
+PROT2   12-28: 10, 62: 100
+PROT3   16-32: 12
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION000116300000000000000">
+9.6.3 Using Constraints</A>
+</H3>
+
+<P>
+To train a new model using constraints, specify one or more constraints file
+using the <TT>-constraints</TT> option to <TT>buildmodel</TT>.  The node labels in
+the constraints file are assigned to nodes with the same node number.  If
+necessary, the length of the model will be increased to allow for all labels.
+If surgery is used, an unlabeled node may be added or removed, resulting in
+the labels and node numbers differing in the final model.  When retraining
+a model using constraints, the model must already contain labels.  Constraints
+work with both EM and Viterbi
+
+<P>
+When creating a model from a multiple alignment with <TT>modelfromalign</TT> or
+using the <TT>-alignfile</TT> parameter to <TT>buildmodel</TT>, constraints can be
+created for specific positions or for all match positions.  Constrained
+positions are specified using <TT>-constraints</TT> option.  Model labels need
+not be specified and are ignored if they are.  The residues specified in the
+file will be constrained to the nodes to which they are aligned.  Insert
+sequences positions will not be constrained.  To constrain all match positions
+in an alignment without creating a constraints definition file, use <TT>-constraints_from_align</TT>.  With either approach, a new constraints definition
+file maybe required as input to other SAM programs.  A new constraints file
+for the alignment sequences can be created using the <TT>-constraints_out</TT>
+option.
+
+<P>
+Constraints can be used when creating multiple-domain alignments with the
+<TT>hmmscore</TT> program (See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.).
+The constraints for the sequence being aligned are specified with the
+<TT>-constraints</TT> option.  The model must have node labels that correspond to
+the constraints file; thus the constraints file are normally the ones used to
+train the model or created when the model was defined from an alignment.
+If the extracted domains are to be processed by another SAM program, a
+constraint definition file for the domains can be written to a file specified
+by the <TT>-constraints_out</TT> option.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html431"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html427"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html421"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html429"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html432"
+  HREF="node12.html">10 Related programs</A>
+<B> Up:</B> <A NAME="tex2html428"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html422"
+  HREF="node10.html">8 Regularizers and models</A>
+ &nbsp <B>  <A NAME="tex2html430"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

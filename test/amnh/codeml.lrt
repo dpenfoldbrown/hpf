@@ -1,0 +1,44 @@
+Likelihood Ratio Tests : 2 * (lnL Model X - lnL Model Y)
+
+M2 - M3 Comparion
+LRT score : 126.39814999999362
+P value : Model 2 / Model 3 comparison : p < 0.0
+Positively Selected Sites : Model 2
+Bayes Empirical Bayes (BEB) analysis (Yang, Wong & Nielsen 2005. Mol. Biol. Evol. 22:1107-1118)
+Positively selected sites (*: P>95%; **: P>99%)
+(amino acids refer to 1st sequence: N1211533)
+
+            Pr(w>1)     post mean +- SE for w
+
+	188 Y	0.573	2.332 +- 1.285
+	193 *	0.560	2.276 +- 1.253
+
+
+Positively Selected Sites : Model 3
+Positively selected sites (*: P>95%; **: P>99%)
+(amino acids refer to 1st sequence: N1211533)
+
+            Pr(w>1)     post mean +- SE for w
+
+	2 K	0.925	0.986
+	3 E	0.998**	1.040
+	4 H	0.917	0.979
+	582 L	1.000**	1.042
+
+M7 - M8 Comparison
+LRT score : 36.5946299999996
+P value : Model 7 / Model 8 comparison : p < 5.0E-4
+Positively Selected Sites : Model 8
+Bayes Empirical Bayes (BEB) analysis (Yang, Wong & Nielsen 2005. Mol. Biol. Evol. 22:1107-1118)
+Positively selected sites (*: P>95%; **: P>99%)
+(amino acids refer to 1st sequence: N1211533)
+
+            Pr(w>1)     post mean +- SE for w
+
+	3 E	0.622	1.243 +- 0.349
+	580 K	0.924	1.464 +- 0.203
+	582 L	0.932	1.469 +- 0.200
+
+
+Common Selected Sites for all 3 models
+188 Y, 193 *, 235 S, 275 V, 323 S, 340 D, 394 P, 530 S, 549 *, 559 Y, 576 Q, 577 C, 580 K, 582 L, 

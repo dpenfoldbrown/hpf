@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# sam-t99-configure perl5-path
+#
+# Script to set the path to the perl executable in the SAM/Target99 scripts.
+# Must be executed in the directory containing the scripts.
+#
+#
+set -e
+PERL_SCRIPTS="target99 build-weighted-model fh0.3 fh0.5 fw0.1 fw0.2 fw0.3 fw0.5 fw0.7 fw0.8 fw1.0 w0.5 varh50"
+
+if [ $# != 1 ] ; then
+    echo "wrong # args: $0 perl5-path" >&2
+    exit 1
+fi
+PERL=$1
+if [ ! -r ${PERL} ] ; then
+    echo "Error: specified perl5 interpreter does not exist: ${PERL}"
+    exit 1
+fi
+
+tmps="t99-script.tmp"
+for ps in ${PERL_SCRIPTS} ; do
+    if [ ! -r $ps ] ; then
+        echo "Error: perl script \"$ps\" not found in current directory." >&2
+        echo "You must cd to the directory containing the target99 scripts." >&2
+        exit 1
+    fi
+    sed -e "1s%^#!.*\$%#!${PERL} -w%" $ps >$tmps
+    mv -f $tmps $ps
+    chmod a=rx $ps
+done

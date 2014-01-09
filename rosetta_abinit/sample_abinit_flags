@@ -1,0 +1,17 @@
+-in:file:fasta /home/dpb3/rosetta/work/qz409/qz409.fasta
+-in:file:frag3 /home/dpb3/rosetta/work/qz409/aaqz40903_05.200_v1_3
+-in:file:frag9 /home/dpb3/rosetta/work/qz409/aaqz40909_05.200_v1_3
+-database /share/apps/rosetta/RosettaReleases/rosetta-3.3/rosetta_database
+
+-abinitio:relax
+-relax:fast
+-abinitio::increase_cycles 10
+-abinitio::rg_reweight 0.5
+-abinitio::rsd_wt_helix 0.5
+-abinitio::rsd_wt_loop 0.5
+
+-use_filters true
+-psipred_ss2 /home/dpb3/rosetta/work/qz409/qz409.psipred.2
+-kill_hairpins /home/dpb3/rosetta/work/qz409/qz409.psipred.2
+
+-nstruct 100

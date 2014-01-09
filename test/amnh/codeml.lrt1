@@ -1,0 +1,10 @@
+Positively Selected Sites : Model 3
+Positively selected sites (*: P>95%; **: P>99%)
+(amino acids refer to 1st sequence: N1211533)
+
+            Pr(w>1)     post mean +- SE for w
+
+	2 K	0.925	0.986
+	3 E	0.998**	1.040
+	4 H	0.917	0.979
+	582 L	1.000**	1.042

@@ -1,0 +1,84 @@
+A basic README describing MCM Run functionality. Based all on the newly built (shiny)
+modular new_mcm.py functionality. This covers the run setup and run driver functions
+found in mcmrun_setup.py and mcmrun_driver.py, respectively.
+
+
+# mcmrun_setup:
+mcmrun_setup.py creates and initializes the database structures required for running
+mcmrun_driver. That is, it takes a two-letter decoy prediction code and populates
+the hpf.mcmRun table with entries for all individual prediction codes (two-letter 
+three-number, eg 'ax197') found for that two-letter code in the database's foldable
+records (table filesystemOutfile). 
+
+It populates these entries with the prediction code, sequence key (of the foldable,
+mind you, which MAY BE DIFFERENT from the corresponding domain sequence), version 
+(which is an arbitrary integer simply put in place to provide the option of having
+and keeping track of multuple MCM runs on the same prediction codes or batches),
+dates of insertion and execution, comments, etc of the foldable-MCM record.
+
+logfile_key and mammoth_resultsfile_key are provided initially as NULL, but to
+support future development - if we want to keep run logs and mammoth results files
+compressed in the DB, we can make tables for that and link them by ID to mcmRun 
+via these fields.
+
+status is an enum field indicating MCM job status. Unprocessed obvs indicates that
+MCM has not been run on the foldable. Error indicates that the MCM.run() method 
+failed with exception thrown (does not account for cluster fuckery such as walltime
+expiration or over-memory kills). running indicates that the foldable has been 
+claimed for MCM run by the mcmrun_driver (details below). completed indicates 
+successful completion with results uploaded to the DB. Note that if DBSTORE as given
+to the MCM object is false in mcmrun_driver, completed WILL NOT BE SET (because 
+the results are not in the DB).
+
+Wham. Here is an example execution:
+
+python mcmrun_setup.py --code ox --version 1 --comment "New mouse-1171 foldables"
+
+
+# mcmrun_driver
+mcmrun_driver.py is responsible for actually running MCM on rosetta prediciton
+results file and the corresponding hpf DB mcmRun record. mcmrun_setup should be
+run prior to mcmrun_driver, as explained above, in order to initialize the DB (
+add entries for a given prediction letter code, eg ox, to the mcmRun table).
+
+In addition to running the mcmrun_setup to init the DB, one also needs to copy
+the rosetta prediction results files to a shared location on the machine/cluster
+on which mcmrun_driver will be run - MCM requires a silent file of decoy results
+to run. 
+
+For example, after running the mcmrun_setup example line above, the DB is ready
+to run MCM on code 'ox'. I then copy (scp) my ox results directory from wherever
+(markula:/data/wcgrid/incoming/ox_hpf2_results) to the cluster I want to execute 
+on:
+
+scp -r dpb@markula.bio.nyu.edu:/data/wcgrid/incoming/ox_hpf2_results /scratch/dpb3/mcm/results
+
+Or, in simpler terms, have all the prediction results on whatever machine it is
+that you want to run MCM on.
+
+In any case, when you have run the setup and copied the results files, then you
+can run the mcmrun_driver. Basically, this attempts to lock the mcmRun DB table
+to atomically retrieve an as-of-yet unprocessed record for a given code. Once a
+lock is achieved, the first unprocessed record is fetched, its status is set to
+'running,' and the table is unlocked. Then mcmrun_driver sets up the working
+environment, finds the appropriate results file in your passed results_dir and
+decompresses it to the given work_dir, and runs MCM on it.
+
+Note that MCM parameters have to be specifically set in the mcmrun_driver.py script.
+Also note that before running the mcmrun_driver, you MUST set the global CONFIG
+variables at the top of the script to reflect your environment and MCM run preferences.
+The fields found there:
+    ROSETTA_PATHS, MAMMOTH_LIST, MAMMOTH_DATA, NR_DATABASE, GINZU_VERSION,
+    DBSTORE, CLEANUP, and DEBUG
+
+Here is are two sample executions. The lower simply indicates the MCM should be run
+on mcmRun DB records with status either 'unprocessed' or 'error':
+
+python mcmrun_driver.py --code ox --version 1 --work_dir /scratch/dpb3/mcm/work --results_dir /scratch/dpb3/mcm/results/ox_hpf2_results
+python mcmrun_driver.py --code ox --version 1 --work_dir /scratch/dpb3/mcm/work --results_dir /scratch/dpb3/mcm/results/ox_hpf2_results --redo_error
+
+
+# Running on the cluster
+In the repo (hpf.mcm) there is a cluster directory that contains a driver script to
+execute the mcmrun_driver.py script, and also a PBS/Torque script to submit via
+qsub. Go nuts.

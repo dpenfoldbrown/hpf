@@ -1,0 +1,1 @@
+python protein_similarity_matrix.py -e 1189 -o ~/xenlaOutNom.txt -k ~/xenlaKeyNom.txt

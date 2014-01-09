@@ -1,0 +1,197 @@
+#!/usr/bin/perl -w
+#
+#       SAM: Sequence Alignment and Modeling Software System                 
+#  (c) 1992-1999 Regents of the University of California, Santa Cruz
+#
+#          Sequence Alignment and Modeling Software System
+#         http://www.cse.ucsc.edu/research/compbio/sam.html
+#
+# ------------- Citations (SAM, SAM-T99, HMMs) -----------------
+# R. Hughey, A. Krogh, Hidden Markov models for sequence analysis:
+#  Extension and analysis of the basic method, CABIOS 12:95-107, 1996.
+# K. Karplus, C. Barrett, R. Hughey, Hidden Markov models for detecting
+#  remote protein homologies, Bioinformatics 14(10):846-856, 1999.
+# A. Krogh et al., Hidden Markov models in computational biology:
+#  Applications to protein modeling, JMB 235:1501-1531, Feb 1994.
+# --------------------------------------------------------------
+#
+#          Distributed with signed license agreement only.
+#  
+#          Questions or comments to sam-info@cse.ucsc.edu
+#
+
+#
+# build-weighted-model  -mod file.mod 
+#			-a2m file.a2m 
+#			-weight weightfile.weights
+#			-aweight_method	2	1=entropy, 2=henikoff, 3=flat
+#			-aweight_bits   0.5
+#			-aweight_exponent 10.0
+#			-prior prior_dirichlet
+#			-trans transition_regularizer
+#			-trans_stiffness 1.0
+#			-ascii
+#                       -constraints a2m-constraints
+#                       -constraints_out new-constraints
+#                       -constraints_from_align
+#                       -alphabet_def alphadef
+#			-keep_temporary
+#
+#	builds a SAM model from an alignment, with parameters
+#	passed to modelfromalign to do weighting, or an
+#	explicit weight file.
+#	It can also take a prior library file and
+#	transition regularizer file.
+#
+#	The -a2m and -mod arguments are required, the rest are optional.
+#
+#       The -alphabet_def argument is passed on to modelfromalign
+#
+#       -constraints specifies a constraints file to use.
+#       
+#       -constraints_out specifies a constraints file to create.
+#       
+#       -constraints_from_align indicates constraints should be built
+#       from the alignment.
+#
+#	-keep_temporary If specified, don't delete temporary directory.
+#
+#	Normally, a binary model is built, but an ascii model can be
+#	requested with -ascii (useful for web scripts that return models).
+#
+# $Id: build-weighted-model,v 1.4 1999/10/31 19:41:30 markd Exp $ 
+#
+
+{   use FileHandle;
+    STDOUT->autoflush(1);
+    STDERR->autoflush(1);
+    use English;
+    use File::Basename;
+    use lib dirname($PROGRAM_NAME);
+
+    use SamT99;
+
+    $prior_file = "$reg_lib_dir/recode2.20comp";
+    $trans_file = "$reg_lib_dir/fssp-trained.regularizer";
+    $binary_model = 1;
+    $weight_file = "";
+    $aweight_method = 2;	# Henikoff weighting
+    $aweight_bits = 0.5;
+    $aweight_exponent = 0.5;
+    $fraction_id = 1.1;
+    $trans_stiffness = 1.0;
+
+    &process_command_line;
+
+    $hostname = `hostname`;
+    chomp $hostname;
+
+    $tmpdir="$tmp_root_dir/tmp-build-weighted-model-$hostname-$$";
+    make_directories($tmpdir);
+
+    if ($fraction_id <= 1.0)
+    {    run_prog("uniqueseq $tmpdir/tmp -alignfile $a2m_file \\\
+    		-a protein -percent_id $fraction_id",
+		"uniqueseq failed");
+	$a2m_file = "$tmpdir/tmp.a2m";
+    }
+
+    $cmd = "modelfromalign $tmpdir/tmp -alignfile $a2m_file \\\
+		-insert $trans_file \\\
+		-ins_jump_conf $trans_stiffness \\\
+		-match_jump_conf $trans_stiffness \\\
+		-del_jump_conf $trans_stiffness \\\
+		-prior_library $prior_file \\\
+		-binary_output $binary_model";
+
+
+    if (defined $alphabet_def)
+    {   $cmd .= " -alphabet_def '$alphabet_def'";
+    }
+    else
+    {
+	$cmd .= "  -a protein";
+    }
+    if (defined $constraints) 
+    {   $cmd .= " -constraints $constraints";
+    }
+    if ($constraints_from_align)
+    {   $cmd .= " -constraints_from_align 1";
+    }
+    if (defined $constraints_out) 
+    {   $cmd .= " -constraints_out $tmpdir/tmp.cst";
+    }
+
+    if ($weight_file eq "")
+    {   $cmd .= " -aweight_method $aweight_method";
+	$cmd .= " -aweight_bits $aweight_bits";
+	$cmd .= " -aweight_exponent $aweight_exponent";
+    }
+    else
+    {   $cmd .= " -alignment_weights $weight_file";
+    }
+
+    run_prog($cmd , "modelfromalign $a2m_file failed");
+    run_prog("cp -f $tmpdir/tmp.mod $mod_file", "copy of model from temporary failed");
+
+    if (defined $constraints_out) 
+    {   run_prog("cp -f $tmpdir/tmp.cst $constraints_out", "copy of constraints from temporary failed");
+    }
+    if (! $keep_temporary)
+    {   run_prog("rm -rf $tmpdir </dev/null", "removal of temporary directory failed");
+    }
+}
+
+#---subroutines:
+
+sub process_command_line 
+{
+  local($i) = 0;
+
+  $constraints_from_align = 0;
+  $keep_temporary = 0;
+
+  # Get user specified values
+  while ($i <= $#ARGV) 
+  {
+    $_ = $ARGV[$i++];
+    SWITCH: 
+    {
+      if (/^-a2m/)      {$a2m_file   = $ARGV[$i++]; last SWITCH;}
+      if (/^-mod/)      {$mod_file   = $ARGV[$i++]; last SWITCH;}
+      if (/^-weight/)   {$weight_file   = $ARGV[$i++]; last SWITCH;}
+      
+      if (/^-fraction_id/)  	{$fraction_id  = $ARGV[$i++]; last SWITCH;}
+      if (/^-aweight_method/)  	{$aweight_method  = $ARGV[$i++]; last SWITCH;}
+      if (/^-aweight_bits/)   	{$aweight_bits  = $ARGV[$i++]; last SWITCH;}
+      if (/^-aweight_exponent/) {$aweight_exponent  = $ARGV[$i++]; last SWITCH;}
+
+      if (/^-prior/)	{$prior_file   = $ARGV[$i++]; last SWITCH;}
+      if (/^-trans\s*$/)	{$trans_file   = $ARGV[$i++]; last SWITCH;}
+      if (/^-trans_stiffness/)	{$trans_stiffness   = $ARGV[$i++]; last SWITCH;}
+      
+      if (/^-ascii/)	{$binary_model = "0"; last SWITCH;}
+      if (/^-alphabet_def/)	{$alphabet_def = $ARGV[$i++]; last SWITCH;}
+      
+      if (/^-constraints$/) {$constraints   = $ARGV[$i++]; last SWITCH;}
+      if (/^-constraints_out$/) {$constraints_out   = $ARGV[$i++]; last SWITCH;}
+      if (/^-constraints_from_align$/) {$constraints_from_align = 1; last SWITCH;}
+      if (/^-keep_temporary$/)	{$keep_temporary = 1; last SWITCH;}
+      
+      print "bad option \"$_\"\n";
+      exit(1);
+    }
+  }
+
+  # Make certain that there are now values for those parameters with non-
+  # default values
+  if (!defined($a2m_file) || ($a2m_file eq ""))
+  {	print STDERR "ERROR: Nothing specified for a2m (input alignment file)\n";
+	exit (-1);
+  }
+  if (!defined($mod_file) || ($mod_file eq ""))
+  {	print STDERR "ERROR: Nothing specified for mod (output file)\n";
+	exit (-1);
+  }
+  return;
+}

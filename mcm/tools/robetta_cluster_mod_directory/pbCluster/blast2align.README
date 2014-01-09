@@ -1,0 +1,21 @@
+From pbradley@math.mit.edu Mon Dec  9 09:18:35 2002
+Date: Wed, 23 Oct 2002 20:05:09 -0400 (EDT)
+From: Philip Bradley <pbradley@math.mit.edu>
+To: larsm@u.washington.edu
+Subject: making ALIGN files from psi-blast
+
+Hi Lars,
+
+the program is /users/pbradley/blast2align.py
+
+args:
+
+<(PSI)-blast-file> <.coords-file> <silent-file1> <silent-file2> ...
+
+use - for <.coords-file> if you don't have one.
+
+The ALIGN file is output to stdout
+
+Let me know if it works!
+Take care,
+Phil

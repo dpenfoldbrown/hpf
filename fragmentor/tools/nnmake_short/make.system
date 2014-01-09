@@ -1,0 +1,146 @@
+#  CVS information:
+#  $Revision: 1.4 $
+#  $Date: 2002/03/29 17:04:45 $
+#  $Author: rohl $
+
+########################### -*- Mode: makefile -*- #########################
+#
+# file:make.system (REQUIRES GNUMAKE)
+#
+# This file detects the compiler and then sets F77, FFLAGS, FOPTIMFLAGS, 
+# and FDEBUGFLAGS and LINKFLAGS appropriately
+#
+
+
+########## automatic compiler choices
+
+NODE = $(shell uname -n)
+MACHINE = $(shell uname -m)
+
+# use fort on DEC Alphas (ringo, george, john, & yoko, but not prana)
+ifeq ($(MACHINE),alpha)
+	COMPILER = alpha
+endif
+
+# mac platforms, suse ppc gnu compiler
+ifeq ($(MACHINE),ppc)
+	COMPILER = ppc
+endif
+
+# Defaults if compiler has not already been chosen
+ifeq ($(COMPILER),)
+
+        # on mary, use pgi or absoft
+	ifeq ($(NODE),mary)
+		COMPILER = absoft
+	endif
+
+        # on rhoda, use pgi
+	ifeq ($(NODE),rhoda)
+		COMPILER = pgi
+	endif
+
+        # on hell, use pgi
+	ifeq ($(NODE),hell)
+		COMPILER = pgi
+	endif
+
+        # on pole, use absoft
+	ifeq ($(NODE),pole)
+		COMPILER = absoft
+	endif
+
+
+        # default to gnu
+	ifeq ($(COMPILER),)
+		COMPILER = gnu
+	endif
+endif
+
+########## once COMPILER is set, here are the options
+
+# defaults
+F77=f77
+FFLAGS=
+FOPTIMFLAGS=-O
+FDEBUGFLAGS=-g
+FPROFILEFLAGS=-P
+
+ifeq ($(COMPILER),gnu)
+	F77 = g77
+	FFLAGS = -finline-functions -funroll-loops -W  -ffixed-line-length-132 -Wimplicit
+	FOPTIMFLAGS = -O -ffast-math
+	FDEBUGFLAGS = -g -Wall -Wimplicit -Wsurprising -Wformat -W
+	FPROFILEFLAGS = -pg
+endif
+
+ifeq ($(COMPILER),pgi) # on mary, good bounds checking
+	F77 = pgf77
+	FFLAGS = -Mextend  -Munroll=c:5
+	FOPTIMFLAGS = -O -Minline -Mvect 
+	FDEBUGFLAGS = -g -C -Mbounds -Minform=inform 
+	FPROFILEFLAGS = -Mprof=lines -O0
+	LINKFLAGS =
+# note: -Mbounds and -Minline are incompatible
+# -Mextend: long source code lines
+# -Mdclchk: require declaration of all variables (implicit none)
+endif
+
+ifeq ($(COMPILER),absoft) # on mary, fast
+	F77 = f77
+	FFLAGS = -N109 -s -W
+	LINKFLAGS = -lU77
+	FDEBUGFLAGS = -C -g
+	FOPTIMFLAGS = -O -N18
+	FPROFILEFLAGS = -P -O
+#-C (bounds checking) 
+#-P (profile) 
+#-h (loop unrolling)   --- JJG gives errors
+#-N18 (inline fxns) 
+#-W (long lines)  
+#-f (all symbolic names to lc) 
+#-s (force static storage, init to 0) 
+#-lU77 (use libraries) 
+#-N114 (warnings not errors for implicit variables)
+#-v (verbose)
+#-N109 (symbolic names->upper case)
+endif
+
+# Suse ppc gnu
+ifeq ($(COMPILER),ppc)
+	F77 = g77
+	FFLAGS = -Wall -finline-functions -funroll-loops -W -ffixed-line-length-132
+	FDEBUGFLAGS = -g -C -Mbounds
+	FOPTIMFLAGS =
+endif
+
+# alpha flags 
+ifeq ($(COMPILER),alpha)
+	F77 = fort
+	FFLAGS = -extend_source -non_shared
+	FOPTIMFLAGS = -O6 -math_library fast  -tune host 
+	FDEBUGFLAGS = -check bounds -check format -check overflow  -std77 -warn argument_checking -warn declarations -warn truncated_source -warn unused  -inline all 
+endif
+
+
+
+
+
+
+
+
+# define a system setup printer that can be invoked as a variable ##########
+#
+define system-print
+@echo ----------------------------------------------------------------------
+@echo SYSTEM SETUP [make.system]
+@echo COMPILER=$(COMPILER) @ $(NODE)
+@echo F77=$(F77)
+@echo FFLAGS=$(FFLAGS)
+@echo FOPTIMFLAGS=$(FOPTIMFLAGS)
+@echo FDEBUGFLAGS=$(FDEBUGFLAGS)
+@echo FPROFILEFLAGS=$(FPROFILEFLAGS)
+@echo LINKFLAGS=$(LINKFLAGS)
+@echo ----------------------------------------------------------------------
+endef
+

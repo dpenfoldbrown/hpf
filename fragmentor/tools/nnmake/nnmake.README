@@ -1,0 +1,47 @@
+c  CVS information:
+c  $Revision: 1320 $
+c  $Date: 2002-03-26 21:11:52 -0500 (Tue, 26 Mar 2002) $
+c  $Author: rohl $
+
+to run:
+
+pNNMAKE_CST.lnx aa 1ubq _ > logfile
+
+all paths set in path_defs.txt
+
+generates fragment files for input into rosetta
+
+-------------------------------
+input:
+.pdb            (optional)
+.jones          psipred prediction
+.rdb            SAM-T99 prediction, obtained from server 
+.phd            PhD prediction, obtained from server 
+.homolog_vall   list of homologs in the vall to be excluded, from blast 
+.homolog_nr     list of homologs in nr to be excluded, from blast  
+.checkpoint     MSA sequence similarity matrix, from blast
+.chsft          predicted torsion angles, from pCHEMSHIFT
+.cst            NOE constraints
+.dpl            dipolar coupling constants
+
+output:
+.dat                        sequence and secondary structure of native
+aa1ubq_03_06.200_v1_1      fragment files
+aa1ubq_09_06.200_v1_1     (uses ss pred, chemshift, but no constraints or dipolar)
+additional files            score, status, names ...
+----------------------------------
+ 
+to run in loop mode:
+ 
+pNNMAKE.lnx aa 1ubq _ alignment
+
+alignment is base name for zone file, template pdb and template ssa
+
+
+or pNNMAKE.lnx aa 1ubq _ -zonelist filename
+
+where filename is a list of alignment base names, 1 per line
+ 
+change max_nn to 2000 in structure.h as trimLoopLibrary.pl requires
+input libraries of 2000 loops
+

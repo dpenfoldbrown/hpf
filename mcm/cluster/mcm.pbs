@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=2,walltime=10:00:00,mem=8gb
+#PBS -N mcm_ox
+#PBS -q default
+#PBS -V
+#PBS -S /bin/bash
+#PBS -d /home/dpb3/mcm
+#PBS -M dpb3@nyu.edu
+#PBS -m n
+#PBS -j oe
+#PBS -o localhost:/home/dpb3/mcm/logs/${PBS_JOBNAME}.${PBS_JOBID}
+
+/home/dpb3/mcm/mcm.sh
+
+exit 0;

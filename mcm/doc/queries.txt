@@ -1,0 +1,12 @@
+
+Select Two-letter prediction codes for an experiment
+
+2select substring(fs.prediction_code,1,2), count(distinct fs.sequence_key) from filesystemOutfile as fs, protein as p where p.sequence_key = fs.parent_sequence_key and p.experiment_key = 888 group by substring(fs.prediction_code,1,2) limit 25;
+
+Select the sequence and number of rosetta decoys in the scopfold experiment
+
+select distinct s.sequence,n_decoys_in_outfile from protein p join ddbCommon.domain d join ddbCommon.ddb_sequence s join mcmData m on p.sequence_key=d.parent_sequence_key and d.parent_sequence_key=s.id and m.sequence_key=s.id where p.experiment_key=6;
+
+Select all predicted domains for hpf blast from my temporary tables.
+
+select s.id,s.sequence,s.gi into outfile 'hpfseqs.sql' from sequence s join domain d join sequence_Ac a on s.id=d.parent_sequence_key and a.sequence_key=a.id limit 5 \G

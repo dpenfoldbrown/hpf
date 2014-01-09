@@ -1,0 +1,531 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>3 Quick overview</TITLE>
+<META NAME="description" CONTENT="3 Quick overview">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html315"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html311"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html305"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html313"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html316"
+  HREF="node5.html">4 SAM-T99</A>
+<B> Up:</B> <A NAME="tex2html312"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html306"
+  HREF="node3.html">2 New to this</A>
+ &nbsp <B>  <A NAME="tex2html314"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html317"
+  HREF="#SECTION00041000000000000000">3.1 Building a model</A>
+<LI><A NAME="tex2html318"
+  HREF="#SECTION00042000000000000000">3.2 Aligning sequences</A>
+<LI><A NAME="tex2html319"
+  HREF="#SECTION00043000000000000000">3.3 Examining models</A>
+<LI><A NAME="tex2html320"
+  HREF="#SECTION00044000000000000000">3.4 Scoring sequences</A>
+<LI><A NAME="tex2html321"
+  HREF="#SECTION00045000000000000000">3.5 Parameter selection</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00040000000000000000"></A><A NAME="quick"></A>
+<BR>
+3 Quick overview
+</H1>
+
+<P>
+The Sequence Alignment and Modeling (SAM) suite of programs includes
+several tools for 
+modeling, aligning, and discriminating related DNA, RNA, and protein
+sequences.  Given a set of related sequences, the system can
+automatically train and use a linear HMM representing the family.
+The SAM-T99 method, available in SAM 3.0 and higher, is a more
+automated method for building and using HMMs.  Readers may wish to
+read the T99 example before the current section.  See Section&nbsp;<A HREF="node5.html#sec:samt99">4</A>.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:model-struct"></A><A NAME="284"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+A linear hidden Markov model and example alignment.</CAPTION>
+<TR><TD><IMG
+ WIDTH="499" HEIGHT="254" BORDER="0"
+ SRC="img6.png"
+ ALT="\begin{figure}\begin{center}
+\parbox{0pt}{\psfig{figure=hmmexample.eps,width=0.9\textwidth}}\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+SAM uses a linear hidden Markov model (Figure&nbsp;<A HREF="node4.html#fig:model-struct">1</A>)
+to represent biological sequences.  The model is a linear sequence of
+<EM>nodes</EM>, each of which includes <EM>match</EM> (square), <EM>insert</EM> (diamond), and <EM>delete</EM> (circle) states.  Each match
+state has a distribution over the appropriate alphabet indicating
+which characters are most likely.  The chain of match states forms a
+model of the family, or of columns of a multiple alignment.  Some
+sequences may not have characters in specific positions -- delete
+states enable them to skip through a node
+without `using up' any characters. Other sequences may have extra
+characters, which are modeled with the insert states.  Insertions are
+thus used when a small number of sequences have positions not found in
+most other sequences, while delete states are used when a small number
+of sequences do not have a character in a position found in most other
+sequences. 
+As with the match states, all transition probabilities (the chance of
+having a delete or moving to 
+an insertion state) are local, enabling, for example, the system to
+strongly penalize sequences that delete conserved regions.
+
+<P>
+The primary programs include:
+
+<P>
+<DL>
+<DT><STRONG>buildmodel</STRONG></DT>
+<DD>Create a new model from a family of sequences, or
+refine an existing model.
+</DD>
+<DT><STRONG>align2model</STRONG></DT>
+<DD>Create a multiple alignment of sequences to an
+existing model.  The <code>prettyalign</code>  program will make
+<code>align2model</code> output more readable.
+</DD>
+<DT><STRONG>hmmscore</STRONG></DT>
+<DD>Calculate the negative log-likelihood (NLL) scores for
+a file of sequences given a model, as well log-odds scores and
+E-values in the case of reverse null models.
+This program is used for discrimination experiments.
+Sequences that score better than (or worse than) a threshold can be
+saved, as can their alignments or multiple domain alignments.
+</DD>
+<DT><STRONG>modelfromalign</STRONG></DT>
+<DD>Use an existing multiple alignment to create an
+initial model.  Such a model is usually then refined using
+<code>buildmodel</code>.
+</DD>
+<DT><STRONG>target99</STRONG></DT>
+<DD>A script that uses SAM to iteratively create a model
+from a single protein sequence and its close homologues.
+</DD>
+</DL>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="overview"></A><A NAME="296"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Overview of SAM.</CAPTION>
+<TR><TD><IMG
+ WIDTH="445" HEIGHT="517" BORDER="0"
+ SRC="img7.png"
+ ALT="\begin{figure}\centerline{\psfig{figure=overview.eps,width=0.8\textwidth}}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+A basic flowchart for using SAM is shown in Figure&nbsp;<A HREF="node4.html#overview">2</A>.
+
+<P>
+As a simple example, consider the task of modeling the 10 tRNAs included
+in the file <code>trna10.seq</code> of the distribution.  For this
+experiment, default program settings will be used: the many
+adjustable parameters are described Sections&nbsp;<A HREF="node8.html#params">6</A>
+and&nbsp;<A HREF="node14.html#sec:parameters">12</A>. 
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+3.1 Building a model</A>
+</H2>
+To start, we need to create a model from the sequence file using
+<code>buildmodel</code>.  This program always requires a name for the run:
+if the name is <code>test</code>, the system will create the model output
+file <code>test.mod</code>, which will include parameter settings, iteration
+statistics, and CPU usage, as well as the initial and final model.
+
+<P>
+Parameters to buildmodel are specified with hyphens.  For this
+experiment, first we try the command:
+<PRE>
+
+buildmodel test -train trna10.seq -randseed 0
+</PRE>
+This specifies the run name and where the sequences for training
+can be found.  Here, to hopefully make this example reproducible, a
+seed for the random number generator has also been specified.  
+
+<P>
+Buildmodel then prints out a line on standard output such as:
+<PRE>
+
+-29.40  -26.34  -27.62   1.09  32 1 76 
+</PRE>
+This is a brief summary of the statistics provided in the output model
+file, and is discussed in more detail in Section&nbsp;<A HREF="node13.html#INFO">11.2</A>.  If
+no random seed had been specified, <code>buildmodel</code>  would use the
+process number, and  the statistics line would be different for multiple
+runs.
+
+<P>
+The run has generated a file called <code>test.mod</code>.  This file
+contains various statistics, described later, as well as the final
+model.  Statistics are printed to the file after each re-estimation
+so that the progress of a run can be readily checked.  
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+3.2 Aligning sequences</A>
+</H2>
+
+<P>
+To generate a multiple alignment, a command such as the
+following is used:
+<PRE>
+
+align2model trna10 -i test.mod -db trna10.seq
+prettyalign trna10.a2m -l90 &gt; trna10.pretty
+</PRE>
+This aligns each sequence to the model, places the alignment in the
+file <TT>trna10.a2m</TT>, and then cleans up the output
+and places it in the file <code>trna10.pretty</code>, with 90 characters per
+line. The alignment will look something like:
+
+<P>
+<PRE>
+
+;&nbsp;&nbsp;SAM:&nbsp;prettyalign&nbsp;v3.3.1&nbsp;(December&nbsp;20,&nbsp;2001)&nbsp;compiled&nbsp;12/27/01_15:15:58
+;&nbsp;&nbsp;(c)&nbsp;1992-2001&nbsp;Regents&nbsp;of&nbsp;the&nbsp;University&nbsp;of&nbsp;California,&nbsp;Santa&nbsp;Cruz
+;
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sequence&nbsp;Alignment&nbsp;and&nbsp;Modeling&nbsp;Software&nbsp;System
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.cse.ucsc.edu/research/compbio/sam.html
+;
+;&nbsp;---------&nbsp;Citations&nbsp;(SAM,&nbsp;SAM-T99,&nbsp;HMMs)&nbsp;----------
+;&nbsp;R.&nbsp;Hughey,&nbsp;A.&nbsp;Krogh,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;for&nbsp;sequence&nbsp;analysis:
+;&nbsp;&nbsp;Extension&nbsp;and&nbsp;analysis&nbsp;of&nbsp;the&nbsp;basic&nbsp;method,&nbsp;CABIOS&nbsp;12:95-107,&nbsp;1996.
+;&nbsp;K.&nbsp;Karplus,&nbsp;C.&nbsp;Barrett,&nbsp;R.&nbsp;Hughey,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;for&nbsp;detecting
+;&nbsp;&nbsp;remote&nbsp;protein&nbsp;homologies,&nbsp;Bioinformatics&nbsp;14(10):846-856,&nbsp;1998.
+;&nbsp;A.&nbsp;Krogh&nbsp;et&nbsp;al.,&nbsp;Hidden&nbsp;Markov&nbsp;models&nbsp;in&nbsp;computational&nbsp;biology:
+;&nbsp;&nbsp;Applications&nbsp;to&nbsp;protein&nbsp;modeling,&nbsp;JMB&nbsp;235:1501-1531,&nbsp;Feb&nbsp;1994.
+;&nbsp;-----------------------------------
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+TRNA1&nbsp;&nbsp;GGGGAUGUAGCUCAG-UGGUA.GAGCGCA-UGCUUCGCAUGUAU.GAGGCCCcG.GGUUCGAUCCCC--GGCAUCUCCA
+TRNA2&nbsp;&nbsp;GCGGCCGUCGUCUAGUCUGGAuUAGGACGCUGGCCUCCCAAGCCA.GCAAUCCcG.GGUUCGAAUCCCGGCGGCC--GCA
+TRNA3&nbsp;&nbsp;GGCCCUGUGGC-UAGCUGGU-.CAAAGCGCCUGUCUAGUAAACAG.GAGAUCCuG.GGUUCGAAUCCCAGCGGGGCCUCCA
+TRNA4&nbsp;&nbsp;GGGCGAAUAGUGUCAGCGGG-.-AGCACACCAGACUUGCAAUCUG.GUAGGGA.G.GGUUCGAGUCCCUCUUUGUCCACCA
+TRNA5&nbsp;&nbsp;GCCGGGAUAGCUCAGUUGGUA.GAGCAGA-GGACUGAAAAUCCUcGUGUCAC.C.AGUUCAAAUC--UGGUUCCUGGCA
+TRNA6&nbsp;&nbsp;GGGGCCUUAGCUCAGCUGGGA.GAGCG-CCUGCUUUGCACGCAG.GAGGUCA.G.CGGUCGA-CCCGCUAGGCUCCACCA
+TRNA7&nbsp;&nbsp;GGGCACAUGGCGCAGUUGGU-.-AGCGCGCUUCCCUUGCAAGGAA.GAGGUCAuC.GGUUCGAUUCCG--GUUGCGUCCA
+TRNA8&nbsp;&nbsp;GGGCCCGUGGCCUAGUCUGGA.UACGGCACCGGCCUUCUAAGCCG.GGGAUCGgG.GGUUCAAAUCCCUCCGGGUCCG--
+TRNA9&nbsp;&nbsp;CGGCACGUAGCGCAGCCUGG-.UAGCGCACCGUCCUGGGGUUGCG.GGGGUCG.GaGGUUCAAAUCCUCUCGUGCCGACCA
+TRNA10&nbsp;UCCGUCGUAGUCUAGGUGGU-.UAGGAUACUCGGCUUUCACCCGA.GAGACCC.G.GGUUCAAGUCCCGGCGACGGAACCA
+
+<P>
+</PRE>
+
+<P>
+Here, hyphens indicate deletes while lower-case letters, and the
+corresponding periods (`.') indicate inserts.  The column numbers
+refer to match states in the model, not to column numbers, so that
+insertions are disregarded in calculating these index points.  It is
+important to remember that insertions are not aligned among them
+selves:  the fact that two insertion characters are in the same
+printed column only means that they were generated by the same
+insertion state, not that they should be aligned.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:testlogo"></A><A NAME="877"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Output of <TT>makelogo</TT>.  Bar height corresponds to
+information in bits, relative character heights correspond to relative
+frequencies.</CAPTION>
+<TR><TD><IMG
+ WIDTH="582" HEIGHT="217" BORDER="0"
+ SRC="img8.png"
+ ALT="\begin{figure}\begin{center}
+\makebox[0pt][c]{\parbox{6.5in}{\psfig{figure=test.eps,width=6.5in}}}
+\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+3.3 Examining models</A>
+</H2>
+
+<P>
+Model structure can be quite interesting.  SAM includes two programs
+for examing models:  <TT>makelogo</TT> and <TT>drawmodel</TT>
+
+<P>
+The first, <TT>makelogo</TT>, shows the negative entropy in bits of each
+match state and the relative frequencies of the different letters in a
+sequence logo format, invented by Tom Schneider and Mike Stephens (NAR
+18:6097-6100, 1990) <A NAME="tex2html32"
+  HREF="http://www-lmmb.ncifcrf.gov/~toms/index.html"><TT>http://www-lmmb.ncifcrf.gov/&nbsp;toms/index.html</TT></A>.  The command:
+<PRE>
+
+makelogo test -modelfile test.mod
+</PRE>
+creates the <TT>test.eps</TT> file of Figure&nbsp;<A HREF="node4.html#fig:testlogo">3</A>.  The
+program has many options.  See Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:drawmodel"></A><A NAME="882"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Output of <TT>drawmodel</TT>.  Match state histograms are in
+AGCU order.</CAPTION>
+<TR><TD><IMG
+ WIDTH="527" HEIGHT="16" BORDER="0"
+ SRC="img9.png"
+ ALT="\begin{figure}\begin{center}
+\par This figure is relatively large. See the
+\htm...
+....cse.ucsc.edu/pub/protein/sam1.01_doc.ps.Z}
+for a copy.
+\end{center}\end{figure}"></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+The second, <code>drawmodel</code>,
+program generates postscript drawings of models that include
+match-state histograms and transition line styles that correspond to
+their frequency of use.  These drawings are most useful when derived
+from frequency counts, values that can be optionally included in the
+output file:
+<PRE>
+
+buildmodel test -train trna10.seq -randseed 0 -print_frequencies 1
+</PRE>
+The command <code>drawmodel test.mod test.ps</code> will run the drawmodel
+program, which scans the file finding a model and frequency count
+data.  By selecting the frequency count data in `overall' mode, the
+postscript drawing in
+Figure&nbsp;<A HREF="node4.html#fig:drawmodel">4</A> is generated.<A NAME="tex2html31"
+  HREF="footnode.html#foot883"><SUP>1</SUP></A>  The histograms in the match states
+correspond to the columns of the multiple alignment above, the numbers
+in the diamond insert states correspond to the average number of
+insertions for each sequence that uses that state, and the node
+numbers are given in the circular delete states.  Transitions that are
+not used by a significant number of the sequences are not drawn.
+See Section&nbsp;<A HREF="node12.html#sec:drawmodel">10.9.1</A>.
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000"></A><A NAME="sec:score"></A>
+<BR>
+3.4 Scoring sequences
+</H2>
+
+<P>
+The scoring program, <TT>hmmscore</TT>, generates a file of the
+negative log-likelihood minus NULL model (NLL-NULL, or log-odds)
+scores for each sequence given the model.  Let's see
+how the 10 tRNA sequences fit the model (<code>test.mod</code>):
+<PRE>
+
+hmmscore test -i test.mod -db trna10.seq -sw 2
+</PRE>
+The arguments are the name of the run, the model file, the
+database sequence file, and a specifier to use fully-local scoring
+similar to that of the Smith &amp; Waterman algorithm (this is suggested
+for all scoring runs unless semi-local, domain, or global scoring is
+specifically required).
+
+<P>
+<code>hmmscore</code> produces the <code>test.dist</code> file of Figure&nbsp;<A HREF="node4.html#test.dist">5</A>.
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="test.dist"></A><A NAME="1519"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
+Distance output from <TT>hmmscore</TT></CAPTION>
+<TR><TD><IMG
+ WIDTH="533" HEIGHT="908" BORDER="0"
+ SRC="img10.png"
+ ALT="\begin{figure}\begin{showfile}
+&lt;tex2html_file&gt; ..."></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+The score file contains six columns.  The first is the sequence
+identifier, followed by sequence length, the `NLL-NULL' score using a
+simple null model, the reverse sequence `NLL-NULL' and an E-value
+based on the size of the database and the reverse sequence score.  The
+simple null 
+model is just the product of the character probabilities in each
+sequence multiplied together.  Thus, the NLL-NULL score show how much
+improvement modeling with an HMM gained versus modeling with just a
+single insertion state from the HMM.  The reverse sequence null
+model is more expensive to calculate, but a much better indicator of
+sequence similarity to the model. The reverse sequence NLL-NULL score
+is the difference between the raw negative log-likelihood (NLL)
+sequence score from that of the raw NLL score of the reversed
+sequence.  Thus, there for sequence null model matches exactly the
+length and composition of the sequence, but does not match the
+ordering of the residues.
+
+<P>
+Other options of <TT>hmmscore</TT> enable the selective output of
+sequences according to their NLL scores, NLL per base scores, or
+E-value.  The <TT>hmmscore</TT> program enters an interactive mode when
+called with no command line arguments. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+
+<H2><A NAME="SECTION00045000000000000000">
+3.5 Parameter selection</A>
+</H2>
+
+<P>
+As you will see, the SAM system, being an active research tool, has a
+vast number of parameters.  This section briefly mentions a few of the
+parameters and ways we have found to make SAM work reasonably well.
+
+<P>
+At UCSC, our primary use of SAM is for modelling proteins.  In this
+case, the SAM-T99 method (described next) is the method to use for
+creating a multiple alignment of database sequences, which can then be
+turned into an HMM using the, for example, <TT>w0.5</TT> script.
+
+<P>
+We have had less experience with DNA and RNA uses of SAM, though we
+have had many reports of excellent results in these fields.
+The SAM DNA alignment page uses the following parameters to
+create an HMM from a file of aligned sequences:
+<PRE>
+
+buildmodel run -train train.a2m -modellength 0 -alphabet DNA     -alignfile train.a2m -aweight_method 2 -aweight_bits 0.3 -aweight_exponent 0.5
+</PRE>
+
+<P>
+For the final alignment the command is:
+
+<P>
+<PRE>
+
+hmmscore run -i run.mod -dpstyle 0 -adpstyle 5 -sw 2           -select_align 8  -db train.a2m -db database.seq  -alphabet DNA
+</PRE>
+
+<P>
+A few of the guiding principles in these two commands are:
+
+<UL>
+<LI>If you are building a model for one or more protein sequences,
+use SAM-T99.
+</LI>
+<LI>Use global alignment (<TT>sw 0</TT>, the default) for building
+models, especially if the sequences are trimmed to the region you wish
+to model, and nearly always use fully local (<TT>sw 2</TT>, must be set) scoring.
+</LI>
+<LI>For scoring and building models, the forward algorithm, or
+forward-backward, works best (<TT>dpstyle 0</TT>, the default).
+</LI>
+<LI>For alignment, posterior-decoded alignment is more costly but
+performs better (<TT>adpstyle 5</TT>).
+</LI>
+<LI>For sequence weighting, alignment-based weighting works well.
+If you do not have an alignment, use <TT>buildmodel</TT> or <TT>target99</TT> to create an alignment and then weight that as above.
+</LI>
+<LI>Always use the default reverse-sequence null model scoring.
+</LI>
+<LI>If you would like to vary parameters beyond these guidelines for
+your specific domain, be sure to perform extensive tests within your
+domain. 
+</LI>
+</UL>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html315"
+  HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html311"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html305"
+  HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html313"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html316"
+  HREF="node5.html">4 SAM-T99</A>
+<B> Up:</B> <A NAME="tex2html312"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html306"
+  HREF="node3.html">2 New to this</A>
+ &nbsp <B>  <A NAME="tex2html314"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

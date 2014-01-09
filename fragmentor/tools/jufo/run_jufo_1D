@@ -1,0 +1,20 @@
+#!/bin/tcsh
+
+set basename = $1:r
+set rootname = $basename:t
+set moldir = ${HOME}/shareware/jufo
+set condir = ${HOME}/shareware/jufo
+set dbname = /scratch/shared/genomes/filtnr
+set ncbidir = ${HOME}/shareware/blast
+
+echo "Running PSI-BLAST with sequence" $1 "..."
+
+$ncbidir/blastpgp -b 0 -j 3 -h 0.001 -d $dbname -i $1 -C jufotmp.chk -Q jufotmp.ascii >& jufotmp.blast
+
+printf "readfasta %s\nreadblast jufotmp.ascii\ncalcsecondary -n -b\nwritesecondary %s.jufo_ss -p\nquit\n" $1 $rootname > ./jufotmp.inp
+
+echo "Running JUFO secondary structure prediction with sequence" $1 "..."
+
+$moldir/molecule.exe < ./jufotmp.inp
+
+\rm -f jufotmp.* error.log core

@@ -1,0 +1,42 @@
+c  CVS information:
+c  $Revision: 4630 $
+c  $Date: 2004-06-03 21:16:26 -0400 (Thu, 03 Jun 2004) $
+c  $Author: rohl $
+
+version tags:
+
+nnmake-v1_3  (11/26/2003)   (corresponds to RELEASE-v1_3)
+    compute average secondary structure prediction and maintain ratio
+      of predicted secondary structure in fragments
+    replace linked list sort with heap sort
+
+nnmake-v1_2
+   add loop picking capability
+   add jufo secondary structure prediction
+
+nnmake-v1_1
+   replace jones 1 state with jones 3 state, add corrected jones 1 state
+   reset the quotas for different frag selection schemes
+   code cleanup: change ss_type indexing, add named variables for types
+   frags tagged with version ('v1_1')
+
+nnmake-v1_0      casp4 version
+   oddities-- uses jones 1 state prediction; treats confidence
+              as probability, so forces frags with the wrong 
+              secondary structure when the prediction is wrong
+           -- no profile only fragments
+   frags taged with 'new_d' on end
+
+BRANCHES:
+
+1. RELEASE-v1_0   branches off main, minor updates for release, terminates
+
+2. RELEASE-v1_1   branches off main, minor updates for release, terminates
+
+3. RELEASE_UPDATES  branches off terminus of RELEASE-v1_1
+        This branch adds update from main trunk to release branch to generate future releases
+        RELEASE-v1_3    updated to nnmake-v1_3
+
+4. RELEASE-v2_0   June 2003
+        Switch to PDB hydrogen naming convention
+        Screens to limit use of sparse NMR data

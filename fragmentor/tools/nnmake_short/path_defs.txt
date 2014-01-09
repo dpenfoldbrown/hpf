@@ -1,0 +1,25 @@
+./                                  loops
+./                                  homolog
+./                                  checkpoint 
+/net/shared/nnmake_database/        vall,vall_const alternate (network)
+./                                  pdb 1
+./                                  pdb 2 
+./                                  dat OUTPUT
+./                                  fragments OUTPUT
+./                                  jufo
+./                                  dsc/rdb
+./                                  jones
+./                                  phd 
+/scratch/shared/nnmake_database/    vall, vall_constraints (local)
+./                                  setup zscore/status OUTPUT 
+./                                  write_names path  OUTPUT
+./                                  chem shift
+./                                  noe/dipolar
+--------------------------------------------------------------------------
+COMMENTS:
+  paths must end with '/ '  (i.e. a space after the final /, not a tab)
+
+  CVS information:
+  $Revision: 1.9 $
+  $Date: 2002/07/10 01:51:56 $
+  $Author: rohl $

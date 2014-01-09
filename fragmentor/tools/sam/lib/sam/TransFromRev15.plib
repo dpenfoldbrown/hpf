@@ -1,0 +1,1115 @@
+NumEnvs= 48 
+AlphaChar= 3
+Order= D M I
+--------------------
+EnvCoding
+
+NumAccBin= 3
+NumEnvClasses= 16
+
+EndEnvCoding
+-------------------
+Env= HHH, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.249456 0.237476 0.0119701 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.91017 0.00937485 1.89592 0.00487768
+Comment= M ,><,,,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= HHH, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.473638 0.439773 0.0338546 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.33787 0.0166995 2.30649 0.0146728
+Comment= M ,><,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= HHH, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.520963 0.48512 0.0358325 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.97431 0.0213868 1.94304 0.00988985
+Comment= M ,><,,,, D ,, I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EEE, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.331818 0.32165 0.0101572 1e-05
+Comment= D ,><,,, M ,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.97487 0.00746274 1.96197 0.00543675
+Comment= M ,><,,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EEE, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.435218 0.417392 0.0178152 1e-05
+Comment= D ,><,,, M ,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.79076 0.00851724 1.77066 0.0115869
+Comment= M ,><,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EEE, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.318885 0.30234 0.0165348 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.59309 0.0153828 2.55816 0.0195409
+Comment= M ,><,,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TTT, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.340468 0.318018 0.0224405 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.78757 0.0155473 1.76706 0.00496168
+Comment= M ,><,,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TTT, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.442209 0.398564 0.043635 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.39444 0.0138547 2.35779 0.0228023
+Comment= M ,><,,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TTT, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.251371 0.218131 0.0332296 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.55169 0.0188359 1.48655 0.0462981
+Comment= M ,><,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *HH, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.25606 0.238778 0.0172724 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.73817 0.00821719 1.72055 0.00940619
+Comment= M ,><,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *HH, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.440408 0.411916 0.0284821 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 3.00775 0.0176572 2.97343 0.0166598
+Comment= M ,><,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *HH, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.364584 0.34258 0.021994 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.93354 0.0184297 1.90445 0.0106633
+Comment= M ,><,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= HH*, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.565262 0.521693 0.0435588 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.01931 0.0142051 0.99155 0.0135591
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= HH*, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.249432 0.22441 0.0250121 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.703572 0.0132623 0.672244 0.0180664
+Comment= M ,><,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= HH*, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.388228 0.356407 0.0318107 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.500732 0.0180501 0.472894 0.00978747
+Comment= M ,><,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *EE, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.526912 0.508343 0.0185593 1e-05
+Comment= D ,><,,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.69726 0.0100093 1.68072 0.0065241
+Comment= M ,><,,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *EE, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.394962 0.369148 0.0258042 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.1249 0.00825986 2.09872 0.017924
+Comment= M ,><,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *EE, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.294597 0.2729 0.0216872 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 4.06687 0.019616 4.01803 0.0292212
+Comment= M ,><,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EE*, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.425139 0.40822 0.0169089 1e-05
+Comment= D ,><,,, M ,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.75003 0.0112037 0.733368 0.00545808
+Comment= M ,><,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EE*, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.507549 0.484704 0.0228353 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.703119 0.0145137 0.675956 0.0126494
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= EE*, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.507179 0.486564 0.0206052 1e-05
+Comment= D ,><,,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.509416 0.0111636 0.4894 0.0088518
+Comment= M ,><,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TT*, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.455361 0.426804 0.0285471 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.94125 0.00865863 2.91711 0.0154896
+Comment= M ,><,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TT*, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.340775 0.31687 0.0238957 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.10356 0.028026 2.05062 0.0249084
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= TT*, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.300041 0.275269 0.0226992 0.00207308
+Comment= D ,><,, M ,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.30336 0.022417 1.26153 0.0194132
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *TT, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.401139 0.375795 0.0253343 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 3.44226 0.0182825 3.40624 0.0177356
+Comment= M ,><,,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *TT, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.282275 0.256979 0.0252855 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.98783 0.0172199 2.94046 0.0301529
+Comment= M ,><,,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= *TT, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.522584 0.474362 0.0482116 1e-05
+Comment= D ,><, M ,,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.29883 0.0255725 2.23282 0.0404405
+Comment= M ,><,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **H, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.3958 0.372347 0.0234434 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 4.38953 0.00729301 4.37037 0.0118757
+Comment= M ,><,,,,,, I , D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **H, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.573885 0.52947 0.044405 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.28583 0.0112869 2.26331 0.0112362
+Comment= M ,><,,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **H, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.465437 0.421151 0.0442763 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.21224 0.0127805 2.18954 0.00991578
+Comment= M ,><,,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= H**, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.433247 0.4005 0.0327442 2.89485e-06
+Comment= D ,><,, M ,,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.34989 0.0167885 1.31625 0.0168549
+Comment= M ,><,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= H**, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.377913 0.351569 0.0263341 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.672433 0.0208235 0.634145 0.0174648
+Comment= M ,><,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= H**, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.443 0.398966 0.0440233 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 5.32934 0.0510469 5.2325 0.0457906
+Comment= Alpha is from the global counts
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **E, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.346152 0.327809 0.0183334 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 3.17629 0.00797041 3.14942 0.0189032
+Comment= M ,><,,,,, I ,, D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **E, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.531978 0.500264 0.0317049 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.52655 0.0207378 1.49097 0.0148384
+Comment= M ,><,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **E, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.0787237 0.0508126 0.0242198 0.00369125
+Comment= D >< M ,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.15815 0.0139475 2.12336 0.0208392
+Comment= M ,><,,,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= E**, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.356762 0.336374 0.0203777 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.06108 0.0140759 1.03938 0.00762411
+Comment= M ,><,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= E**, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.279013 0.269157 0.00984672 1e-05
+Comment= D ,><,,, M ,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.561121 0.0155688 0.535426 0.0101263
+Comment= M ,><,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= E**, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.418772 0.391856 0.026906 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.954365 0.0221439 0.896156 0.0360649
+Comment= M ,><,,, I D
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **T, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.444465 0.406916 0.0375396 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.5965 0.0150193 1.56969 0.0117865
+Comment= M ,><,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **T, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.330223 0.288897 0.0413159 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.66623 0.042438 2.58765 0.0361484
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= **T, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.402011 0.360431 0.0415702 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 2.52117 0.0243348 2.4765 0.0203351
+Comment= M ,><,,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= T**, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.423887 0.39017 0.0337067 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.29932 0.0219341 1.26817 0.00921844
+Comment= M ,><,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= T**, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.377299 0.34325 0.0340386 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.836615 0.0174179 0.804644 0.0145524
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= T**, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.295747 0.260878 0.0348596 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.781893 0.0187863 0.747428 0.0156786
+Comment= M ,><,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= ***, 0
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.607033 0.569091 0.0379321 1e-05
+Comment= D ,><,, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.02192 0.0175593 0.995768 0.0085918
+Comment= M ,><,,,, D , I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.963308 0.00977709 0.39176 0.561771
+Comment= Alpha is from the global counts
+
+--------------------
+Env= ***, 1
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.4407 0.404591 0.0360989 1e-05
+Comment= D ,><,, M ,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 1.51327 0.0177925 1.47812 0.0173627
+Comment= M ,><,,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.0380536 1e-05 0.00729548 0.0307482
+Comment= These are from below
+
+--------------------
+Env= ***, 2
+State= D
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.434413 0.392917 0.0414853 1e-05
+Comment= D ,><, M ,,,,,,,,,,,, I
+
+State= M
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.937932 0.0205854 0.8969 0.0204467
+Comment= M ,><,,, D I
+
+State= I
+L= 1
+Number= 0
+Mixture= 1.0
+Alpha= 0.0380536 1e-05 0.00729548 0.0307482
+Comment= I ,>< M ,,,,,,,,,, D
+
+--------------------

@@ -1,0 +1,17 @@
+ClassName = Alphabet
+    Name = Angle
+    IsNucleic = 0
+    NormalChars = EBGHLYDTKZ 
+    AllMatch= X
+    
+EndClassName = Alphabet
+
+ClassName = Alphabet
+    Name = redAngle
+    IsNucleic = 0
+    NormalChars = ECGHLYKZ 
+    AllMatch= X
+    Alias = B C
+    Alias = D C
+    Alias = T C
+EndClassName = Alphabet

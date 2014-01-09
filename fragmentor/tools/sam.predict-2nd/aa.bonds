@@ -1,0 +1,50 @@
+// format: residue atom atom
+//	X means any residue that HAS both atoms
+X C O
+X C OXT
+X CA C
+X CA CB		// not for G
+X CA N
+X CB CG
+X CB CG1	// IV
+X CB CG2	// ITV
+X CD CE		// KM
+X CD OE1	// EQ
+X CD1 CE1	// FY
+X CD2 CE2	// FWY
+X CE1 CZ	// FY
+X CE2 CZ	// FY
+X CG CD		// EKNQR
+X CG CD1	// FILWY
+X CG CD2	// FHLWY
+X CG OD1	// DN
+Y CZ OH
+
+C CB SG
+D CG OD2
+E CD OE2
+H CD2 NE2
+H CE1 NE2
+H CG ND1
+H ND1 CE1
+I CG1 CD
+I CG1 CD1
+K CE NZ
+M CG SD
+M SD CE
+N CG ND2
+P CD N	
+Q CD NE2
+R CD NE
+R CZ NH1
+R CZ NH2
+R NE CZ 
+S CB OG
+T CB OG1
+W CD1 NE1
+W CD2 CE3
+W CE2 CZ2
+W CE2 NE1
+W CE3 CZ3
+W CZ2 CH2
+W CZ3 CH2

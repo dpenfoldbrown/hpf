@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -N jamboree_blast_01
+#PBS -q long
+#PBS -V 
+#PBS -S /bin/bash
+#PBS -d /home/dpb3/hpf/blast
+#PBS -j oe
+#PBS -o /home/dpb3/apf-duf/logs
+
+
+/home/dpb3/hpf/blast/parallel_blast.sh
+
+exit 0;

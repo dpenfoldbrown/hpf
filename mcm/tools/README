@@ -1,0 +1,7 @@
+patrick 9-18-2008
+Run configure.sh in the mcm directory which will replace all occurences 
+of "DB_HOME" in the rosetta and mammoth path files with the first argument, ie the tmp database directory.
+
+This will unzip and untar the rosetta++ code.  
+You'll need to build rosetta++, and the mcm script will look for it in 
+this directory as "rosetta++"

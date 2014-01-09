@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>6 Parameter specification</TITLE>
+<META NAME="description" CONTENT="6 Parameter specification">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html379"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html375"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html369"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html377"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html380"
+  HREF="node9.html">7 Sequence formats</A>
+<B> Up:</B> <A NAME="tex2html376"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html370"
+  HREF="node7.html">5 File types</A>
+ &nbsp <B>  <A NAME="tex2html378"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00080000000000000000"></A><A NAME="params"></A>
+<BR>
+6 Parameter specification
+</H1>
+
+<P>
+Parameter values are drawn from four sources: command line arguments,
+inserted parameter files, default parameter files, and the program
+itself. Initial models and regularizers cannot be specified on the
+command line.  Several programs require certain parameters to be set;
+if they are not (or if parameters are specified incorrectly), a usage
+message is output to standard error.
+
+<P>
+Each parameter, including the initial model and regularizer, has a
+reasonable setting hardwired in the SAM code.  These are the default
+values listed in Section&nbsp;<A HREF="node14.html#sec:parameters">12</A>.  The default
+regularizer is actually two defaults, one for RNA or DNA, and the
+other for proteins.
+
+<P>
+These hardwired values can be overridden by a user-specific default
+file or command line specification.  This file can be one of three
+alternatives.  First, if the environment variable SAMRC is set, new
+default values are read from that file.  Second, if the SAMRC variable
+was not set and a <code>.samrc</code> file exists in the current directory,
+that file is used as the default.  Third, if SAMRC was not set and
+<code>.samrc</code> was not found in the current directory,
+<code>$HOME/.samrc</code> is checked.  
+<P>
+Parameter files can cause other parameter files to be read using the
+<TT>insert</TT> directive.  When this directive is used in a
+default such as <code>.samrc</code>, the inserted file is assumed to have
+defaults as well.  Non-default files are specified on the command line
+as, for example,
+<PRE>
+
+buildmodel test -alphabet RNA -insert trna.init
+</PRE>
+In this case, the alphabet is set to RNA, and the file
+<code>trna.init</code> will override default parameters hardwired in the
+program or specified in one of the <code>.samrc</code> files.  If the file
+contained, for example, the line <code>alphabet DNA</code>, the alphabet
+would be switched to DNA with an appropriate warning message.  Values
+are set and insert files are read according to their position on the
+command line or within a file.
+
+<P>
+Command line arguments are evaluated in the order they are presented
+to the program.  If one of the command line arguments specifies an
+inserted parameter file, that file is processed before the next
+command line argument.  If one file inserts another, the inserted file
+is processed before completing the original file.  Thus, to override
+values specified in an inserted file, insert the file <EM>first</EM> on
+the command line, and then specify the parameters to reset--the last
+specified values win. 
+
+<P>
+It is often important to conditionally specify initialization
+information.  In addition to the <TT>insert</TT>, three conditional
+insertion directives are also available: <TT>insert_file_dna</TT>, <TT>insert_file_rna</TT>, and <TT>insert_file_protein</TT>.  These cause a file
+to be inserted if the alphabet matches the directive.  If the alphabet
+is not yet set when one of these is encountered, and warning message
+is generated.
+
+<P>
+Two parameter names have abbreviated forms:  <TT>i</TT> can be used
+in place of <TT>insert</TT>, and <TT>a</TT> can be used in place of
+<TT>alphabet</TT>.  The following will set the alphabet to RNA and read
+in the file named <TT>parameters</TT>.
+<PRE>
+
+buildmodel test -a RNA -i parameters
+</PRE>
+
+<P>
+The model output (such as <TT>test.mod</TT>, in the command line above)
+includes statistics about the run and a listing of all parameters that
+have been changed from their default values.  Inserted file names are
+listed, but commented out, because their effect has been recorded in
+the list of all changed parameter values.  Random number seeds created
+based on the pid are also commented out so that new seeds will be
+created if the program is rerun on the file.
+
+<P>
+Models are usually specified using the insert file (<code>-i</code>)
+command line argument.  In this case, the model type (i.e., model,
+regularizer, frequency counts, or null model, discussed in
+Section&nbsp;<A HREF="node10.html#sec:model-format">8.4</A>) is read from the file.  Alternatively,
+a <TT>model_file</TT>, <TT>regularizer_file</TT>, or <TT>nullmodel_file</TT> can be specified, in which case the very first model
+structure in that file (which could be a regularizer or frequency
+count model, for example) is read in.  These file names will override
+any models present in the inserted files, even if the inserted file
+occurs after the <TT>model_file</TT> parameter on the command line.
+This option is particularly useful for discrimination training with
+positive and negative examples, in which case a model generated by the
+negative examples can be used as the null model. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+There are two special paramater names, <TT>db</TT> and <TT>id</TT>, that
+form lists of strings. That is, when multiple database or sequence
+identifiers are found on the command line or in a paramater file, they
+are added to the current list of databases or sequence indentifiers,
+rather than replacing the previously-specified value.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html379"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html375"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html369"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html377"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html380"
+  HREF="node9.html">7 Sequence formats</A>
+<B> Up:</B> <A NAME="tex2html376"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html370"
+  HREF="node7.html">5 File types</A>
+ &nbsp <B>  <A NAME="tex2html378"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

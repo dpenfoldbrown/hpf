@@ -1,0 +1,153 @@
+ClassName = Alphabet
+    Name = DSSP
+    # Note: DSSP acutally uses <space> not C for coil,
+    # but <space> is not an acceptable character in most sequence formats.
+    IsNucleic = 0
+    NormalChars = EBGHITSC
+    Alias = L C
+    AllMatch = X
+
+    CharName = E beta 	beta_strand
+    CharName = B bridge	short_beta_bridge
+    CharName = G 3_10	3_10_helix
+    CharName = H helix	alpha_helix
+    CharName = I pi	pi_helix
+    CharName = T turn	turn
+    CharName = S bend	bend
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+
+ClassName = Alphabet
+    Name = STRIDE
+    # Note: STRIDE acutally uses <space> not C for coil,
+    # but <space> is not an acceptable character in most sequence formats.
+    IsNucleic = 0
+    NormalChars = EBGHITC
+    Alias = L C
+    Alias = S C	# STRIDE does not use S 
+    		# (should check whether DSSPs S is more often a C or a T
+		# in STRIDE)
+    	
+    AllMatch = X
+
+    CharName = E beta 	beta_strand
+    CharName = B bridge	short_beta_bridge
+    CharName = G 3_10	3_10_helix
+    CharName = H helix	alpha_helix
+    CharName = I pi	pi_helix
+    CharName = T turn	turn
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+
+ClassName = Alphabet
+    Name = EHL
+    # Note: this alphabet puts 3-10 helices with alpha-helices, 
+    # but B and I are put with loop, not with E and H.
+
+    IsNucleic = 0
+    NormalChars = EHC
+    Alias = G H
+    Alias = L C
+    Alias = T C
+    Alias = S C
+    Alias = B C
+    Alias = I C
+    AllMatch = X
+    CharName = H helix	alpha_helix
+    CharName = E beta 	beta_strand
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+
+ClassName = Alphabet
+    Name = EHL2
+    # Note: this alphabet puts 3-10 helices (G)  and pi-helices (I) with alpha-helices (H), 
+    # and beta bridges (B) with strands (E).
+    # Turns and other structures are classified with loops (C).
+    # This is the coding used for CASP3 and CASP4.
+    IsNucleic = 0
+    NormalChars = EHC
+    Alias = G H
+    Alias = L C
+    Alias = T C
+    Alias = S C
+    Alias = B E
+    Alias = I H
+    AllMatch = X
+    CharName = H helix	helix
+    CharName = E beta 	beta_strand
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+ClassName = Alphabet
+    Name = EHTL
+    IsNucleic = 0
+    NormalChars = EHTC
+    Alias = G H
+    Alias = L C
+    Alias = S C
+    Alias = B C
+    Alias = I C
+    AllMatch = X
+    CharName = E beta 	beta_strand
+    CharName = H helix	alph_helix
+    CharName = T turn	turn
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+ClassName = Alphabet
+    # Note: this alphabet puts 3-10 helices (G)  and pi-helices (I) with alpha-helices (H), 
+    # and beta bridges (B) with strands (E).
+    Name = EHTL2
+    IsNucleic = 0
+    NormalChars = EHTC
+    Alias = G H
+    Alias = L C
+    Alias = S C
+    Alias = B E
+    Alias = I H
+    AllMatch = X
+    CharName = E beta 	beta_strand
+    CharName = H helix	helix
+    CharName = T turn	turn
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+ClassName = Alphabet
+    # Note: this alphabet puts 3-10 helices (G)  and pi-helices (I) with alpha-helices (H), 
+    # but seperates out turns and beta bridges
+    Name = EBHTL
+    IsNucleic = 0
+    NormalChars = EBHTC
+    Alias = G H
+    Alias = L C
+    Alias = S C
+    Alias = I H
+    AllMatch = X
+    CharName = E beta 	beta_strand
+    CharName = B bridge beta_bridge
+    CharName = H helix	helix
+    CharName = T turn	turn
+    CharName = C coil	random_coil
+EndClassName = Alphabet
+
+
+ClassName = Alphabet
+    # Note: this alphabet puts and pi-helices (I) with alpha-helices (H), 
+    # but seperates out all other STRIDE classifications
+    Name = EBGHTL
+    IsNucleic = 0
+    NormalChars = EBGHTC
+    Alias = L C
+    Alias = S C
+    Alias = I H
+    AllMatch = X
+    CharName = E beta 	beta_strand
+    CharName = B bridge beta_bridge
+    CharName = G 3_10	3_10_helix
+    CharName = H helix	helix
+    CharName = T turn	turn
+    CharName = C coil	random_coil
+EndClassName = Alphabet

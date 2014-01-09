@@ -1,0 +1,32 @@
+ClassName = ExtAminoAlphabet
+
+Name = ExtAA
+IsAmino = 1
+NormalChars = ACDEFGHIKLMNPQRSTVWY
+Wildcard = B DN
+Wildcard = Z EQ
+AllMatch = X
+CharName = A Ala Alanine
+CharName = C Cys Cysteine
+CharName = D Asp Aspartic_acid
+CharName = E Glu Glutamic_acid
+CharName = F Phe Phenylalanine
+CharName = G Gly Glycine
+CharName = H His Histidine
+CharName = I Ile Isoleucine
+CharName = K Lys Lysine
+CharName = L Leu Leucine
+CharName = M Met Methionine
+CharName = N Asn Asparagine
+CharName = P Pro Proline
+CharName = Q Gln Glutamine
+CharName = R Arg Arginine
+CharName = S Ser Serine
+CharName = T Thr Threonine
+CharName = V Val Valine
+CharName = W Trp Tryptophan
+CharName = Y Tyr Tyrosine
+CharName = B Asn/Asp Asn/Asp
+CharName = Z Gln/Glu Gln/Glu
+
+EndClassName = ExtAminoAlphabet

@@ -1,0 +1,18 @@
+Example qsubs of the fragment picker:
+
+
++ New frag_driver:
+
+qsub -t 1-10 -l nodes=1:ppn=1 -q short -V -d /home/dpb3/fragmentor/ -o /home/dpb3/fragmentor/logs/ -j oe -N newfrag-oi-000-009 frag.sh
+
+qsub -t 1-4 -l nodes=1:ppn=1 -q short -V -d /home/dpb3/fragmentor/ -o /home/dpb3/fragmentor/logs/ -j oe -N newfrag-ok_test-996-999 frag.sh
+
+
++ Old frag_array:
+
+qsub -t 1-10 -l nodes=1:ppn=1 -q short -V -d /home/dpb3/fragmentor/ -o /home/dpb3/fragmentor/logs/ -j oe -N oldfrag-oi-000-009 old-frag.sh
+
+
++ Other examples:
+
+qsub -hard -l mem_free=4G -S /bin/bash -r y -V -cwd -j y -o /scratch/patrick/tmp/fragmentor/logs/ -t 1-1000 -N frag_lj old-frag.sh lj

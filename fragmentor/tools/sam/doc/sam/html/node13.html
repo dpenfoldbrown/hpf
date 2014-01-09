@@ -1,0 +1,764 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>11 System installation</TITLE>
+<META NAME="description" CONTENT="11 System installation">
+<META NAME="keywords" CONTENT="sam_doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sam_doc.css">
+
+<LINK REL="next" HREF="node14.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="sam_doc.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html513"
+  HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html509"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html503"
+  HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html511"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html514"
+  HREF="node14.html">12 Parameter descriptions</A>
+<B> Up:</B> <A NAME="tex2html510"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html504"
+  HREF="node12.html">10 Related programs</A>
+ &nbsp <B>  <A NAME="tex2html512"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html515"
+  HREF="#SECTION000131000000000000000">11.1 Environment variables</A>
+<LI><A NAME="tex2html516"
+  HREF="#SECTION000132000000000000000">11.2 Runtime statistics</A>
+<LI><A NAME="tex2html517"
+  HREF="#SECTION000133000000000000000">11.3 Reducing runtime</A>
+<LI><A NAME="tex2html518"
+  HREF="#SECTION000134000000000000000">11.4 Future Features</A>
+<LI><A NAME="tex2html519"
+  HREF="#SECTION000135000000000000000">11.5 Prior versions</A>
+<UL>
+<LI><A NAME="tex2html520"
+  HREF="#SECTION000135100000000000000">11.5.1 Version 2.2.1</A>
+<LI><A NAME="tex2html521"
+  HREF="#SECTION000135200000000000000">11.5.2 Version 2.2</A>
+<LI><A NAME="tex2html522"
+  HREF="#SECTION000135300000000000000">11.5.3 Version 2.1.2</A>
+<LI><A NAME="tex2html523"
+  HREF="#SECTION000135400000000000000">11.5.4 Version 2.1.1</A>
+<LI><A NAME="tex2html524"
+  HREF="#SECTION000135500000000000000">11.5.5 Version 2.1</A>
+<LI><A NAME="tex2html525"
+  HREF="#SECTION000135600000000000000">11.5.6 Version 2.0</A>
+<LI><A NAME="tex2html526"
+  HREF="#SECTION000135700000000000000">11.5.7 Version 1.4</A>
+<LI><A NAME="tex2html527"
+  HREF="#SECTION000135800000000000000">11.5.8 Version 1.3</A>
+<LI><A NAME="tex2html528"
+  HREF="#SECTION000135900000000000000">11.5.9 Version 1.2</A>
+<LI><A NAME="tex2html529"
+  HREF="#SECTION0001351000000000000000">11.5.10 Version 1.1</A>
+<LI><A NAME="tex2html530"
+  HREF="#SECTION0001351100000000000000">11.5.11 Version 1.0</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION000130000000000000000">
+11 System installation</A>
+</H1>
+
+<P>
+The SAM system runs on a variety of Unix workstations (we have checked
+installation on workstations including DEC DECstation and Alpha, HP
+715, IBM RS6000, SGI Onyx Reality Engine, Sun Sparc, Intel Pentium
+with the Linux operating system, and the UCSC Kestrel parallel processor.
+
+<P>
+The distribution includes an <TT>INSTALL</TT> file that discusses
+installation procedures.
+
+<P>
+The <TT>gnuplot</TT>, <TT>gunzip</TT>, and <TT>uncompress</TT> programs should
+be in the user's path, and other programs should be available as
+required by SAM-T99.  See Section&nbsp;<A HREF="node5.html#sec:sam-t99-install">4.10</A>.
+
+<P>
+
+<H2><A NAME="SECTION000131000000000000000"></A><A NAME="sec:env"></A>
+<BR>
+11.1 Environment variables
+</H2>
+
+<P>
+The SAM system has several environment variables, typically set in
+<TT>csh</TT> using a command of the form +setenv PRIOR_PATH
+/projects/compbio/lib+.  
+<DL>
+<DT><STRONG>PRIOR_PATH</STRONG></DT>
+<DD>Directory with prior libraries, regularizers,
+and <TT>makelogo</TT> color definitions.. See Section&nbsp;<A HREF="node10.html#sec:priors">8.1.1</A> 
+and Section&nbsp;<A HREF="node12.html#sec:makelogo">10.9.3</A>.
+</DD>
+<DT><STRONG>BLASTMAT</STRONG></DT>
+<DD>Directory for BLAST scoring matrices.
+See Section&nbsp;<A HREF="node12.html#sec:smithwaterman">10.2.7</A>. 
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000132000000000000000"></A><A NAME="INFO"></A>
+<BR>
+11.2 Runtime statistics
+</H2>
+
+<P>
+At the end of each run of <code>buildmodel</code>, a line of statistics is
+printed out, such as the line
+<PRE>
+
+-218.36  -217.00  -217.68   0.96  22 0 149
+</PRE>
+mentioned in Section&nbsp;<A HREF="node4.html#quick">3</A>.  These numbers are quite useful for
+quick comparison of results when, for example, running the program
+many times using a shell script.  The numbers are: minimum NLL-NULL score,
+maximum score, average score, sample deviation of 
+scores, number of re-estimates, number of surgeries, and the length of
+the final model.  In the above case, the scores are for the 
+training set:  if a test set were specified (Section&nbsp;<A HREF="node9.html#traintest">7.3</A>), the
+minimum, maximum, average, and sample deviation for the test set would be
+reported after the model length, followed by the ratio of the average
+test set score to the average training set score (ideally, this value
+should be close to unity -- larger values may indicate overfitting of
+the model to the training set).
+
+<P>
+
+<H2><A NAME="SECTION000133000000000000000">
+11.3 Reducing runtime</A>
+</H2>
+
+<P>
+Training a model can be a be a time-consuming process.  Each
+re-estimation cycles through all sequences in the training set,
+performing a dynamic programming algorithm with operations
+proportional to the product of the total number of characters in the
+training set and the length of the model.  Then, there can be large
+numbers of re-estimations, making some runs take overnight.
+
+<P>
+Shorter execution times (and possibly worse models or alignments) can be had
+in several: a hard limit can be placed on the number of <TT>reestimates</TT>, or the <TT>stopcriterion</TT> can be increased, though
+both of these can decrease model quality.  Similarly, the number of
+surgeries can be reduced.  One of the most effective ways to reduce
+runtime is to simply reduce the number of sequences in the training
+set.  A small, well-chosen training set, in which close homologs
+have been eliminated, can produce better models than a larger, random
+training set.
+
+<P>
+If a run seems to be taking too long, it is possible to tell SAM to
+save the next model as a prelude to killing the program.  The two UNIX
+signals, SIGUSR1 and SIGUSR2, can be used to toggle the <TT>print_surg_models</TT> and <TT>print_all_models</TT> variables.  In the
+first case, models are printed after each surgery procedure, and in
+the second, after each re-estimation cycle.
+
+<P>
+
+<H2><A NAME="SECTION000134000000000000000">
+11.4 Future Features</A>
+</H2>
+
+<P>
+There are many future features we would like to include in SAM.  The
+following list will also point out some of the things you currently
+cannot do using the system.  The items are of varying difficulty.
+
+<P>
+
+<UL>
+<LI>A calibration tool for more exact computation of E-values.
+
+<P>
+</LI>
+<LI>Position-specific regularizer strengths to extend the special
+node concepts between entirely fixed and entirely free.
+
+<P>
+</LI>
+<LI>Model learning and combining using genetic algorithms.
+
+<P>
+</LI>
+<LI>Probabilistic sequences in which each position is a distribution
+over the alphabet.
+
+<P>
+</LI>
+<LI>A coarse-grain (MPI) parallel implementation.
+
+<P>
+</LI>
+<LI>A version that can run on the Kestrel programmable parallel
+processor:
+<DIV ALIGN="CENTER">
+<A NAME="tex2html65"
+  HREF="http://www.cse.ucsc.edu/research/kestrel">http://www.cse.ucsc.edu/research/kestrel</A>
+
+</DIV>
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION000135000000000000000"></A><A NAME="sec:previous"></A>
+<BR>
+11.5 Prior versions
+</H2>
+
+<P>
+
+<H3><A NAME="SECTION000135100000000000000">
+11.5.1 Version 2.2.1</A>
+</H3>
+
+<UL>
+<LI>Corrections to MSF and FSSP file reading.
+</LI>
+<LI>Addition of SW 3 option for modeling a domain within a longer
+protein.  See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135200000000000000">
+11.5.2 Version 2.2</A>
+</H3>
+July, 1998
+
+<P>
+
+<UL>
+<LI>Release of 2.1.1 and 2.1.2.
+</LI>
+<LI>More efficient implementation of Dirichlet mixture priors.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135300000000000000">
+11.5.3 Version 2.1.2</A>
+</H3>
+June, 1998.
+
+<P>
+
+<UL>
+<LI>Implementation of posterior-decoded alignments and output of
+posterior-decoded values of the dynamic programming operation.  The
+<TT>viterbi</TT> variable has been renamed <TT>dpstyle</TT>.  An alias
+to <TT>viterbi</TT> is currently included.
+See Section&nbsp;<A HREF="node11.html#sec:vtrain">9.5</A>,
+Section&nbsp;<A HREF="node12.html#sec:align2model">10.1</A>, and Section&nbsp;<A HREF="node12.html#sec:grabdp">10.4</A>.
+
+<P>
+</LI>
+<LI>Implementation of local and semi-local
+training. See Section&nbsp;<A HREF="node11.html#sec:vtrain">9.5</A>. 
+
+<P>
+</LI>
+<LI>Change in the definition of FIM probabilities:  all outgoing
+arcs from a FIM node now have (unnormalized) unity probability (zero
+cost), as the internal delete to insert and insert to insert
+transitions have always had.  FIMs continue to not have match states.
+Optionally, the FIM insert to insert transition can be set with <TT>fimtrans</TT>. See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+
+<P>
+</LI>
+<LI>Change in the implementation of jumps for local and semi-local
+scoring.  Jumps are now from the delete node after the initial FIM to
+an internal match state and from an internal match state to the delete
+node of the final FIM.  Previously, internal delete states were used.
+See Section&nbsp;<A HREF="node12.html#sec:fragalign">10.1.2</A>.
+
+<P>
+</LI>
+<LI>The extra delete state in alignments induced by
+automatically-added FIMs is now automatically removed for both
+alignments and multiple-domain alignments.  If FIMs are present in the
+model and <TT>auto_fim</TT> is set, the delete state is also removed.
+
+<P>
+</LI>
+<LI>The <TT>prettyalign</TT> FASTA-like format no longer includes
+semicolon-delimited comments.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135400000000000000">
+11.5.4 Version 2.1.1</A>
+</H3>
+April, 1998.  
+
+<P>
+
+<UL>
+<LI>User-defined alphabets for sequences. See Section&nbsp;<A HREF="node9.html#sec:alphdef">7.1.1</A>.
+</LI>
+<LI>Negative <TT>fimstrength</TT> values will adjust both insert and
+FIM states. See Section&nbsp;<A HREF="node10.html#sec:fims">8.5</A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135500000000000000">
+11.5.5 Version 2.1</A>
+</H3>
+February, 1998.
+
+<P>
+
+<UL>
+<LI>The <TT>multdomain</TT> program has been removed and its function
+has been merged into <TT>hmmscore</TT>.  The <TT>mdNLLminusNULL</TT>
+parameter has been renamed <TT>mdNLLnull</TT>.  The <TT>multdomainshort</TT> parameter has been renamed <TT>alignshort</TT>.
+The old names are currently aliased to the new names for these two parameters.
+ See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+</LI>
+<LI>The <TT>hmmscore</TT> program can now print selected sequence
+alignments and selected sequence multiple domain alignments during
+scoring. See Section&nbsp;<A HREF="node12.html#sec:select">10.2.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+</LI>
+<LI>The interactive mode of <TT>hmmscore</TT> has been removed.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+</LI>
+<LI>The scored sequence letter counts null model has been removed.
+Null model scores can now be calculated based on the reverse
+sequences.  The <TT>simple_threshold</TT> variable determines when
+complex null model calculations, such as the reverse null model or the
+user's null model, should be performed in terms of the
+simple null model score. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+</LI>
+<LI>The content of score files has changed, as has the use of <TT>select_seq</TT>, <TT>select_score</TT>, <TT>sort</TT>, and <TT>subtract_null</TT>. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+</LI>
+<LI>The <TT>uniqueseq</TT> program has been updated.  See Section&nbsp;<A HREF="node12.html#sec:uniqueseq">10.11.8</A>.
+</LI>
+<LI>The <TT>checkseq</TT> program has been updated. See Section&nbsp;<A HREF="node12.html#sec:checkseq">10.11.1</A>.
+
+<P>
+</LI>
+<LI>Scoring examples in this manual have been changed to use
+fully-local scoring and <TT>hmmscore</TT> now prints a warning whenever
+fully-local scoring is not used. See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>.
+</LI>
+<LI>The <TT>protein_prior</TT> and <TT>nucleotide_prior</TT> variables
+can be used to specify default prior
+libraries. The Dirichlet mixture recode1.20comp is now used by default
+with protein sequences. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+</LI>
+<LI>Internal weighting in <TT>buildmodel</TT> is now by default
+turned on with <TT>internal_weight</TT> set to 1.  If an external weight file is  specified
+and <TT>internal_weight</TT> is not explicitly set on the command line,
+internal weighting will be turned off.  See Section&nbsp;<A HREF="node11.html#sec:internalweight">9.4.4</A>.
+</LI>
+<LI>The <TT>sequence_models</TT> variable, when set, causes <TT>buildmodel</TT>
+to create initial models from random sequences in the training set
+which are then regularized.  The each single sequence is given a
+weight equal to the value of  <TT>sequence_models</TT>.  This option is
+recommended and is expected to become default behavior in a
+future release.  It can both reduce runtime by providing an initial
+starting point when an alignment is not available and increase
+modeling performance.
+See Section&nbsp;<A HREF="node10.html#sec:alignfile">8.3</A>.
+</LI>
+<LI>The <TT>seed_runs</TT> parameter has been removed from <TT>buildmodel</TT>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135600000000000000">
+11.5.6 Version 2.0</A>
+</H3>
+November, 1997.
+
+<P>
+
+<UL>
+<LI>A complete rewrite of the inner dynamic programming loop to save
+memory (see the Grice, Hughey, and Speck, and the Tarnas and Hughey
+papers mentioned in the introduction) and allow local and semi-local
+scoring and alignment, as well as Viterbi-based training.  Memory use
+is now proportional to the product of model length and the square root
+of the sequence length rather than the model length and the sequence
+length.  See Section&nbsp;<A HREF="node12.html#sec:fragalign">10.1.2</A> 
+and Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>.
+
+<P>
+</LI>
+<LI>HSSP-based structural transition regularizer. See Section&nbsp;<A HREF="node10.html#sec:structreg">8.1.2</A>.
+
+<P>
+</LI>
+<LI>The <TT>multdomain</TT> program now performs scoring adjustments
+identical to those of <TT>hmmscore</TT> when SW is
+set. See Section&nbsp;<A HREF="node12.html#sec:fragments">10.2.3</A>. 
+
+<P>
+</LI>
+<LI>Internal sequence weighting inspired by HMMer's Maximum
+Discrimination method has been implemented.  It  significantly
+increases discrimination performance in the presence of
+biased training sets. See Section&nbsp;<A HREF="node11.html#sec:internalweight">9.4.4</A>.
+
+<P>
+</LI>
+<LI>The <TT>a2mdots</TT> variable can be cleared to avoid printing
+dots in a2m files, leading to an at times considerable space
+reduction.  See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+
+<P>
+</LI>
+<LI>The <TT>hmmscore</TT> program can partition a database to aid in
+distributed scoring. See Section&nbsp;<A HREF="node12.html#sec:segment">10.2.6</A>.
+
+<P>
+</LI>
+<LI>SAM will now read its input from compressed (.gz or .Z) files.
+See Section&nbsp;<A HREF="node7.html#sec:files">5</A>.
+
+<P>
+</LI>
+<LI>The alphabet code has been rewritten to make it simpler for
+those with source licenses to modify the code.
+
+<P>
+</LI>
+<LI>Weight files for <TT>buildmodel</TT> initial alignments and <TT>modelfromalign</TT> alignments can be specified with the <TT>alignment_weights</TT> parameter. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+
+<P>
+</LI>
+<LI>A broader collection of Dirichlet mixture and transition
+regularizers is included with this version. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+
+<P>
+</LI>
+<LI>The MasPar implementation is no longer supported.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135700000000000000">
+11.5.7 Version 1.4</A>
+</H3>
+
+<P>
+August, 1996.
+
+<P>
+
+<UL>
+<LI>The geometric average of the match state probabilities is now
+available for use (and the default) with simple and complex null
+models. Complex null models are now built from the transition and
+insert probabilities of the model, and the geometric average of all
+the model's match tables in the match table.
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+
+<P>
+</LI>
+<LI>The <TT>train_reset_inserts</TT> variable causes <TT>buildmodel</TT> to, at the completion of re-estimation cycle, reset all the
+insertion and FIM tables to (by default) the geometric
+average of the match states.  Set to 0 to turn off.  See Section&nbsp;<A HREF="node10.html#sec:insert_fim">8.6</A>. 
+
+<P>
+</LI>
+<LI>If no IDs are specified, the <TT>hmmscore</TT> and <TT>multdomain</TT> programs will read in sequences a few at a time, instead
+of all at once, saving a tremendous amount of memory.  If this is
+done, sequence output by <TT>hmmscore</TT> is no longer sorted by score,
+though the score file can still be sorted.  Given a sorted score file
+and unsorted sequence file, the new <TT>sortseq</TT> program will sort
+the sequences according to the score file.
+See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>,
+Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>, and Section&nbsp;<A HREF="node12.html#sec:sortseq">10.11.7</A>.
+
+<P>
+</LI>
+<LI>The <TT>uniqueseq</TT> program will eliminate sequences with
+duplicate IDs from a file.  The <TT>checkseq</TT> program will read a
+sequence file and print information about it. See Section&nbsp;<A HREF="node12.html#sec:uniqueseq">10.11.8</A>.
+
+<P>
+</LI>
+<LI>Training noise is reduced by <TT>retrain_noise_scale</TT>
+(default 0.1) whenever an initial model or alignment is provided.
+Noise is also reduced between the first and successive surgery
+iterations by <TT>surgery_noise_scale</TT> (default 0.1).
+See Section&nbsp;<A HREF="node11.html#sec:noise">9.1</A>.
+
+<P>
+</LI>
+<LI>Models can be edited using the new utility program,
+ <TT>modifymodel</TT>. See Section&nbsp;<A HREF="node12.html#sec:modifymodel">10.9.4</A>.
+
+<P>
+</LI>
+<LI>The program <TT>makehist</TT> will turn one or two <TT>.dist</TT> score file
+into a histogram, <TT>makeroc</TT> will turn two <TT>.dist</TT> score
+files into a false positive/false negative plot showing score vs.
+counts (number of sequences with the score) and <TT>makeroc2</TT> will
+turn two <TT>.dist</TT> score files into a plot of false positive vs. false
+negative as a function of threshold score.  All three programs require <TT>gnuplot</TT>. See Section&nbsp;<A HREF="node12.html#sec:plottingprogs">10.10</A>.
+
+<P>
+</LI>
+<LI>Weight file reading is more robust.  We plan to implement a
+WWW weighting server which, given a multiple alignment, will return
+sequence weights under a variety of weighting schemes.
+
+<P>
+</LI>
+<LI>The <TT>a2mallcaps</TT> variable has been removed:  <TT>modelfromalign</TT>, <TT>buildmodel</TT>, and other alignment reading
+routines will first check to see if the file is an HSSP file, if not,
+the a2m format will be checked, and if that does not result in every
+sequence having the same number of columns, all characters will be
+treated as uppercase. See Section&nbsp;<A HREF="node10.html#sec:alignfile">8.3</A>.
+
+<P>
+</LI>
+<LI>Binary model output.  Models can be printed in human unreadable
+binary form.  This reduces file size to about one quarter, and greatly
+increases model reading speed.  See Section&nbsp;<A HREF="node10.html#sec:binmods">8.4.4</A>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135800000000000000">
+11.5.8 Version 1.3</A>
+</H3>
+May, 1996.
+
+<P>
+
+<UL>
+<LI>Weighted  training. See Section&nbsp;<A HREF="node11.html#sec:weights">9.4</A>.
+</LI>
+<LI>Sequence weight annealing. See Section&nbsp;<A HREF="node11.html#sec:aweights">9.4.2</A>.
+</LI>
+<LI>The ability to use files as model type specifiers rather than
+keywords such as REGULARIZER. See Section&nbsp;<A HREF="node7.html#sec:files">5</A>.
+</LI>
+<LI>The ability to print scores of only those sequences doing better
+than some threshold. See Section&nbsp;<A HREF="node12.html#sec:hmmscore">10.2</A>.
+</LI>
+<LI>When multiple models are trained, training is stopped for each
+model individually according to the <TT>stopcriterion</TT>.  Previously,
+training was stopped when the average score difference reached the
+<TT>stopcriterion</TT>. See Section&nbsp;<A HREF="node11.html#sec:estimation">9</A>.
+</LI>
+<LI><TT>Modelfromalign</TT> can be told to treat all letters as match
+columns, and turns the letter `O' (capital `o') into a FIM. See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>.
+</LI>
+<LI>Efficiency improvements to model reading.
+</LI>
+<LI>SAM alignments have undergone significant changes.  <TT>Align2model</TT> output is now in a normal sequence format, though still
+with uppercase, lowercase, `.' and `-' meanings.  <TT>Prettyalign</TT>
+can read any <TT>readseq</TT> format, with lower-case letters indicating
+insertions. <TT>Prettyalign</TT> can no longer be used as a pipe.  <TT>Modelfromalign</TT> can read any <TT>readseq</TT> format. The <TT>buildmodel</TT> program can be given an initial
+alignment. See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>.
+</LI>
+<LI>The method for specifying multiple database files
+or multiple sequence IDs has changed.  Multiple <TT>db</TT> or <TT>id</TT>
+declarations on the command file or a parameter file will add to a
+list of database files or id files.
+</LI>
+<LI>The command lines for many programs has changed.  Except for
+<TT>prettyalign</TT>, all programs now take arguments in the form of a
+run name followed by variable name and value pairs.  See Section&nbsp;<A HREF="node8.html#params">6</A>.
+</LI>
+<LI>The <TT>modelfromalign</TT> program now uses prior libraries.
+See Section&nbsp;<A HREF="node12.html#sec:modelfromalign">10.6</A>.
+</LI>
+<LI>FIM normalization has been moved to another place in the code,
+and can be avoided if desired. See Section&nbsp;<A HREF="node12.html#sec:fimtrain">10.3.1</A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION000135900000000000000">
+11.5.9 Version 1.2</A>
+</H3>
+March, 1996.
+
+<P>
+
+<UL>
+<LI>The ability to globally apply various FIM and insertion table
+settings to the regularizer during training and to the model during
+scoring.  This reflects a general cleaning up of the log-odds scoring
+introduced in 1.1. The defaults are to use training set letter counts
+in both FIMs and insert states for training, and match state frequency
+averages for FIMs during scoring (with no change to the insert states).
+See Section&nbsp;<A HREF="node10.html#sec:insert_fim">8.6</A>. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+</LI>
+<LI>The ability to score sequences according to the difference
+between two models, such as models trained on positive and
+negative family examples. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+</LI>
+<LI>By default, <TT>hmmscore</TT> will add FIMs to
+a model before scoring it. See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+</LI>
+<LI>By default, SAM will start with three models of random length,
+and then pick the best model for surgery and further re-estimation.
+This will increase runtime from Version 1.1, but improves model generation.
+</LI>
+<LI>Several new parameters exist. See Section&nbsp;<A HREF="node14.html#sec:parameters">12</A>.
+</LI>
+<LI>An interface is provided between HMMer and SAM. 
+See Section&nbsp;<A HREF="node12.html#sec:convert">10.9.5</A>.
+</LI>
+<LI>Non-default initial models are no longer printed in model files.
+This led to too much confusion about which model was the real one, as
+well as those pesky ``non-default model being replaced'' messages.
+</LI>
+<LI>The use of Dirichlet mixture priors has been updated to reflect
+in our most recent work (<A NAME="tex2html66"
+  HREF="http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html"><TT>http://www.cse.ucsc.edu/research/compbio/dirichlets/index.html</TT></A>).  The
+format of prior libraries has changed slightly, and only one prior
+library (<TT>uprior9.plib</TT>) is included in the distribution. <B>Mixtures in the earlier format may crash the program.</B>
+Mixture
+priors are particularly useful in database search from a small set of
+training examples. See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION0001351000000000000000">
+11.5.10 Version 1.1</A>
+</H3>
+November, 1995.
+
+<P>
+
+<UL>
+<LI>The default protein regularizer has
+been changed from having the uniform distribution in the insert states
+to having the background distribution.  This generally helps
+discrimination experiments, though may hurt sequence alignment.
+See Section&nbsp;<A HREF="node10.html#sec:regularizer">8.1</A>.
+</LI>
+<LI>The default scoring has been changed from calculating Z-scores
+using length bins to NULL model subtraction, which accounts for both
+sequence length and wildcards.  For scoring, FIMs must be added to a
+model before it is scored for this to produce valid results.
+This corresponds to the log-odds scoring used in Sean Eddy's HMMER.
+See Section&nbsp;<A HREF="node12.html#sec:nll_null">10.2.1</A>.
+</LI>
+<LI>Scoring and training with wildcards has been modified so that
+sequences with many wildcards can be properly scored with null models.
+</LI>
+<LI>An iterative program for finding multiple motifs in a single
+sequences is part of SAM. See Section&nbsp;<A HREF="node12.html#sec:multdomain">10.2.4</A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION0001351100000000000000">
+11.5.11 Version 1.0</A>
+</H3>
+January, 1995.
+
+<P>
+
+<UL>
+<LI>First general release.
+</LI>
+</UL>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html513"
+  HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/next.png"></A> 
+<A NAME="tex2html509"
+  HREF="sam_doc.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/up.png"></A> 
+<A NAME="tex2html503"
+  HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/prev.png"></A> 
+<A NAME="tex2html511"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="http://www.cse.ucsc.edu/research/compbio/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html514"
+  HREF="node14.html">12 Parameter descriptions</A>
+<B> Up:</B> <A NAME="tex2html510"
+  HREF="sam_doc.html">SAM (Sequence Alignment and</A>
+<B> Previous:</B> <A NAME="tex2html504"
+  HREF="node12.html">10 Related programs</A>
+ &nbsp <B>  <A NAME="tex2html512"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+<a href=http://www.cse.ucsc.edu/research/compbio/sam.html>SAM</a><BR><a href=mailto:sam-info@cse.ucsc.edu>sam-info@cse.ucsc.edu</a><BR><A HREF=http://www.cse.ucsc.edu/research/compbio>UCSC Computational Biology Group</A>
+</ADDRESS>
+</BODY>
+</HTML>

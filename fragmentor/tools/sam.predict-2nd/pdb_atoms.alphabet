@@ -1,0 +1,63 @@
+ClassName = Alphabet
+Name = pdb_atoms
+
+// The single-letter codes are not really intended for use.
+// The short names (abbreviations) are the standard PDB codes for the atoms.
+
+NormalChars = 	NABG12PQSD34UV890TE567WXYRZIJMHLKF$%OC@
+Wildcard = ! CANO@
+
+CharName = 	!	BACK	backbone_atom
+
+CharName=	C	C	carboxyl_carbon
+CharName=	A	CA	alpha_carbon
+CharName=	B	CB	beta_carbon
+CharName=	G	CG	gamma_carbon
+CharName=	1	CG1	gamma1_carbon
+CharName=	2	CG2	gamma2_carbon
+CharName=	D	CD	delta_carbon
+CharName=	3	CD1	delta1_carbon
+CharName=	4	CD2	delta2_carbon
+CharName=	E	CE	epsilon_carbon
+CharName=	5	CE1	epsilon1_carbon
+CharName=	6	CE2	epsilon2_carbon
+CharName=	7	CE3	epsilon3_carbon
+CharName=	Z	CZ	zeta_carbon
+CharName=	I	CZ2	zeta2_carbon
+CharName=	J	CZ3	zeta3_carbon
+CharName=	H	CH2	eta_carbon
+CharName=	N	N	amide_nitrogen
+CharName=	U	ND1	delta1_nitrogen
+CharName=	V	ND2	delta2_nitrogen
+CharName=	W	NE	epsilon_nitrogen
+CharName=	X	NE1	epsilon1_nitrogen
+CharName=	Y	NE2	epsilon2_nitrogen
+CharName=	M	NZ	zeta_nitrogen
+CharName=	L	NH1	eta1_nitrogren
+CharName=	K	NH2	eta2_nitrogen
+CharName=	O	O	carboxyl_oxygen
+CharName=	P	OG	gamma_oxygen
+CharName=	Q	OG1	gamma1_oxygen
+CharName=	8	OD1	delta1_oxygen
+CharName=	9	OD2	delta2_oxygen
+CharName=	0	OE1	epsilon1_oxygen
+CharName=	R	OE2	epsilon2_oxygen
+CharName=	F	OH	eta_oxygen
+CharName=	S	SG	gamma_sulphur
+CharName=	T	SD	delta_sulphur
+
+// non-standard atoms
+CharName=	@	OXT	terminal_oxygen
+CharName=	$	UNK	unknown_atom
+CharName=	%	CH3	methyl_group
+
+// possible aliases that are not definable in the standard alphabet
+//	R	OE	epsilon_oxygen	(alias for OE1)
+// 		AD1	OD1 or ND1
+//		AD2	OD2 or ND2
+//		AE1 	OE1 or NE1
+//		AE2	OE2 or NE2
+
+// hydrogen atoms NOT included in this alphabet---there are over 50 of them
+
+EndClassName= Alphabet
