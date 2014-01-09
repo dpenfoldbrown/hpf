@@ -12,9 +12,9 @@ NOTE: Using a global protein structure set cacheing dict (no re-building repr. s
 ## CONFIG
 
 EXPERIMENT = 1198
-MTX_OUTFILE = "/home/dpb3/hpf/hpf/structure_comparison/out/1198_mycge_mtx.out"
-KEY_OUTFILE = "/home/dpb3/hpf/hpf/structure_comparison/out/1198_mycge_key.out"
-TOMAMMOTH_FILE = "/home/dpb3/hpf/hpf/structure_comparison/out/1198_mycge_2mammoth.out"
+MTX_OUTFILE = "/home/dpb/hpf/hpf/structure_comparison/out/1198_mycge_mtx.out"
+KEY_OUTFILE = "/home/dpb/hpf/hpf/structure_comparison/out/1198_mycge_key.out"
+TOMAMMOTH_FILE = "/home/dpb/hpf/hpf/structure_comparison/out/1198_mycge_2mammoth.out"
 
 
 ## IMPORTS
