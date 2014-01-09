@@ -35,9 +35,6 @@ global_struct_mammoth_db = {}
 global_protein_struct_sets = {}
 global_org_structs = set()
 
-global_tomammoth_handle = open(TOMAMMOTH_FILE, 'w')
-global_tomammoth_handle.write("PROTEIN_I, PROTEIN_J, SOURCEID, TARGETID\n")
-
 
 ## MAIN FUNCTIONALITY
 def create_structure_matrix(experiment, mtxfile, keyfile):
@@ -56,7 +53,7 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
     for p in proteins:
         # Write entry to keyfile (uniprot ac, hpf seq id, hpf prot id)
         uniprotac = p.ac.ac if p.ac else " "*5
-        args.keyhandle.write("{0}\t{1}\t{2}\n".format(uniprotac, p.sequence_key, p.id))
+        keyhandle.write("{0}\t{1}\t{2}\n".format(uniprotac, p.sequence_key, p.id))
 
         # Get protein struct set, add it to global protein structset dict
         struct_set = get_structset(p)
@@ -64,10 +61,14 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
 
         # Add structs in struct set to organism-level struct set
         global_org_structs.update(struct_set)
+    
     keyhandle.close()
+    print "{0} structures in Organism Structure set".format(len(global_org_structs))
 
     # Parse and store StructureMammoth DB files (store iff both structs in org struct set)
+    print "IMPORTANT! Parsing StrucuteMammoth DB files. May take a while..."
     parse_structure_mammoth_db()
+    print "Parsing StructureMammoth DB files complete"
 
     # Iterate symmetrically over list: for each pair i,j, compute i,j similarity,
     # store in matrix row for i, write row i to file, del row, move on to next row
@@ -272,7 +273,12 @@ def get_structset(protein):
 ## MAIN and EXECUTION
 
 if __name__ == "__main__":
+    
+    global_tomammoth_handle = open(TOMAMMOTH_FILE, 'w')
+    global_tomammoth_handle.write("PROTEIN_I, PROTEIN_J, SOURCEID, TARGETID\n")
+
     create_structure_matrix(EXPERIMENT, MTX_OUTFILE, KEY_OUTFILE)
+
 
 
 
