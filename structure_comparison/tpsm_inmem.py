@@ -49,7 +49,7 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
     # Loop over prots. Write in order to keyfile; build org struct set; build prot structset dict
     keyhandle = open(keyfile, 'w')
     keyhandle.write("UNIPROT\tHPF_SEQ\tHPF_PROT\n")
-
+    
     for p in proteins:
         # Write entry to keyfile (uniprot ac, hpf seq id, hpf prot id)
         uniprotac = p.ac.ac if p.ac else " "*5
@@ -60,7 +60,12 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
         global_protein_struct_sets[p.id] = struct_set
 
         # Add structs in struct set to organism-level struct set
-        global_org_structs.update(struct_set)
+        # NOTE: Must loop here because struct_set can have nested lists
+        for sv in struct_set:
+            if is_known(sv): 
+                global_org_structs.add(sv)
+            else:
+                global_org_structs.update(sv)
     
     keyhandle.close()
     print "{0} structures in Organism Structure set".format(len(global_org_structs))
@@ -81,16 +86,16 @@ def create_structure_matrix(experiment, mtxfile, keyfile):
         
         # Get the outer-values only once per row.
         psource = proteins[i]
-        source_structset = global_protein_struct_sets(psource.id)
+        source_structset = global_protein_struct_sets[psource.id]
         
         j = i + 1
-        while j < num_proteins
+        while j < num_proteins:
             ptarget = proteins[j]
-            target_structset = global_protein_struct_sets(ptarget.id)
+            target_structset = global_protein_struct_sets[ptarget.id]
 
             # Pairwise max average
-            forward_scores = unidirectional_pma(source_structset, target_structset, protein_i, protein_j)
-            backward_scores = unidirectional_pma(target_structset, source_structset, protein_i, protein_j)
+            forward_scores = unidirectional_pma(source_structset, target_structset, i, j)
+            backward_scores = unidirectional_pma(target_structset, source_structset, i, j)
             scores = forward_scores + backward_scores 
             
             if len(scores) < 1:
@@ -135,7 +140,7 @@ def parse_structure_mammoth_db():
     # print "Completed parsing {0}".format(smfile00)
     
     with open(smfile01) as handle:
-        for line in handle:s
+        for line in handle:
             fields = line.split(",")
             if fields[1] in global_org_structs and fields[2] in global_org_structs:
                 print "Adding Structure Mammoth to global dict"
@@ -275,7 +280,7 @@ def get_structset(protein):
 if __name__ == "__main__":
     
     global_tomammoth_handle = open(TOMAMMOTH_FILE, 'w')
-    global_tomammoth_handle.write("PROTEIN_I, PROTEIN_J, SOURCEID, TARGETID\n")
+    global_tomammoth_handle.write("PROTEIN_I,PROTEIN_J,SOURCEID,TARGETID\n")
 
     create_structure_matrix(EXPERIMENT, MTX_OUTFILE, KEY_OUTFILE)
 
