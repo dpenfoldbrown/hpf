@@ -12,6 +12,10 @@
 ## dpb 5/01/2013
 
 import warnings
+import networkx
+from itertools import combinations
+from hpf.graph import max_score_path, path_score
+from hpf.structure_comparison.overlap import overlap
 
 # Cutoffs for astral finding
 ASTRAL_MCM_CUTOFF = 0.8
@@ -62,10 +66,6 @@ def structure_representation(domain):
             # Build up graph of thresholded astrals. 
             ## Node ID is astral structure key 
             ## Score is # of domain residues covered by astral (astral.overlap * astral.length)
-            import networkx
-            from itertools import combinations
-            from hpf.graph import max_score_path, path_score
-            from hpf.structure_comparison.overlap import overlap
             dag = networkx.DiGraph()
             for a in clean_astral_overlaps:
                 dag.add_node(a.astral.structure_key, score=(a.overlap * (a.astral_stop - a.astral_start + 1)))
