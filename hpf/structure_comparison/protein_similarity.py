@@ -145,7 +145,7 @@ def unidirectional_pairwise_max_avg(psource, ptarget):
         psource -   protein DBO (hpf.hddb.db.Protein) of "source" comparison protein
         ptarget -   protein DBO (hpf.hddb.db.Protein) of "target" comparison protein
     Return:
-        list[float] -   list of the maximum pairwise scores from source to target protein   
+        list[float] -   list of the maximum pairwise scores from source to target protein
     """
     
     source_structset = get_structset(psource, use_global=True)
