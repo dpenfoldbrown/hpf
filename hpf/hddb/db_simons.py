@@ -23,7 +23,7 @@ from datetime import datetime
 # url = "mysql://dpb:dpb_nyu@handbanana.bio.nyu.edu:3306/"
 # url = "mysql://kdrew:bonneau@127.0.0.1:13307/"
 # url = "mysql://pfp:pfp_nyu@db/"
-url = "mysql://nygo:189213955@scdanet.org:3306/"
+url = "mysql://nygo:189213955@db0.scdanet.org:3306/"
 
 temp = None
 engine = None
